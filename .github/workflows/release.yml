@@ -43,7 +43,7 @@ jobs:
           zip -r "wacrg-spec-${{ github.ref_name }}.zip" spec docs/spec
 
       - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: wacrg-spec-${{ github.ref_name }}.zip
           generate_release_notes: true

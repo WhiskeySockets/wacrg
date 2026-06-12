@@ -1,0 +1,34 @@
+id: static-smali-analysis
+title: Static smali / native analysis
+status: draft
+maturity: emerging
+summary: >
+  Decompile the WhatsApp Android app and read the disassembled smali and native
+  code to map how call stanzas are built, which attributes and enum values exist,
+  and how the keying and media paths are wired — the intended behavior, without
+  running anything.
+targets:
+  - signaling
+  - keying
+  - media
+strengths:
+  - Exposes the full vocabulary of attributes, node tags, and enum constants as the
+    app defines them, including paths rarely seen live.
+  - Great for discovering names/structure to look for with dynamic techniques.
+  - No live account or device required once you have the APK.
+limitations:
+  - Shows intended logic, not observed runtime values — easy to misread dead or
+    feature-flagged code paths.
+  - Obfuscation and native code raise the effort substantially.
+  - A finding here is a hypothesis; it needs a live technique to corroborate before
+    reaching confirmed.
+tooling:
+  - apktool / baksmali for smali
+  - jadx for readable decompilation
+  - Ghidra / radare2 for native libraries
+maintainers: []
+references:
+  - title: jadx
+    url: https://github.com/skylot/jadx
+  - title: Ghidra
+    url: https://ghidra-sre.org/

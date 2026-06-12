@@ -1,0 +1,87 @@
+name: Technique (register / update)
+description: Register a new reverse-engineering technique or update an existing one.
+title: "[technique]: <technique id>"
+labels: ["type/technique"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Techniques describe HOW maintainers obtain evidence. Each spec fact's
+        provenance references one or more of these by their fixed id. Use this
+        form to register a technique's metadata or propose updates to it.
+
+  - type: dropdown
+    id: technique-id
+    attributes:
+      label: Technique id
+      description: The fixed technique id this issue concerns.
+      options:
+        - websocket-capture
+        - baileys-instrumentation
+        - frida-hooking
+        - mitm-tls
+        - static-smali-analysis
+        - memory-dump
+    validations:
+      required: true
+
+  - type: dropdown
+    id: maturity
+    attributes:
+      label: Maturity
+      description: How established is this technique in practice?
+      options:
+        - established
+        - emerging
+        - experimental
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-it-reveals
+    attributes:
+      label: What it reveals
+      description: >-
+        Which protocol layers does this technique expose? Use the layer ids:
+        signaling, keying, media, transport. Briefly explain what you can see.
+      placeholder: |
+        Targets: signaling, transport.
+        Reveals decrypted WABinary <call> stanzas and relay endpoint candidates.
+    validations:
+      required: true
+
+  - type: textarea
+    id: tooling
+    attributes:
+      label: Tooling
+      description: Tools, libraries, and setup used for this technique.
+      placeholder: |
+        - Custom Noise handshake decryptor
+        - WABinary token table / decoder
+    validations:
+      required: false
+
+  - type: textarea
+    id: strengths
+    attributes:
+      label: Strengths
+      description: What this technique is especially good at.
+    validations:
+      required: false
+
+  - type: textarea
+    id: limitations
+    attributes:
+      label: Limitations
+      description: Blind spots, fragility, or things this technique cannot show.
+    validations:
+      required: false
+
+  - type: input
+    id: guide
+    attributes:
+      label: Link to guide
+      description: Path or URL to a how-to guide for this technique (e.g. docs/techniques/websocket-capture.md), if one exists.
+      placeholder: docs/techniques/websocket-capture.md
+    validations:
+      required: false

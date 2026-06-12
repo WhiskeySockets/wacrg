@@ -1,0 +1,141 @@
+name: Stanza capture
+description: Submit an observed/captured WhatsApp call stanza for intake into the spec corpus.
+title: "[capture]: <stanza tag> <direction>"
+labels: ["type/stanza-capture", "status/needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing a capture! This form feeds the machine-readable
+        corpus via automation, so please keep the section structure intact.
+
+        **Synthetic and sanitized data ONLY.** Do not paste real phone numbers,
+        JIDs, push names, message contents, keys, tokens, or any other PII or
+        secrets. Replace identifiers with placeholders such as
+        `A@s.whatsapp.net` / `B@s.whatsapp.net` and redact key material. By
+        submitting, you confirm the data is sanitized.
+
+  - type: input
+    id: stanza-tag
+    attributes:
+      label: Stanza tag
+      description: The WABinary node tag this capture concerns (e.g. `call`, `offer`, `accept`, `terminate`).
+      placeholder: call
+    validations:
+      required: true
+
+  - type: dropdown
+    id: direction
+    attributes:
+      label: Direction
+      description: Direction of the stanza relative to the capturing client.
+      options:
+        - outgoing
+        - incoming
+        - bidirectional
+    validations:
+      required: true
+
+  - type: input
+    id: client-platform
+    attributes:
+      label: Client / platform
+      description: Which client/platform produced or received this (e.g. WhatsApp Android 2.2x, iOS, WhatsApp Web, Baileys).
+      placeholder: WhatsApp Android 2.24.x
+    validations:
+      required: false
+
+  - type: dropdown
+    id: capture-technique
+    attributes:
+      label: Capture technique
+      description: The reverse-engineering technique used to obtain this capture.
+      options:
+        - websocket-capture
+        - baileys-instrumentation
+        - frida-hooking
+        - mitm-tls
+        - static-smali-analysis
+        - memory-dump
+    validations:
+      required: true
+
+  - type: dropdown
+    id: confidence
+    attributes:
+      label: Confidence
+      description: How confident are you in this capture and its interpretation?
+      options:
+        - confirmed
+        - probable
+        - speculative
+        - unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: raw-stanza
+    attributes:
+      label: Raw stanza
+      description: The raw stanza as captured (XML-ish WABinary, hex, or base64). Sanitized only.
+      placeholder: |
+        <call from="A@s.whatsapp.net" to="B@s.whatsapp.net" id="...">
+          <offer call-id="..." call-creator="A@s.whatsapp.net">
+            <audio enc="opus" rate="16000"/>
+            <enc v="2" type="pkmsg">...redacted ciphertext...</enc>
+          </offer>
+        </call>
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: decoded-structure
+    attributes:
+      label: Decoded structure
+      description: A human-readable decode of the stanza — the tag/attrs/children tree and what each part means.
+      placeholder: |
+        call (from, to, id)
+          offer (call-id, call-creator)
+            audio (enc=opus, rate=16000)  -> audio media descriptor
+            enc (v=2, type=pkmsg)         -> Signal ciphertext carrying the media key
+    validations:
+      required: false
+
+  - type: textarea
+    id: observed-attributes
+    attributes:
+      label: Observed attributes
+      description: >-
+        List notable attributes and their observed (sanitized) values, one per
+        line, e.g. `name = value — note`.
+      placeholder: |
+        call-id = ABCD1234 — opaque per-call identifier
+        call-creator = A@s.whatsapp.net — JID of the initiating device
+        type = pkmsg — Signal session-establishing ciphertext
+    validations:
+      required: false
+
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Provenance
+      description: >-
+        How this was obtained and corroborated. Reference related issues/PRs
+        (e.g. `#12`), other techniques that agree/disagree, and any tooling.
+      placeholder: |
+        Technique: websocket-capture. Cross-checked against baileys-instrumentation in #12.
+        Tooling: custom Noise decryptor + WABinary decoder.
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes-open-questions
+    attributes:
+      label: Notes / open questions
+      description: Anything uncertain, surprising, or still to be resolved about this capture.
+      placeholder: |
+        - Unsure whether <encopt keygen> is always present.
+        - Did not see <net> in this capture; may be conditional.
+    validations:
+      required: false

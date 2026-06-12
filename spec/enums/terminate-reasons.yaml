@@ -1,0 +1,59 @@
+id: terminate-reasons
+title: Call terminate reasons
+status: draft
+summary: >
+  Candidate values for the reason attribute on a <terminate> (and, where it shares the
+  vocabulary, <reject>) call stanza. The reason explains why a call ended or was not
+  connected and drives both UI (missed call, declined, busy) and call-log/state on each
+  device. WhatsApp multi-device complicates this: when one of a user's linked devices
+  answers or declines, the OTHER devices receive a terminate with an "elsewhere" reason
+  so they stop ringing. The set below is a hedged working list; some values are inferred
+  from observed UI behaviour rather than confirmed wire strings, and the exact spelling
+  (hyphen vs underscore) is uncertain.
+values:
+  - value: timeout
+    confidence: probable
+    description: >
+      The call rang without being answered until the ring timeout elapsed; surfaces as a
+      missed call. The most commonly inferred terminate reason.
+  - value: busy
+    confidence: probable
+    description: >
+      The callee is already on another call (or otherwise busy) and cannot take this one;
+      surfaces to the caller as busy/engaged.
+  - value: declined
+    confidence: probable
+    description: >
+      The callee actively declined/rejected the call. May overlap with the reason carried
+      by a <reject> stanza rather than a server-originated <terminate>.
+  - value: accept_elsewhere
+    confidence: speculative
+    description: >
+      Sent to a user's other linked devices once one device has accepted the call, telling
+      them to stop ringing. The exact wire token is unconfirmed.
+  - value: reject_elsewhere
+    confidence: speculative
+    description: >
+      Sent to a user's other linked devices once one device has rejected/declined the call,
+      telling them to stop ringing. Wire token unconfirmed.
+  - value: connection_lost
+    confidence: speculative
+    description: >
+      The media/transport connection dropped (network loss, relay failure) and could not be
+      recovered, ending an in-progress call.
+  - value: retry
+    confidence: speculative
+    description: >
+      Signals that the call setup should be retried, e.g. after a transient routing or
+      session-establishment failure. Whether this is a true terminate reason or a separate
+      control value is unclear.
+  - value: cancelled
+    confidence: speculative
+    description: >
+      The caller hung up/cancelled before the callee answered (the outgoing-side counterpart
+      to timeout). Distinguishing cancelled from timeout on the wire is an open question.
+  - value: unknown
+    confidence: unknown
+    description: >
+      Placeholder for a terminate whose reason is absent or not yet decoded. Not necessarily
+      a literal wire value; used by tooling when the reason cannot be classified.

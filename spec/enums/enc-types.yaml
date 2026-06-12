@@ -1,0 +1,26 @@
+id: enc-types
+title: Encryption payload (enc) types
+status: draft
+summary: >
+  Values for the type attribute of an <enc> node, which carries Signal-protocol ciphertext.
+  In call signaling, the media/call key is delivered to each recipient device inside one or
+  more <enc> nodes using the EXISTING Signal session between the two devices (X3DH for the
+  initial handshake, Double Ratchet thereafter). The type distinguishes a message that also
+  bootstraps a new Signal session (pkmsg, a PreKeySignalMessage) from one sent over an
+  already-established session (msg, a normal SignalMessage). These two tokens are well
+  established in WhatsApp message encryption; their reuse for call key delivery is the
+  working assumption here, marked probable.
+values:
+  - value: pkmsg
+    confidence: probable
+    description: >
+      PreKeySignalMessage. Used when there is no established Signal session with the target
+      device yet: it bundles the X3DH prekey handshake material so the recipient can build
+      the session, then decrypts the wrapped call/media key. Expected the first time a device
+      pair exchanges a call (or after a session reset).
+  - value: msg
+    confidence: probable
+    description: >
+      Normal SignalMessage over an already-established Double Ratchet session. Used for call
+      key delivery once a session with the target device exists, which is the common case for
+      contacts that have previously messaged or called each other.

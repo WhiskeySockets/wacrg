@@ -1,0 +1,36 @@
+id: websocket-capture
+title: WebSocket / WABinary capture
+status: stable
+maturity: established
+summary: >
+  Capture and decode the binary WABinary nodes that flow over the Noise-encrypted
+  WhatsApp multi-device WebSocket. Because call signaling rides the same socket as
+  messaging, the entire <call> stanza family can be observed at the framing boundary
+  on an account you control — without touching the native media engine.
+targets:
+  - signaling
+  - keying
+strengths:
+  - Cheapest, lowest-risk way to see the <call> stanza family end to end.
+  - Observes the full node tree (tags, attributes, children) after Noise decryption.
+  - Reveals the structure of the <enc> keying envelope (type pkmsg/msg, version) even
+    though the ciphertext payload stays opaque.
+  - Reproducible from a plain library session; no rooted device or app patching needed.
+limitations:
+  - Completely blind to the media plane (SRTP, RTP, codecs) — that traffic never
+    crosses the WebSocket.
+  - Sees the <enc> envelope but not the plaintext call/media key inside it.
+  - Only as complete as your client's own session; multi-device fan-out beyond your
+    devices is inferred, not observed.
+tooling:
+  - Baileys (WhiskeySockets) for a scriptable multi-device session
+  - A WABinary decoder (Baileys exposes one)
+  - Frame logging at the Noise transport boundary
+maintainers:
+  - purpshell
+guide: docs/techniques/websocket-capture.md
+references:
+  - title: Baileys
+    url: https://github.com/WhiskeySockets/Baileys
+  - title: The Noise Protocol Framework
+    url: https://noiseprotocol.org/

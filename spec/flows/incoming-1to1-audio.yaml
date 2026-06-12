@@ -1,0 +1,80 @@
+id: incoming-1to1-audio
+title: Incoming 1:1 audio call
+status: draft
+spec_version: "0.1.0"
+summary: >
+  The happy-path sequence from the local device's perspective when it RECEIVES a 1:1 audio
+  call and answers. A remote caller's <call><offer> arrives via the server; the local device
+  acks it, optionally signals ringing with <preaccept>, decrypts the call/media key from the
+  <enc> node using its Signal session, and on the user answering sends <accept>. Transport and
+  relay-latency exchanges select the media path and SRTP audio flows over UDP. This mirrors the
+  outgoing flow with caller/callee roles swapped; ordering and acked hops are a working model.
+participants:
+  - id: caller
+    label: Remote caller device
+  - id: server
+    label: WhatsApp server
+  - id: callee
+    label: Callee (local answering device)
+steps:
+  - from: caller
+    to: server
+    stanza: call-offer
+    label: remote <call><offer> arrives at the server
+    confidence: probable
+    note: Origin of the incoming call; included for end-to-end context.
+  - from: server
+    to: callee
+    stanza: call-offer
+    label: routed <call><offer> delivered to this device
+    confidence: probable
+    note: >
+      Carries the <enc> wrapping the call key for this specific device; decrypted with the
+      existing Signal session (type pkmsg if no session yet, otherwise msg).
+  - from: callee
+    to: server
+    stanza: call-ack
+    label: <ack class="call"> acknowledging the offer
+    confidence: speculative
+    note: Acknowledges receipt to the server before the user has answered.
+  - from: callee
+    to: caller
+    stanza: call-preaccept
+    label: <preaccept> (this device is ringing)
+    confidence: speculative
+    note: Optional early ringing indication back toward the caller.
+  - from: callee
+    to: caller
+    stanza: call-relaylatency
+    label: <relaylatency> probe results for candidate relays
+    confidence: speculative
+    note: Local device measures relay latency to inform path selection.
+  - from: callee
+    to: caller
+    stanza: call-accept
+    label: <accept> — local user answers
+    confidence: probable
+    note: On answering, the call key (already decrypted) is used to derive SRTP keys.
+  - from: server
+    to: callee
+    stanza: call-terminate
+    label: <terminate reason="accept_elsewhere"> to this user's other devices
+    confidence: speculative
+    note: >
+      If multiple linked devices rang, the others receive an "elsewhere" terminate so they
+      stop ringing. Shown to illustrate multi-device behaviour.
+  - from: caller
+    to: callee
+    label: SRTP audio media flows over UDP relay (off the WebSocket)
+    confidence: probable
+    note: Media is not WABinary; marks where the call becomes active.
+  - from: callee
+    to: caller
+    stanza: call-terminate
+    label: <terminate> when either party hangs up
+    confidence: probable
+    note: Ends the call on normal hang-up.
+open_questions:
+  - Does the local device ack the offer before or after deciding to ring?
+  - Is the "accept_elsewhere" terminate sent by the server or peer device, and with exactly that reason token?
+  - Is <preaccept> sent peer-to-peer or routed through the server?

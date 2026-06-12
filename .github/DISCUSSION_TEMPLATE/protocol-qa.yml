@@ -1,0 +1,43 @@
+title: "[Q&A] <your question>"
+labels: ["help-wanted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ask questions about the WhatsApp call protocol, the spec corpus, or the
+        tooling. For concrete captures/findings, open an issue with the relevant
+        form instead.
+
+        **Synthetic and sanitized data only** — no real PII, JIDs, keys, or
+        tokens in examples.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part of the project is your question about?
+      options:
+        - signaling
+        - keying
+        - media
+        - transport
+        - tooling / corpus
+        - other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What would you like to know? Include any sanitized context that helps.
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-tried
+    attributes:
+      label: What you've checked already
+      description: Existing spec pages, issues, or discussions you've already looked at.
+    validations:
+      required: false

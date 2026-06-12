@@ -1,0 +1,24 @@
+title: "[Announcement] <short title>"
+labels: ["meta"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Post project announcements here: spec releases, milestones, process
+        changes, calls for captures, and coordination news.
+
+  - type: textarea
+    id: announcement
+    attributes:
+      label: Announcement
+      description: What's the news? Keep it clear and link to relevant issues, PRs, or releases.
+    validations:
+      required: true
+
+  - type: textarea
+    id: action-needed
+    attributes:
+      label: Action needed (if any)
+      description: Is there anything contributors should do or be aware of as a result?
+    validations:
+      required: false

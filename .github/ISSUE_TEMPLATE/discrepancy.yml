@@ -1,0 +1,60 @@
+name: Discrepancy report
+description: Report two techniques or sources that disagree about the call protocol.
+title: "[discrepancy]: <what conflicts>"
+labels: ["type/discrepancy", "status/needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Independent maintainers use different reverse-engineering techniques and
+        sometimes observe conflicting things. Use this form to surface a
+        conflict so it can be reconciled in the spec.
+
+        **Synthetic and sanitized data only** in evidence snippets.
+
+  - type: textarea
+    id: what-conflicts
+    attributes:
+      label: What conflicts
+      description: Describe the disagreement. Which attribute/child/behavior, and what is observed differently?
+      placeholder: Source A sees <enc type="pkmsg"> on every offer; Source B sees type="msg" for repeat calls to the same device.
+    validations:
+      required: true
+
+  - type: textarea
+    id: source-a
+    attributes:
+      label: Source A (technique + evidence)
+      description: >-
+        The first observation: which technique (from the fixed id set), and
+        sanitized evidence. Reference issues/PRs if relevant.
+      render: text
+      placeholder: |
+        Technique: websocket-capture (#12)
+        Evidence:
+        <enc v="2" type="pkmsg">...</enc>
+    validations:
+      required: true
+
+  - type: textarea
+    id: source-b
+    attributes:
+      label: Source B (technique + evidence)
+      description: >-
+        The conflicting observation: which technique (from the fixed id set),
+        and sanitized evidence. Reference issues/PRs if relevant.
+      render: text
+      placeholder: |
+        Technique: baileys-instrumentation (#15)
+        Evidence:
+        <enc v="2" type="msg">...</enc>
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-resolution
+    attributes:
+      label: Proposed resolution
+      description: How might this be reconciled? (e.g. both true under different conditions, one is stale, needs a tie-breaking capture.)
+    validations:
+      required: false

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wacrg.whiskeysockets.io/schema/glossary.schema.json",
+  "title": "Glossary",
+  "description": "Shared terms used throughout the wacrg specification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["terms"],
+  "properties": {
+    "terms": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["term", "definition"],
+        "properties": {
+          "term": {
+            "type": "string",
+            "minLength": 1
+          },
+          "definition": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

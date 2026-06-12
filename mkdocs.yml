@@ -1,0 +1,52 @@
+site_name: WhatsApp Calls Research Group
+site_description: >-
+  A collaborative, GitHub-native, machine-readable specification of the
+  WhatsApp 1:1 call protocol — signaling, keying, media, and transport.
+repo_url: https://github.com/WhiskeySockets/wacrg
+repo_name: WhiskeySockets/wacrg
+docs_dir: docs
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - content.code.copy
+    - toc.follow
+  palette:
+    - scheme: default
+      primary: green
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: green
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+plugins:
+  - search
+  - awesome-pages
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        # Render ```mermaid fenced blocks as diagrams (mkdocs-material loads
+        # mermaid.js automatically when this fence is registered).
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format

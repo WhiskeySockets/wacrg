@@ -1,0 +1,123 @@
+id: call-preaccept
+tag: call
+display_name: Call Pre-Accept
+category: signaling
+direction: [outgoing, incoming]
+status: draft
+spec_version: "0.1.0"
+summary: >
+  An early-acknowledgement stanza emitted by a callee device after it has received
+  and decrypted the offer but before the user has answered. The <call> node wraps a
+  <preaccept> child echoing the call-id and call-creator. It signals "your offer
+  reached me and I am now ringing", letting the caller show an accurate ringing state
+  and optionally begin transport warm-up. It is not a commitment to accept the call.
+  From the ringing device this is outgoing; from the caller it is incoming. Details
+  below are a working model, not yet confirmed by a real capture.
+attributes:
+  - name: from
+    type: jid
+    required: true
+    confidence: probable
+    description: JID of the ringing callee device emitting the pre-accept.
+    observed_values: ["B.0:7@s.whatsapp.net"]
+    provenance:
+      techniques: [websocket-capture]
+      sources: []
+  - name: to
+    type: jid
+    required: true
+    confidence: probable
+    description: JID of the caller the pre-accept is routed to.
+    observed_values: ["A@s.whatsapp.net"]
+    provenance:
+      techniques: [websocket-capture]
+      sources: []
+  - name: id
+    type: string
+    required: true
+    confidence: probable
+    description: Stanza id used to correlate the server <ack> for this pre-accept.
+    observed_values: ["3C4D5E6F70"]
+    provenance:
+      techniques: [websocket-capture]
+      sources: []
+children:
+  - tag: preaccept
+    occurrence: "1"
+    confidence: probable
+    description: >
+      Container marking the call as received-and-ringing. Echoes the session
+      identifiers. It may optionally carry early transport candidates so the relay
+      handshake can begin while the phone rings, but it carries no acceptance.
+    attributes:
+      - name: call-id
+        type: string
+        required: true
+        confidence: probable
+        description: The logical call session id, copied verbatim from the offer.
+        observed_values: ["CALLID-0001-synthetic"]
+        provenance:
+          techniques: [websocket-capture, baileys-instrumentation]
+          sources: []
+      - name: call-creator
+        type: jid
+        required: true
+        confidence: probable
+        description: JID of the call creator (the caller), copied from the offer.
+        observed_values: ["A@s.whatsapp.net"]
+        provenance:
+          techniques: [websocket-capture]
+          sources: []
+    children:
+      - tag: destination
+        occurrence: "0..1"
+        confidence: speculative
+        description: >
+          Optional early transport candidates, allowing relay warm-up before the user
+          answers. Whether pre-accept carries these or they wait for <accept> is
+          unconfirmed.
+        children:
+          - tag: te
+            occurrence: "0..n"
+            confidence: speculative
+            description: A transport endpoint candidate advertised early by the ringing device.
+            attributes:
+              - name: ip
+                type: string
+                required: false
+                confidence: speculative
+                description: Candidate IP address (synthetic example only).
+                observed_values: ["203.0.113.20"]
+                provenance:
+                  techniques: [websocket-capture]
+                  sources: []
+              - name: port
+                type: int
+                required: false
+                confidence: speculative
+                description: Candidate UDP port for media.
+                observed_values: [3478]
+                provenance:
+                  techniques: [websocket-capture]
+                  sources: []
+examples:
+  - title: Illustrative pre-accept / ringing (synthetic)
+    note: >
+      Synthetic and sanitized — not a real capture. Whether <preaccept> carries early
+      <destination> candidates is an open question; a bare form is also plausible.
+    format: xml
+    body: |
+      <call from="B.0:7@s.whatsapp.net" to="A@s.whatsapp.net" id="3C4D5E6F70">
+        <preaccept call-id="CALLID-0001-synthetic" call-creator="A@s.whatsapp.net"/>
+      </call>
+notes: >
+  Pre-accept is the protocol's analogue of an SIP 180 Ringing: it confirms delivery
+  and that the device is alerting the user, distinct from the actual <accept>. Not
+  every device or call necessarily emits it, so the caller must not block on it.
+open_questions:
+  - Is <preaccept> always emitted, or only under certain client versions / network conditions?
+  - Does pre-accept carry early transport candidates, or is transport deferred to <accept>?
+  - In multi-device, do all ringing devices send pre-accept, and how does the caller aggregate them?
+references:
+  - title: Baileys (WhatsApp Web multi-device library)
+    url: https://github.com/WhiskeySockets/Baileys

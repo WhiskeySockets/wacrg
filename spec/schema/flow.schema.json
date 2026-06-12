@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wacrg.whiskeysockets.io/schema/flow.schema.json",
+  "title": "Call signaling flow",
+  "description": "An ordered sequence of stanza exchanges between participants describing a call scenario (e.g. an outgoing 1:1 audio call). Rendered as a mermaid sequence diagram.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "status",
+    "spec_version",
+    "summary",
+    "participants",
+    "steps"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable slug identifying this flow; matches the file name without extension.",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "$ref": "#/$defs/status"
+    },
+    "spec_version": {
+      "$ref": "#/$defs/spec_version"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "participants": {
+      "type": "array",
+      "description": "Ordered list of participants; ids are referenced by steps.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/participant"
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/step"
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "status": {
+      "type": "string",
+      "enum": ["draft", "review", "stable", "deprecated"]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["confirmed", "probable", "speculative", "unknown"]
+    },
+    "spec_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "participant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to", "label", "confidence"],
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "Participant id the message originates from.",
+          "minLength": 1
+        },
+        "to": {
+          "type": "string",
+          "description": "Participant id the message is delivered to.",
+          "minLength": 1
+        },
+        "stanza": {
+          "type": "string",
+          "description": "Optional id of a stanza defined under spec/stanzas. Checked for referential integrity by the validator.",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

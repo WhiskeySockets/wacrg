@@ -1,0 +1,29 @@
+{
+  "name": "@whiskeysockets/wacrg",
+  "private": true,
+  "version": "0.1.0",
+  "description": "WhatsApp Calls Research Group — machine-readable specification of the WhatsApp 1:1 call protocol with provenance tracking.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "validate": "tsx scripts/validate.ts",
+    "generate": "tsx scripts/generate-docs.ts",
+    "coverage": "tsx scripts/coverage.ts",
+    "build": "npm run validate && npm run generate && npm run coverage",
+    "check": "npm run build && git diff --exit-code -- docs/spec COVERAGE.md docs/coverage-badge.json",
+    "ingest": "tsx scripts/ingest-issue.ts",
+    "test": "npm run validate"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "fast-glob": "^3.3.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "yaml": "^2.6.1"
+  }
+}

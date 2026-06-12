@@ -1,0 +1,47 @@
+# Markdown link checker.
+# Verifies that links inside Markdown files resolve. Runs on PRs that touch any
+# Markdown file and on a weekly schedule to catch external link rot. The not-yet-
+# live GitHub Pages site and the shields.io coverage badge endpoint are excluded
+# because they only exist after the first Pages deploy / push.
+
+name: Link check
+
+on:
+  pull_request:
+    paths:
+      - "**/*.md"
+  schedule:
+    # Mondays at 06:00 UTC.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+# Only needs to read the repository contents.
+permissions:
+  contents: read
+
+concurrency:
+  group: link-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lychee:
+    name: Check Markdown links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Run lychee link checker
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # Check all Markdown; fail the job on any broken link. Exclude the
+          # Pages site and the shields badge endpoint that are not live yet.
+          args: >-
+            --no-progress
+            --exclude "whiskeysockets\.github\.io"
+            --exclude "img\.shields\.io"
+            --exclude "raw\.githubusercontent\.com/WhiskeySockets/wacrg"
+            "**/*.md"
+          fail: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

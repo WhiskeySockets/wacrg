@@ -1,0 +1,34 @@
+id: frida-hooking
+title: Frida dynamic hooking
+status: review
+maturity: emerging
+summary: >
+  Attach Frida to the WhatsApp app on a device you own and hook native functions
+  around call setup and cryptography to observe values the WebSocket never carries —
+  notably derived media keys and the SRTP/RTP path. Highest effort, highest reach
+  into the keying and media planes.
+targets:
+  - keying
+  - media
+  - transport
+strengths:
+  - Can observe runtime values, including derived keys and SRTP parameters, at the
+    moment they are computed.
+  - Reaches the media engine and transport selection that signaling-only techniques
+    cannot.
+  - Lets you confirm (not just infer) how a key in an <enc> node becomes an SRTP key.
+limitations:
+  - Requires a rooted/owned test device and ongoing effort to track app updates.
+  - Function offsets and signatures shift between builds; hooks are brittle.
+  - "Sensitive: only ever run against your own accounts and devices, never third parties."
+tooling:
+  - Frida (frida.re)
+  - A rooted test device or emulator you control
+  - Symbol/offset discovery aids (e.g. a disassembler) to locate hook points
+maintainers: []
+guide: docs/techniques/frida-hooking.md
+references:
+  - title: Frida
+    url: https://frida.re/
+  - title: SRTP (RFC 3711)
+    url: https://www.rfc-editor.org/rfc/rfc3711

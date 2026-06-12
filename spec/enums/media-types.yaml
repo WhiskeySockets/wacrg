@@ -1,0 +1,23 @@
+id: media-types
+title: Call media types
+status: draft
+summary: >
+  Media track types that can appear in a 1:1 call, used by media descriptors inside the
+  offer (<audio>, <video>) and by mute/toggle state updates. WhatsApp 1:1 calls always
+  carry audio; video is optional and may be enabled at offer time or escalated to during
+  an audio call. Codec details are recorded here as notes/values where known: audio is
+  understood to use Opus, and video an H.264/VP8-family codec, though exact codec
+  negotiation (in <audio enc rate>/<video> attributes) is only partially reconstructed.
+values:
+  - value: audio
+    confidence: probable
+    description: >
+      The mandatory audio track, present in every 1:1 call. Believed to use the Opus codec
+      carried in SRTP; the offer's <audio> descriptor likely advertises sample rate (rate)
+      and an encoding/payload identifier (enc).
+  - value: video
+    confidence: probable
+    description: >
+      Optional video track. Present from the start for a video call or added mid-call via a
+      toggle/upgrade. Codec is believed to be in the H.264/VP8 family; negotiation details
+      in the <video> descriptor are not fully decoded.

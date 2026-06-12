@@ -1,0 +1,14 @@
+<!-- GENERATED FILE — do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
+
+# Call flows
+
+End-to-end signaling sequences assembled from individual stanzas. Generated from `spec/flows/`.
+
+| Flow | Status | Summary |
+| --- | --- | --- |
+| [Missed 1:1 call (no answer, ring timeout)](./call-missed-timeout.md) | draft | The sequence when a 1:1 call rings unanswered until the ring timeout elapses, producing a missed call. The caller's <call><offer> is routed to the callee, which rings (optional <preaccept>) but the user never answers. When the timeout is reached, a <terminate> with reason timeout ends the call: the caller's side logs an outgoing missed/unanswered call and the callee's side logs an incoming missed call. No <accept> occurs and no media is set up. Whether the timeout fires caller-side, callee-side, or server-side, and which party emits the terminate, is uncertain and noted in open questions. |
+| [Callee rejects a 1:1 call](./call-rejected.md) | draft | The sequence when the callee actively declines an incoming 1:1 call instead of answering. The caller's <call><offer> is routed to the callee, which (without ever accepting) sends a <reject> carrying the call-id/call-creator and a reason (e.g. declined). The server acks and routes the rejection back to the caller, whose UI shows the call as declined, and propagates a "reject_elsewhere" terminate to the callee's other linked devices so they stop ringing. No media is ever established. Step ordering and reason tokens are a working model and hedged. |
+| [Incoming 1:1 audio call](./incoming-1to1-audio.md) | draft | The happy-path sequence from the local device's perspective when it RECEIVES a 1:1 audio call and answers. A remote caller's <call><offer> arrives via the server; the local device acks it, optionally signals ringing with <preaccept>, decrypts the call/media key from the <enc> node using its Signal session, and on the user answering sends <accept>. Transport and relay-latency exchanges select the media path and SRTP audio flows over UDP. This mirrors the outgoing flow with caller/callee roles swapped; ordering and acked hops are a working model. |
+| [Outgoing 1:1 audio call](./outgoing-1to1-audio.md) | draft | The happy-path sequence for placing a 1:1 audio call from the local (caller) device to a remote contact that answers. The caller sends a server-routed <call><offer> carrying media descriptors, transport candidates, and one or more <enc> nodes wrapping the call/media key for each callee device. The server acks the offer and routes it to the callee's device(s), which may ring (<preaccept>) and then <accept>. Once accepted, both sides derive SRTP keys from the Signal-delivered call key and media flows over UDP relays, with relay-latency and transport updates tuning the path. Step ordering and which hops are acked are a working model; confidence is hedged per step. |
+
+[Back to spec overview](../index.md)

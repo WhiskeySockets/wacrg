@@ -1,0 +1,35 @@
+id: baileys-instrumentation
+title: Baileys instrumentation
+status: stable
+maturity: established
+summary: >
+  Add logging and introspection hooks inside the Baileys client to record parsed
+  call nodes, session state, and the shape of the Signal-protocol material used to
+  key a call. Builds on websocket-capture by giving structured, already-decoded
+  access to nodes and to the client's view of the keying handshake.
+targets:
+  - signaling
+  - keying
+strengths:
+  - Works with already-parsed node objects rather than raw bytes.
+  - Can correlate a <call> offer with the Signal session state that produced its
+    <enc> nodes.
+  - "Easy to script: emit findings straight into the capture intake format."
+  - Deterministic and repeatable against your own test accounts.
+limitations:
+  - Constrained to what the library implements and exposes; gaps in Baileys are gaps
+    here too.
+  - Still does not reach the media engine or SRTP key derivation.
+  - Risk of drift if WhatsApp changes node shapes faster than the library tracks them.
+tooling:
+  - Baileys (WhiskeySockets)
+  - Custom event/middleware hooks around node send/receive
+  - The capture Issue Form to upstream findings
+maintainers:
+  - purpshell
+guide: docs/techniques/baileys-instrumentation.md
+references:
+  - title: Baileys
+    url: https://github.com/WhiskeySockets/Baileys
+  - title: Signal Protocol documentation
+    url: https://signal.org/docs/

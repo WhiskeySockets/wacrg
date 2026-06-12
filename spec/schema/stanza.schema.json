@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wacrg.whiskeysockets.io/schema/stanza.schema.json",
+  "title": "WABinary stanza definition",
+  "description": "Machine-readable description of a single WhatsApp call signaling stanza (a WABinary node). Source of truth for generated documentation and coverage statistics.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "tag",
+    "display_name",
+    "category",
+    "direction",
+    "status",
+    "spec_version",
+    "summary"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable slug identifying this stanza; matches the file name without extension.",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "tag": {
+      "type": "string",
+      "description": "WABinary node tag for the root of this stanza (e.g. call).",
+      "minLength": 1
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Human-readable name shown in generated docs.",
+      "minLength": 1
+    },
+    "category": {
+      "$ref": "#/$defs/category"
+    },
+    "direction": {
+      "type": "array",
+      "description": "Directions in which this stanza is observed, from the perspective of the local device.",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/direction"
+      }
+    },
+    "status": {
+      "$ref": "#/$defs/status"
+    },
+    "spec_version": {
+      "$ref": "#/$defs/spec_version"
+    },
+    "summary": {
+      "type": "string",
+      "description": "One-paragraph plain-language description of the stanza.",
+      "minLength": 1
+    },
+    "attributes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/attribute"
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/child"
+      }
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/example"
+      }
+    },
+    "notes": {
+      "type": "string"
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/reference"
+      }
+    }
+  },
+  "$defs": {
+    "category": {
+      "type": "string",
+      "description": "Protocol layer this artifact belongs to.",
+      "enum": ["signaling", "keying", "media", "transport"]
+    },
+    "direction": {
+      "type": "string",
+      "enum": ["outgoing", "incoming", "bidirectional"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "review", "stable", "deprecated"]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["confirmed", "probable", "speculative", "unknown"]
+    },
+    "spec_version": {
+      "type": "string",
+      "description": "Spec version this artifact targets.",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "technique": {
+      "type": "string",
+      "description": "Identifier of a reverse-engineering technique. Must match a technique id from the fixed set.",
+      "enum": [
+        "websocket-capture",
+        "baileys-instrumentation",
+        "frida-hooking",
+        "mitm-tls",
+        "static-smali-analysis",
+        "memory-dump"
+      ]
+    },
+    "attr_type": {
+      "type": "string",
+      "description": "Declared data type for an attribute value. Either a base type or a reference to an enum of the form enum:<enum-id>.",
+      "anyOf": [
+        {
+          "enum": [
+            "string",
+            "int",
+            "hex",
+            "bytes",
+            "bool",
+            "jid",
+            "timestamp"
+          ]
+        },
+        {
+          "type": "string",
+          "pattern": "^enum:[a-z0-9][a-z0-9-]*$"
+        }
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "description": "Where this fact came from: the technique(s) that revealed it and any issue/PR/source references.",
+      "additionalProperties": false,
+      "required": ["techniques"],
+      "properties": {
+        "techniques": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/technique"
+          }
+        },
+        "sources": {
+          "type": "array",
+          "description": "Issue/PR references (e.g. #12) or short free-text notes.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "attribute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type", "confidence", "description"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "$ref": "#/$defs/attr_type"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observed_values": {
+          "type": "array",
+          "description": "Synthetic or sanitized example values only. Never real captured values.",
+          "items": {
+            "type": ["string", "number", "boolean"]
+          }
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      }
+    },
+    "child": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tag", "occurrence", "confidence", "description"],
+      "properties": {
+        "tag": {
+          "type": "string",
+          "minLength": 1
+        },
+        "occurrence": {
+          "type": "string",
+          "description": "Cardinality of this child within its parent.",
+          "enum": ["1", "0..1", "0..n", "1..n"]
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/attribute"
+          }
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/child"
+          }
+        }
+      }
+    },
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "format", "body"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "note": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string",
+          "enum": ["xml", "hex", "json"]
+        },
+        "body": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

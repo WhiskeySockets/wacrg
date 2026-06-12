@@ -1,0 +1,56 @@
+# CI: validate the YAML corpus and ensure generated docs/coverage are up to date.
+# Runs the schema + referential-integrity validator, then regenerates docs and
+# coverage and fails if anything is stale (i.e. the committed generated files
+# do not match what the generator/coverage scripts would produce right now).
+
+name: CI
+
+on:
+  pull_request:
+    paths:
+      - "spec/**"
+      - "corpus/**"
+      - "scripts/**"
+      - "package.json"
+  push:
+    branches: [main]
+    paths:
+      - "spec/**"
+      - "corpus/**"
+      - "scripts/**"
+      - "package.json"
+
+# Least-privilege: CI only needs to read the repository.
+permissions:
+  contents: read
+
+# Cancel superseded runs for the same ref to save CI minutes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-and-check:
+    name: Validate corpus and check generated output
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # No lockfile is committed yet, so use a plain install.
+      - name: Install dependencies
+        run: npm i
+
+      - name: Validate corpus (schemas + referential integrity)
+        run: npm run validate
+
+      # `check` runs the full build (validate + generate + coverage) and then
+      # `git diff --exit-code` over the generated outputs; it fails if the
+      # committed docs/coverage are out of date.
+      - name: Check generated docs and coverage are current
+        run: npm run check

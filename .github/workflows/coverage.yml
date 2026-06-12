@@ -1,0 +1,47 @@
+# Refresh generated spec docs + coverage on every push to main.
+# Re-runs the full build (validate + generate + coverage) and commits any
+# resulting changes to the generated outputs so the repository always reflects
+# the current corpus. The commit message carries [skip ci] to avoid loops.
+
+name: Coverage
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "spec/**"
+
+# Needs write access to push the auto-commit back to main.
+permissions:
+  contents: write
+
+# Serialize runs so concurrent pushes do not race on the auto-commit.
+concurrency:
+  group: coverage-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    name: Refresh generated spec + coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm i
+
+      # Full build regenerates docs/spec, COVERAGE.md and the coverage badge.
+      - name: Build (validate + generate + coverage)
+        run: npm run build
+
+      - name: Commit regenerated outputs
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: refresh generated spec + coverage [skip ci]"
+          file_pattern: "COVERAGE.md docs/spec docs/coverage-badge.json"

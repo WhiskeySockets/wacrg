@@ -1,0 +1,134 @@
+id: call-relaylatency
+tag: call
+display_name: Relay Latency Probe / Report
+category: transport
+direction: [outgoing, incoming]
+status: draft
+spec_version: "0.1.0"
+summary: >
+  A call-routed stanza used to probe and report round-trip latency to candidate
+  WhatsApp voip relay servers. Before (and sometimes during) a call, a device measures
+  how fast each relay candidate responds and either reports those measurements to the
+  peer/server or requests fresh probes, so that the lowest-latency relay can be chosen
+  for the SRTP media path. The stanza is believed to carry a <relaylatency> node listing
+  per-relay latency samples, each keyed by a relay identifier or address. Exact framing,
+  units, and whether the server or the peer consumes the report are still being
+  reconstructed; confidence is low across the board.
+attributes:
+  - name: from
+    type: jid
+    required: true
+    confidence: probable
+    description: Sender device JID of the latency report.
+    provenance:
+      techniques: [websocket-capture]
+      sources: []
+  - name: to
+    type: jid
+    required: false
+    confidence: speculative
+    description: >
+      Destination JID. May be absent when the report is consumed by the server itself
+      (for relay selection) rather than routed to the peer.
+    provenance:
+      techniques: [websocket-capture]
+      sources: []
+  - name: id
+    type: string
+    required: true
+    confidence: probable
+    description: Stanza id used to correlate the report with its server <ack>.
+    provenance:
+      techniques: [websocket-capture]
+      sources: []
+children:
+  - tag: relaylatency
+    occurrence: "1"
+    confidence: speculative
+    description: >
+      Wrapper carrying one or more relay latency samples. Hypothesised to be emitted
+      periodically while candidates are being evaluated, and again if the active relay
+      degrades mid-call.
+    attributes:
+      - name: call-id
+        type: string
+        required: false
+        confidence: speculative
+        description: >
+          Call this latency report is associated with, when measured in the context of
+          an active or ringing call. May be omitted for pre-call relay warm-up probes.
+        provenance:
+          techniques: [websocket-capture]
+          sources: []
+    children:
+      - tag: relay
+        occurrence: "1..n"
+        confidence: speculative
+        description: >
+          A single relay's latency sample. The element name is uncertain; <relay>,
+          <te>, or a bare latency entry are all plausible.
+        attributes:
+          - name: ip
+            type: string
+            required: false
+            confidence: speculative
+            description: Address of the probed relay candidate.
+            observed_values: ["203.0.113.10"]
+            provenance:
+              techniques: [websocket-capture]
+              sources: []
+          - name: token
+            type: string
+            required: false
+            confidence: speculative
+            description: >
+              Opaque server-assigned relay token/identifier the candidate was advertised
+              under, used instead of (or alongside) a raw address.
+            provenance:
+              techniques: [websocket-capture]
+              sources: []
+          - name: latency
+            type: int
+            required: true
+            confidence: speculative
+            description: >
+              Measured round-trip latency to this relay. Units assumed to be milliseconds
+              but not confirmed; could be a raw probe RTT in another unit.
+            observed_values: ["28", "64", "150"]
+            provenance:
+              techniques: [websocket-capture]
+              sources: []
+          - name: jitter
+            type: int
+            required: false
+            confidence: speculative
+            description: Optional jitter estimate accompanying the latency sample.
+            provenance:
+              techniques: [websocket-capture]
+              sources: []
+examples:
+  - title: Illustrative relay latency report for two candidates (synthetic)
+    note: Synthetic and sanitized — not a real capture. Field names are a working hypothesis.
+    format: xml
+    body: |
+      <call from="A.1@s.whatsapp.net" id="RL-0007">
+        <relaylatency call-id="9f86d081">
+          <relay ip="203.0.113.10" latency="28" jitter="3"/>
+          <relay ip="198.51.100.5" latency="64" jitter="11"/>
+        </relaylatency>
+      </call>
+notes: >
+  Latency probing is a transport-layer concern that feeds relay/candidate selection
+  carried by <call-transport>. The two are closely related: relaylatency supplies the
+  measurements, the transport update applies the resulting choice. Whether probing uses
+  STUN-style binding requests over UDP (out of band of the WebSocket) and only the
+  summary is reported here is unconfirmed.
+open_questions:
+  - Is the round-trip measured out-of-band over UDP, with only a summary reported in this stanza?
+  - What units does the latency attribute use (milliseconds assumed)?
+  - Does the server or the peer device consume the report for relay selection?
+  - Are relays identified by raw address, by an opaque server token, or both?
+  - How often is the report emitted — once pre-call, periodically, or only on degradation?
+references:
+  - title: RFC 8489 — Session Traversal Utilities for NAT (STUN)
+    url: https://www.rfc-editor.org/rfc/rfc8489

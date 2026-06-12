@@ -1,0 +1,138 @@
+id: call-mute
+tag: call
+display_name: Mute / Video Toggle State Update
+category: media
+direction: [outgoing, incoming]
+status: draft
+spec_version: "0.1.0"
+summary: >
+  A call-routed stanza that communicates in-call media state changes between peers:
+  muting/unmuting audio, enabling/disabling the outgoing video track, and (for calls
+  that escalate from audio to video) requesting a media upgrade. It is a lightweight
+  signaling notification so the remote UI can reflect that the other party has muted or
+  turned their camera on/off; the actual media simply stops/starts in the SRTP stream.
+  We model it as a <call> carrying a state-change child (e.g. <mute>, <unmute>, or a
+  generic <state>) with attributes naming the affected media type and the new value.
+  The precise tag and attribute vocabulary is unconfirmed and hedged accordingly.
+attributes:
+  - name: from
+    type: jid
+    required: true
+    confidence: probable
+    description: Sender device JID announcing the media state change.
+    provenance:
+      techniques: [websocket-capture]
+      sources: []
+  - name: to
+    type: jid
+    required: true
+    confidence: probable
+    description: Destination peer device JID.
+    provenance:
+      techniques: [websocket-capture]
+      sources: []
+  - name: id
+    type: string
+    required: true
+    confidence: probable
+    description: Stanza id used to correlate with the server <ack>.
+    provenance:
+      techniques: [websocket-capture]
+      sources: []
+children:
+  - tag: mute
+    occurrence: "0..1"
+    confidence: speculative
+    description: >
+      Indicates the sender muted (or, paired with a value attribute, unmuted) a media
+      track. We are unsure whether mute/unmute are distinct tags or a single tag with a
+      boolean attribute; both are represented here as hypotheses.
+    attributes:
+      - name: call-id
+        type: string
+        required: true
+        confidence: probable
+        description: Identifier of the call whose media state changed.
+        provenance:
+          techniques: [websocket-capture]
+          sources: []
+      - name: call-creator
+        type: jid
+        required: false
+        confidence: probable
+        description: JID of the call-creating device, used with call-id to key the call.
+        provenance:
+          techniques: [websocket-capture]
+          sources: []
+      - name: media
+        type: enum:media-types
+        required: false
+        confidence: speculative
+        description: >
+          Which media track the state change applies to (audio or video). Defaults to
+          audio if absent in the audio-only case.
+        provenance:
+          techniques: [websocket-capture]
+          sources: []
+      - name: value
+        type: bool
+        required: false
+        confidence: speculative
+        description: >
+          New mute state (true = muted). Present only if a single tag encodes both
+          mute and unmute via a boolean rather than using separate tags.
+        provenance:
+          techniques: [websocket-capture]
+          sources: []
+  - tag: video
+    occurrence: "0..1"
+    confidence: speculative
+    description: >
+      Toggles the outgoing video track on/off, or requests an audio-to-video upgrade.
+      Likely shares the call-id/call-creator keying of other in-call updates.
+    attributes:
+      - name: call-id
+        type: string
+        required: true
+        confidence: probable
+        description: Identifier of the call whose video state changed.
+        provenance:
+          techniques: [websocket-capture]
+          sources: []
+      - name: state
+        type: string
+        required: false
+        confidence: speculative
+        description: >
+          New video state. Observed/assumed values include on, off, and possibly an
+          upgrade-request marker; exact vocabulary unconfirmed.
+        observed_values: ["on", "off"]
+        provenance:
+          techniques: [websocket-capture]
+          sources: []
+examples:
+  - title: Illustrative audio mute notification (synthetic)
+    note: Synthetic and sanitized — not a real capture. Tag/attribute names are hypothetical.
+    format: xml
+    body: |
+      <call from="A.1@s.whatsapp.net" to="B.2@s.whatsapp.net" id="MU-0001">
+        <mute call-id="9f86d081" call-creator="A@s.whatsapp.net" media="audio" value="true"/>
+      </call>
+  - title: Illustrative video-toggle (camera on) notification (synthetic)
+    note: Synthetic and sanitized — not a real capture.
+    format: xml
+    body: |
+      <call from="A.1@s.whatsapp.net" to="B.2@s.whatsapp.net" id="MU-0002">
+        <video call-id="9f86d081" state="on"/>
+      </call>
+notes: >
+  Categorised as media because it concerns the audio/video tracks, though it is delivered
+  over the signaling WebSocket like all other call stanzas. Mute is best understood as a
+  courtesy notification: even without it, a peer simply stops receiving audio packets, but
+  the explicit signal lets the UI show a mute indicator promptly.
+open_questions:
+  - Are mute and unmute separate tags, or one tag with a boolean value attribute?
+  - Does video-toggle reuse the <video> media descriptor tag from the offer, or a distinct tag?
+  - Is an audio-to-video escalation signalled here or via a fresh <offer> with a <video> descriptor?
+  - Does a mute update require a server <ack>, or is it best-effort fire-and-forget?
+references: []

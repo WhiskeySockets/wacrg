@@ -1,0 +1,89 @@
+name: Protocol finding
+description: Report a behavioral finding about how WhatsApp 1:1 calls work.
+title: "[finding]: <short description>"
+labels: ["type/finding", "status/needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to document a behavioral finding (how the protocol acts),
+        as opposed to a single raw stanza capture.
+
+        **Synthetic and sanitized data only** — no real PII, JIDs, keys, or
+        tokens in evidence snippets.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which protocol layer does this finding concern?
+      options:
+        - signaling
+        - keying
+        - media
+        - transport
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One-paragraph description of the finding in plain language.
+      placeholder: When the callee is busy, the server emits a <terminate reason="busy"> within ~Xms instead of routing the offer.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Sanitized observations supporting the finding (sequences, timings, stanza snippets, decoded fields).
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: techniques
+    attributes:
+      label: Technique(s)
+      description: >-
+        Which reverse-engineering technique(s) produced this? Use only the fixed
+        ids: websocket-capture, baileys-instrumentation, frida-hooking, mitm-tls,
+        static-smali-analysis, memory-dump.
+      placeholder: |
+        websocket-capture, baileys-instrumentation
+    validations:
+      required: true
+
+  - type: dropdown
+    id: confidence
+    attributes:
+      label: Confidence
+      description: How confident are you in this finding?
+      options:
+        - confirmed
+        - probable
+        - speculative
+        - unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: affects
+    attributes:
+      label: Affects which stanzas/flows
+      description: List the stanza ids and/or flow ids this finding touches (e.g. `call-offer`, `outgoing-1to1-audio`), if known.
+      placeholder: |
+        stanzas: call-terminate
+        flows: outgoing-1to1-audio
+    validations:
+      required: false
+
+  - type: textarea
+    id: open-questions
+    attributes:
+      label: Open questions
+      description: What is still uncertain or needs corroboration?
+    validations:
+      required: false

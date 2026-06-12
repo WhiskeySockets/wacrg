@@ -1,0 +1,24 @@
+# Funding configuration for the WhatsApp Calls Research Group (wacrg).
+#
+# This is a research/documentation project. The entries below are PLACEHOLDERS
+# and are commented out by default. Uncomment and fill in real values only if
+# the group decides to accept funding. Keep this file valid YAML.
+#
+# See: https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+
+# GitHub Sponsors: one username or up to four, as a list.
+# github: [WhiskeySockets]
+
+# Other platforms (uncomment and set if used):
+# patreon: # a single Patreon username
+# open_collective: # a single Open Collective username
+# ko_fi: # a single Ko-fi username
+# tidelift: # a single Tidelift platform-name/package-name
+# community_bridge: # a single Community Bridge project name
+# liberapay: # a single Liberapay username
+# issuehunt: # a single IssueHunt username
+# lfx_crowdfunding: # a single LFX Crowdfunding project name
+# polar: # a single Polar username
+# buy_me_a_coffee: # a single Buy Me a Coffee username
+# thanks_dev: # a single thanks.dev username
+# custom: # up to four custom URLs, e.g. ["https://example.com/donate"]

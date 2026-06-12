@@ -23,7 +23,7 @@
     "ajv-formats": "^3.0.1",
     "fast-glob": "^3.3.2",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2",
+    "typescript": "^6.0.3",
     "yaml": "^2.6.1"
   }
 }

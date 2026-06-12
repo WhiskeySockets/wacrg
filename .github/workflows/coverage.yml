@@ -41,7 +41,7 @@ jobs:
         run: npm run build
 
       - name: Commit regenerated outputs
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: refresh generated spec + coverage [skip ci]"
           file_pattern: "COVERAGE.md docs/spec docs/coverage-badge.json"

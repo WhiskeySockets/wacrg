@@ -134,16 +134,19 @@ live media capture that observes the same frames — per the
 These are the gaps between "we can name the component" and "we can re-implement
 it bit-exactly." They are `speculative` until recovered.
 
-1. **MLow bitstream layout.** Frame header/TOC, how subframes are packed, and the
-   entropy coder. The decoder dispatches on a per-packet type byte (a 16-way
-   switch in the decode entry); the meaning of each type is not yet mapped.
+1. **MLow bitstream layout.** Frame header/TOC and how subframes are packed.
+   Partly recovered: the codec is an **LPC + MDCT hybrid** (CELT-family) whose
+   synthesis path is the float DSP cluster around #9013, not the config function
+   #1839 an earlier note misread. See [decode-pipeline](decode-pipeline.md).
 2. **Sample rate and frame size.** The binary references **8000** and **16000**
    internally, while configuration language elsewhere suggests a super-wideband
    (32 kHz) path with 20 ms frames. Whether MLow's core runs at 16 kHz with SWB
    handled by resampling is unresolved. *(`speculative`; tracked as a
    discrepancy.)*
-3. **Is the entropy coder the Opus/CELT range coder?** A common assumption for
-   "SILK-like" codecs. Not yet confirmed against the actual decode kernel.
+3. ~~**Is the entropy coder the Opus/CELT range coder?**~~ **Answered (verified).**
+   Yes: libopus' CELT range coder (`ec_dec`), present unmodified, matched
+   constant-for-constant in #8855-8861 and reproduced + round-trip tested in Go.
+   See [decode-pipeline](decode-pipeline.md#entropy-coder-the-celt-range-coder-verified).
 4. **Reed-Solomon parameters.** Symbol size, block length, and how the RED group
    maps onto RS shards.
 5. **Encoder internals.** Bitrate control (driven by the BWE above), DTX/VAD, and
@@ -154,6 +157,8 @@ it bit-exactly." They are `speculative` until recovered.
 
 ## See also
 
+- [Decode pipeline](decode-pipeline.md) — the verified CELT range coder, the LPC
+  and MDCT DSP kernels, and the #1839 correction.
 - [Function map](function-map.md) — the class/source/function identity table and
   the corrected names.
 - [Methodology](methodology.md) — every query used to derive this, reproducibly.

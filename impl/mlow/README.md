@@ -27,11 +27,12 @@ implementation mirrors that recovered structure rather than the prior guess.
 | file | layer | source-of-truth doc |
 | --- | --- | --- |
 | `doc.go`, `mlow.go` | public API, architecture, honesty contract | [index.md](../../docs/codec/mlow/index.md) |
-| `red.go` *(pending)* | RED redundancy split | [function-map.md](../../docs/codec/mlow/function-map.md) |
-| `fec.go` *(pending)* | Reed-Solomon FEC | function-map.md |
-| `frame.go` *(pending)* | MLow frame / TOC parse | index.md (open questions) |
-| `rangecoder.go` *(pending)* | entropy/range decoder | index.md (open questions) |
-| `decoder.go` *(pending)* | CELP decode (LSF/LPC/LTP/excitation/synthesis) | index.md (open questions) |
+| `rangecoder.go`, `ec_enc.go` **(done, tested)** | CELT range coder (decode + matched encoder) | [decode-pipeline.md](../../docs/codec/mlow/decode-pipeline.md) |
+| `frame.go` *(pending)* | MLow frame / TOC parse | function-map.md |
+| `red.go`, `fec.go` *(pending)* | RED split + Reed-Solomon FEC | function-map.md |
+| `mdct.go` *(pending)* | CELT-style MDCT band decode | decode-pipeline.md |
+| `lpc.go` *(pending)* | LPC synthesis (Levinson-Durbin verified, #9083) | decode-pipeline.md |
+| `decoder.go` *(pending)* | full decode (range -> MDCT/LPC -> PCM) | decode-pipeline.md |
 
 Each file, as it lands, cites the exact WASM function indices and the lifted-C
 evidence it was built from, so a reviewer can trace any line back to the binary.

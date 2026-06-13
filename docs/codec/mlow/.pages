@@ -1,6 +1,7 @@
 title: MLow audio codec
 nav:
   - index.md
+  - decode-pipeline.md
   - function-map.md
   - methodology.md
   - ...

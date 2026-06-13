@@ -2,6 +2,10 @@
 // audio codec and its receive pipeline, reconstructed by static analysis of the
 // WhatsApp Web calling engine (Emscripten WASM).
 //
+// MLow is an LPC + MDCT hybrid (CELT-family) transform codec: its entropy layer
+// is libopus' CELT range coder, present unmodified (verified, see rangecoder.go),
+// over an LPC synthesis stage (Levinson-Durbin, WASM #9083) and an MDCT stage.
+//
 // # Provenance and honesty
 //
 // Every type and constant here traces to a finding documented in the wacrg
@@ -28,7 +32,7 @@
 //	  -> MlowRedPayloadSplitter   RED redundancy split  (red.go)
 //	  -> ReedSolomonCode          FEC erasure recovery  (fec.go)
 //	  -> concerto::NetEq          jitter buffer + PLC    (out of scope here)
-//	  -> AudioDecoderMLowImpl     MLow CELP decode       (decoder.go)
+//	  -> AudioDecoderMLowImpl     MLow LPC+MDCT decode   (decoder.go)
 //	       (+ mlowcompanion neural post-filter -- OUT OF SCOPE)
 //	  -> PCM
 //

@@ -1,0 +1,36 @@
+# PR welcome bot — greets new pull requests with how-to-review guidance.
+# Mirrors WhiskeySockets/Baileys (mshick/add-pr-comment), adapted for a spec repo.
+# Uses GITHUB_TOKEN so it works without configuring a personal token secret.
+name: PR Comment
+
+on:
+  pull_request_target:
+    types: [opened, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  pr-comment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: mshick/add-pr-comment@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          message-id: welcome
+          message: |
+            Thanks for contributing to the **WhatsApp Calls Research Group**! 🎉
+
+            A maintainer will review your change against the
+            [confidence & provenance rules](https://github.com/WhiskeySockets/wacrg/blob/main/CONTRIBUTING.md#confidence-and-provenance-rules).
+            A few things that speed up review:
+
+            - **Provenance + confidence** on every new attribute/child/value. `confirmed` needs **two independent techniques**.
+            - **Synthetic / sanitized data only** — no real PII, JIDs, keys, or media.
+            - Run it locally: `npm install && npm run build` (validate → generate docs → coverage), then commit the regenerated `docs/spec/**` and `COVERAGE.md`.
+
+            ### How the community can help
+            If you can **corroborate** this with a *different*
+            [technique](https://github.com/WhiskeySockets/wacrg/blob/main/docs/techniques/index.md),
+            comment with what you saw — independent agreement is how a fact reaches `confirmed`.

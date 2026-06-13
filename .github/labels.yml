@@ -1,0 +1,90 @@
+# Label definitions for the WhatsApp Calls Research Group (wacrg).
+#
+# This file is the SOURCE OF TRUTH for repository labels. It is consumed by the
+# EndBug/label-sync GitHub Action, which creates/updates/prunes labels to match.
+# Colors are 6-digit hex WITHOUT a leading "#".
+#
+# Color grouping convention:
+#   area/*        -> blue family (which protocol layer a thing concerns)
+#   type/*        -> purple family (what kind of contribution it is)
+#   confidence/*  -> green -> grey as certainty decreases
+#   status/*      -> yellow family (workflow state)
+#   others        -> neutral greys/greens
+
+# --- area: which protocol layer the issue/PR concerns ---
+- name: "area/signaling"
+  color: "1d4ed8"
+  description: "Call control signaling over the Noise WebSocket (WABinary <call> stanzas)."
+
+- name: "area/keying"
+  color: "2563eb"
+  description: "Key exchange and media key delivery (Signal session, X3DH, ratchet)."
+
+- name: "area/media"
+  color: "3b82f6"
+  description: "Media transport and codecs (SRTP over UDP, audio/video descriptors)."
+
+- name: "area/transport"
+  color: "60a5fa"
+  description: "Network transport, ICE/relay candidates, endpoints, latency."
+
+# --- type: what kind of contribution this is ---
+- name: "type/stanza-capture"
+  color: "7c3aed"
+  description: "A captured/observed stanza submitted for intake into the corpus."
+
+- name: "type/finding"
+  color: "8b5cf6"
+  description: "A behavioral finding about how the call protocol works."
+
+- name: "type/discrepancy"
+  color: "a78bfa"
+  description: "Two techniques or sources disagree; needs reconciliation."
+
+- name: "type/technique"
+  color: "6d28d9"
+  description: "Register or update a reverse-engineering technique."
+
+# --- confidence: how certain we are (green = most certain, grey = least) ---
+- name: "confidence/confirmed"
+  color: "15803d"
+  description: "Independently confirmed by at least one reliable technique."
+
+- name: "confidence/probable"
+  color: "65a30d"
+  description: "Likely correct but not yet independently confirmed."
+
+- name: "confidence/speculative"
+  color: "9ca3af"
+  description: "Plausible hypothesis; weak or single-source evidence."
+
+# --- status: workflow state ---
+- name: "status/needs-review"
+  color: "facc15"
+  description: "Awaiting maintainer review before merge/intake."
+
+# --- general / housekeeping ---
+- name: "good-first-capture"
+  color: "0e8a16"
+  description: "A good first contribution for newcomers (a small, well-scoped capture)."
+
+- name: "help-wanted"
+  color: "008672"
+  description: "Extra attention or contributors are wanted here."
+
+- name: "meta"
+  color: "ededed"
+  description: "Project meta: tooling, process, repo configuration, housekeeping."
+
+- name: "automated"
+  color: "c5def5"
+  description: "Opened or maintained by automation (bots, workflows, Dependabot)."
+
+# --- stale bot ---
+- name: "stale"
+  color: "795548"
+  description: "No recent activity; will be closed soon unless updated. Remove to keep open."
+
+- name: "unstale"
+  color: "5319e7"
+  description: "Exempt from the stale bot; keep this thread open regardless of inactivity."

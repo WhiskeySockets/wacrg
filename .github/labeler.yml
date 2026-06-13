@@ -1,0 +1,45 @@
+# Path-based PR labels for actions/labeler@v5.
+# Each label here must also exist in .github/labels.yml.
+
+"area/signaling":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "spec/stanzas/**"
+          - "spec/flows/**"
+          - "docs/signaling.md"
+          - "docs/transport-noise.md"
+
+"area/keying":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/encryption-keying.md"
+          - "spec/enums/enc-types.yaml"
+
+"area/media":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/media-srtp.md"
+          - "spec/enums/media-types.yaml"
+
+"area/transport":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/ice-and-relays.md"
+          - "spec/stanzas/call-transport.yaml"
+          - "spec/stanzas/call-relaylatency.yaml"
+
+"type/technique":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "spec/techniques/**"
+          - "docs/techniques/**"
+
+"meta":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+          - "scripts/**"
+          - "mkdocs.yml"
+          - "package.json"
+          - "tsconfig.json"
+          - "*.md"

@@ -1,0 +1,18 @@
+# Auto-labeler — applies area/* and type/* labels based on the files a PR touches.
+# Configuration lives in .github/labeler.yml. Labels must exist (see labels.yml).
+name: Labeler
+
+on: [pull_request_target]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          sync-labels: false

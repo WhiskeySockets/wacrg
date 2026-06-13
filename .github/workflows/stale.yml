@@ -1,0 +1,41 @@
+# Stale bot — nudges, then closes, issues/PRs with no activity.
+# Mirrors the WhiskeySockets/Baileys convention, tuned gentler for a research repo
+# where threads are longer-lived. Captures awaiting triage keep status/needs-review
+# (exempt); mark anything `unstale` to opt a thread out entirely.
+name: Mark stale issues and pull requests
+
+on:
+  schedule:
+    - cron: "30 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          days-before-stale: 30
+          days-before-close: 14
+          stale-issue-label: stale
+          stale-pr-label: stale
+          stale-issue-message: >-
+            This issue has had no activity for 30 days and is now marked stale.
+            Remove the `stale` label, comment, or it will be closed in 14 days.
+          stale-pr-message: >-
+            This pull request has had no activity for 30 days and is now marked
+            stale. Remove the `stale` label, comment, or push an update, or it
+            will be closed in 14 days.
+          close-issue-message: >-
+            Closing after 14 days of inactivity since being marked stale. Comment
+            to reopen — findings are never lost; the corpus keeps its history.
+          close-pr-message: >-
+            Closing after 14 days of inactivity since being marked stale. Reopen
+            whenever you can pick it back up.
+          exempt-issue-labels: "help-wanted,good-first-capture,status/needs-review,meta,unstale"
+          exempt-pr-labels: "help-wanted,status/needs-review,meta,unstale"

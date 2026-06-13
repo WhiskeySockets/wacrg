@@ -1,0 +1,51 @@
+# Release: snapshot the spec on version tags.
+# On a `v*` tag push, build the project (validate + generate + coverage), bundle
+# the raw corpus (spec/) and the generated human docs (docs/spec) into a zip, and
+# publish a GitHub Release with that bundle attached and auto-generated notes.
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+# Creating a release and uploading assets requires contents:write.
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build and publish spec bundle
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm i
+
+      # Ensure the bundle reflects validated, freshly generated content.
+      - name: Build (validate + generate + coverage)
+        run: npm run build
+
+      - name: Create spec bundle
+        run: |
+          zip -r "wacrg-spec-${{ github.ref_name }}.zip" spec docs/spec
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: wacrg-spec-${{ github.ref_name }}.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

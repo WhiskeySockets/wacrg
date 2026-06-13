@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build / output artifacts
+dist/
+site/
+.mkdocs_cache/
+.cache/
+
+# Logs
+*.log
+
+# OS noise
+.DS_Store
+
+# Reverse-engineering scratch / capture databases (never commit raw traffic)
+mitm_mcp_traffic.db
+*.db
+
+# Python tooling (used by some RE techniques)
+.venv/
+__pycache__/
+
+# Stray warden RE output (WhatsApp Web WASM audio identity map) dropped under docs/.
+# Real, valuable data — but raw, unintegrated, and in the wrong place (docs/ is the
+# published site root). Relocate into corpus/ or a proper spec data path to track it.
+docs/media/
+
+# NOTE: docs/spec and COVERAGE.md are COMMITTED generated artifacts.
+# Do not add them here.

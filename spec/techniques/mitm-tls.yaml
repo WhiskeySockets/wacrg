@@ -1,0 +1,32 @@
+id: mitm-tls
+title: TLS man-in-the-middle
+status: draft
+maturity: emerging
+summary: >
+  Intercept the auxiliary HTTPS/TLS traffic around a call (provisioning, relay
+  allocation, telemetry) on a device you own. Does not break WhatsApp's Noise
+  transport or Signal-protocol encryption, but can surface server endpoints,
+  relay/ICE configuration, and timing that contextualize the signaling plane.
+targets:
+  - signaling
+  - transport
+strengths:
+  - Reveals out-of-band HTTPS endpoints and relay/transport configuration that the
+    WebSocket alone does not explain.
+  - Useful for mapping which servers participate in call setup and media relaying.
+  - Standard, well-understood tooling.
+limitations:
+  - Cannot decrypt the Noise WebSocket or Signal payloads — the core call crypto is
+    out of reach.
+  - Certificate pinning blocks naive interception; needs a patched/owned client to
+    bypass on your own device.
+  - Often yields context rather than direct protocol facts; corroborate before
+    raising confidence.
+tooling:
+  - mitmproxy
+  - A device/emulator you own with a trusted interception CA
+  - Pinning-bypass on your own build where required
+maintainers: []
+references:
+  - title: mitmproxy
+    url: https://mitmproxy.org/

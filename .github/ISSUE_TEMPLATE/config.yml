@@ -1,0 +1,24 @@
+# Issue template chooser configuration.
+#
+# Blank issues are disabled so contributions flow through the structured forms,
+# which feed the corpus and apply the right labels. Use the contact links below
+# for questions and security reports.
+blank_issues_enabled: false
+
+contact_links:
+  - name: Questions & protocol Q&A
+    url: https://github.com/WhiskeySockets/wacrg/discussions
+    about: >-
+      Have a question, want to discuss an idea, or not sure something is a
+      concrete finding yet? Open a Discussion instead of an issue.
+  - name: Report a security or privacy concern
+    url: https://github.com/WhiskeySockets/wacrg/security/policy
+    about: >-
+      Found accidentally committed real PII/secrets, or have a sensitive
+      disclosure? Please follow the security policy (SECURITY.md) rather than
+      opening a public issue.
+  - name: Chat with the community (Discord)
+    url: https://discord.gg/WeJM5FP9GG
+    about: >-
+      Join the WhiskeySockets Discord to chat about WhatsApp protocol research
+      and ask quick questions.

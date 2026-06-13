@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wacrg.whiskeysockets.io/schema/technique.schema.json",
+  "title": "Reverse-engineering technique",
+  "description": "Describes one of the fixed set of techniques used to observe the WhatsApp call protocol. Provenance entries reference these ids.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "status",
+    "maturity",
+    "summary",
+    "targets",
+    "strengths",
+    "limitations",
+    "tooling"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Technique identifier. Constrained to the fixed set shared across the corpus.",
+      "enum": [
+        "websocket-capture",
+        "baileys-instrumentation",
+        "frida-hooking",
+        "mitm-tls",
+        "static-smali-analysis",
+        "memory-dump",
+        "wasm-analysis"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "$ref": "#/$defs/status"
+    },
+    "maturity": {
+      "type": "string",
+      "enum": ["established", "emerging", "experimental"]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "targets": {
+      "type": "array",
+      "description": "Protocol layers this technique can reveal.",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/category"
+      }
+    },
+    "strengths": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "tooling": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "maintainers": {
+      "type": "array",
+      "description": "GitHub handles of maintainers familiar with this technique.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "guide": {
+      "type": "string",
+      "description": "Optional path to a how-to guide under docs/."
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/reference"
+      }
+    }
+  },
+  "$defs": {
+    "status": {
+      "type": "string",
+      "enum": ["draft", "review", "stable", "deprecated"]
+    },
+    "category": {
+      "type": "string",
+      "enum": ["signaling", "keying", "media", "transport"]
+    },
+    "reference": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["title"],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "url": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

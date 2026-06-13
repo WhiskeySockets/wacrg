@@ -1,0 +1,59 @@
+id: call-rejected
+title: Callee rejects a 1:1 call
+status: draft
+spec_version: "0.1.0"
+summary: >
+  The sequence when the callee actively declines an incoming 1:1 call instead of answering.
+  The caller's <call><offer> is routed to the callee, which (without ever accepting) sends a
+  <reject> carrying the call-id/call-creator and a reason (e.g. declined). The server acks and
+  routes the rejection back to the caller, whose UI shows the call as declined, and propagates a
+  "reject_elsewhere" terminate to the callee's other linked devices so they stop ringing. No
+  media is ever established. Step ordering and reason tokens are a working model and hedged.
+participants:
+  - id: caller
+    label: Caller (initiating device)
+  - id: server
+    label: WhatsApp server
+  - id: callee
+    label: Callee device
+steps:
+  - from: caller
+    to: server
+    stanza: call-offer
+    label: <call><offer> placed
+    confidence: probable
+    note: Standard offer with per-device <enc> call key and transport candidates.
+  - from: server
+    to: callee
+    stanza: call-offer
+    label: routed <call><offer> delivered to callee
+    confidence: probable
+    note: Callee device(s) begin ringing.
+  - from: callee
+    to: server
+    stanza: call-reject
+    label: <reject reason="declined"> call-id call-creator
+    confidence: probable
+    note: Callee user declines; no <accept> is ever sent so no SRTP keys are derived.
+  - from: server
+    to: callee
+    stanza: call-ack
+    label: <ack class="call"> for the reject
+    confidence: speculative
+    note: Server acknowledges the rejection back to the rejecting device.
+  - from: server
+    to: caller
+    stanza: call-reject
+    label: routed <reject> delivered to caller
+    confidence: probable
+    note: Caller UI shows the call as declined.
+  - from: server
+    to: callee
+    stanza: call-terminate
+    label: <terminate reason="reject_elsewhere"> to callee's other devices
+    confidence: speculative
+    note: Other linked callee devices stop ringing once one device has rejected.
+open_questions:
+  - Is the decline carried by a dedicated <reject> stanza, or a <terminate reason="declined">?
+  - Does the reject reason token match a value in the terminate-reasons enum, or a separate set?
+  - Is the "reject_elsewhere" propagation server-originated or peer-originated?

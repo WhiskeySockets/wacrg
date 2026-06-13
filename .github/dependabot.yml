@@ -1,0 +1,31 @@
+version: 2
+
+updates:
+  # Keep the Node/TypeScript tooling dependencies (tsx, typescript, ajv, yaml,
+  # fast-glob, etc.) current. The manifest lives at the repository root.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "automated"
+      - "meta"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+
+  # Keep GitHub Actions used by the CI / automation workflows up to date.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "automated"
+      - "meta"
+    commit-message:
+      prefix: "ci"
+      include: "scope"

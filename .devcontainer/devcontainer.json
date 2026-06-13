@@ -1,0 +1,26 @@
+{
+  // wacrg research lab — a reproducible workspace for the WhatsApp Calls
+  // Research Group tooling (corpus validation, doc generation, coverage).
+  "name": "wacrg research lab",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "features": {},
+  "postCreateCommand": "bash .devcontainer/postCreate.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "redhat.vscode-yaml",
+        "DavidAnson.vscode-markdownlint",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "editor.formatOnSave": false,
+        "yaml.format.enable": true,
+        "files.eol": "\n"
+      }
+    }
+  },
+  // Nothing needs to be exposed; the tooling is CLI-only. mkdocs serve (8000)
+  // can be forwarded manually if a contributor wants a live docs preview.
+  "forwardPorts": [],
+  "remoteUser": "node"
+}

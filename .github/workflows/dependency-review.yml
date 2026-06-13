@@ -1,0 +1,18 @@
+# Dependency review — flags vulnerable or license-incompatible dependencies
+# introduced by a pull request (the tooling under scripts/ uses npm packages).
+name: Dependency review
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          comment-summary-in-pr: on-failure

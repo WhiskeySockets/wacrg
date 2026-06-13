@@ -1,0 +1,64 @@
+id: call-missed-timeout
+title: Missed 1:1 call (no answer, ring timeout)
+status: draft
+spec_version: "0.1.0"
+summary: >
+  The sequence when a 1:1 call rings unanswered until the ring timeout elapses, producing a
+  missed call. The caller's <call><offer> is routed to the callee, which rings (optional
+  <preaccept>) but the user never answers. When the timeout is reached, a <terminate> with
+  reason timeout ends the call: the caller's side logs an outgoing missed/unanswered call and
+  the callee's side logs an incoming missed call. No <accept> occurs and no media is set up.
+  Whether the timeout fires caller-side, callee-side, or server-side, and which party emits the
+  terminate, is uncertain and noted in open questions.
+participants:
+  - id: caller
+    label: Caller (initiating device)
+  - id: server
+    label: WhatsApp server
+  - id: callee
+    label: Callee device
+steps:
+  - from: caller
+    to: server
+    stanza: call-offer
+    label: <call><offer> placed
+    confidence: probable
+    note: Standard offer; per-device <enc> call key delivered but never used.
+  - from: server
+    to: caller
+    stanza: call-ack
+    label: <ack class="call"> for the offer
+    confidence: probable
+    note: Confirms the offer was routed.
+  - from: server
+    to: callee
+    stanza: call-offer
+    label: routed <call><offer> delivered to callee
+    confidence: probable
+    note: Callee device(s) ring.
+  - from: callee
+    to: caller
+    stanza: call-preaccept
+    label: <preaccept> (ringing) — but user never answers
+    confidence: speculative
+    note: Optional ringing indication; no <accept> follows.
+  - from: caller
+    to: callee
+    stanza: call-terminate
+    label: <terminate reason="timeout"> after ring timeout
+    confidence: probable
+    note: >
+      The unanswered call is torn down with reason timeout, surfacing as a missed call on the
+      callee and an unanswered/cancelled call on the caller. Which side originates the
+      terminate is uncertain.
+  - from: callee
+    to: server
+    stanza: call-ack
+    label: <ack class="call"> for the terminate
+    confidence: speculative
+    note: Acknowledges the teardown.
+open_questions:
+  - Does the ring timeout fire on the caller, the callee, or the server?
+  - Which party originates the <terminate> on timeout?
+  - Is a caller-initiated cancel (caller gives up early) a distinct reason from timeout?
+  - Are other linked callee devices terminated with timeout or an "elsewhere" variant?

@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/WhiskeySockets/wacrg/corpus/schema/capture.schema.json",
+  "title": "wacrg capture",
+  "description": "Schema for a single corpus intake capture under corpus/captures/<id>.yaml. Captures are synthetic and sanitized only.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "source", "stanza_tag", "direction", "confidence", "raw", "sanitized"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable identifier for the capture, e.g. issue-12 or example-sanitized-offer."
+    },
+    "title": {
+      "type": "string",
+      "description": "Short human-readable title."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "review", "stable", "deprecated"],
+      "default": "draft",
+      "description": "Lifecycle status of the capture record."
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["technique"],
+      "description": "Where the capture came from and how it was obtained.",
+      "properties": {
+        "technique": {
+          "type": "string",
+          "enum": [
+            "websocket-capture",
+            "baileys-instrumentation",
+            "frida-hooking",
+            "mitm-tls",
+            "static-smali-analysis",
+            "memory-dump",
+            "wasm-analysis"
+          ],
+          "description": "Reverse-engineering technique used to obtain this capture. Must be one of the fixed technique ids."
+        },
+        "issue": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Optional GitHub issue number that produced this capture."
+        },
+        "contributor": {
+          "type": "string",
+          "description": "Optional GitHub handle of the contributor."
+        },
+        "captured_at": {
+          "type": "string",
+          "description": "Optional ISO date string for when the capture was taken."
+        }
+      }
+    },
+    "stanza_tag": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The top-level WABinary node tag the capture concerns, e.g. call."
+    },
+    "direction": {
+      "type": "string",
+      "enum": ["outgoing", "incoming", "bidirectional"],
+      "description": "Direction of the stanza relative to the capturing device."
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["confirmed", "probable", "speculative", "unknown"],
+      "description": "How much trust the contributor places in this decode."
+    },
+    "raw": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "body"],
+      "description": "The raw captured payload in a transport-faithful form.",
+      "properties": {
+        "format": {
+          "type": "string",
+          "enum": ["xml", "hex", "base64", "json"],
+          "description": "Encoding of the raw body."
+        },
+        "body": {
+          "type": "string",
+          "description": "The raw payload. Must be sanitized of all PII and secrets."
+        }
+      }
+    },
+    "decoded": {
+      "type": "string",
+      "description": "Human-readable decode / annotation of the raw payload."
+    },
+    "attributes": {
+      "type": "array",
+      "description": "Optional flat list of notable attributes extracted from the capture.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "value"],
+        "properties": {
+          "name": { "type": "string" },
+          "value": { "type": "string" },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-text notes, caveats, and open questions."
+    },
+    "sanitized": {
+      "type": "boolean",
+      "const": true,
+      "description": "MUST be true. Asserts the capture contains no real PII or secrets."
+    }
+  }
+}

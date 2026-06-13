@@ -1,0 +1,45 @@
+id: wasm-analysis
+title: WhatsApp Web WASM analysis
+status: review
+maturity: emerging
+summary: >
+  WhatsApp Web ships its calling engine as an Emscripten-compiled WebAssembly
+  module. Statically and iteratively reverse-engineer that module — parse,
+  fingerprint, auto-identify library code, lift to pseudo-C, and diff across
+  releases — to recover how 1:1 calls are signaled, keyed, and carried. The web
+  client is a cleaner, more stable surface than the mobile app, and findings can
+  compound across WhatsApp's frequent rebuilds instead of resetting each release.
+targets:
+  - signaling
+  - keying
+  - media
+  - transport
+strengths:
+  - WASM has explicit function boundaries, structured control flow, and typed
+    signatures — far more legible than Android smali or native ARM.
+  - The JS-to-WASM boundary (imports/exports) makes the interface to WebCrypto,
+    WebRTC, and the socket explicit and easy to enumerate.
+  - "Open runtime: Emscripten/musl/libc++ are open source, so 40-80% of the module can be auto-identified, concentrating analyst effort on app-specific call logic."
+  - "Compounding RE: keyed to stable function identity, annotations survive vendor rebuilds, so knowledge accumulates across WhatsApp releases."
+limitations:
+  - "Static surface only: it does not observe live call packets or real-time SRTP media — pair with frida-hooking or websocket-capture for runtime values."
+  - LTO inlining, custom allocators, and heavy obfuscation degrade automated
+    library identification and structural matching.
+  - "Reveals intended logic: a finding still needs runtime corroboration from an independent technique before it can reach confirmed."
+tooling:
+  - warden (warden-re) — living RE knowledge base for Emscripten WASM (parse,
+    fingerprint, Emscripten Oracle identification, pseudo-C lift, cross-version diff)
+  - Ghidra with the ghidra-wasm-plugin; WABT / wasm-tools; Emscripten / emsdk
+  - Browser devtools to locate and pull the call WASM module and its JS glue
+maintainers:
+  - purpshell
+guide: docs/techniques/wasm-analysis.md
+references:
+  - title: warden — living reverse-engineering for Emscripten WebAssembly
+    url: https://github.com/purpshell/warden
+  - title: warden-re on PyPI
+    url: https://pypi.org/project/warden-re/
+  - title: Emscripten
+    url: https://emscripten.org/
+  - title: WebAssembly
+    url: https://webassembly.org/

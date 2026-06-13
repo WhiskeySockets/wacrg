@@ -1,0 +1,29 @@
+# CODEOWNERS for the WhatsApp Calls Research Group (wacrg)
+#
+# This file maps areas of the repository to the people/teams responsible for
+# reviewing changes to them. GitHub requests reviews from these owners
+# automatically when a pull request touches matching paths.
+#
+# NOTE: The handles/teams below are PLACEHOLDERS. Adjust them to real GitHub
+# usernames or teams once membership is settled. The team
+# @WhiskeySockets/wacrg-maintainers does not exist yet and must be created
+# (or replaced with individual handles) for these rules to take effect.
+
+# Default owners for everything in the repo (lowest precedence; overridden by
+# the more specific rules below for matching paths).
+*                           @WhiskeySockets/wacrg-maintainers
+
+# Machine-readable spec corpus. Stanza, flow, and technique definitions are the
+# heart of the project and should get focused review.
+/spec/stanzas/              @WhiskeySockets/wacrg-maintainers
+/spec/flows/                @WhiskeySockets/wacrg-maintainers
+/spec/techniques/           @WhiskeySockets/wacrg-maintainers
+
+# Generated and authored documentation.
+/docs/                      @WhiskeySockets/wacrg-maintainers
+
+# Tooling (validator, generator, coverage, ingest).
+/scripts/                   @WhiskeySockets/wacrg-maintainers
+
+# CI / automation workflows.
+/.github/workflows/         @WhiskeySockets/wacrg-maintainers

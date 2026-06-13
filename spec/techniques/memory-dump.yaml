@@ -1,0 +1,30 @@
+id: memory-dump
+title: Process memory dump
+status: draft
+maturity: experimental
+summary: >
+  Recover in-memory state and key material from the WhatsApp process on a device you
+  own — for example the plaintext call/media key after it is decrypted from an <enc>
+  node, or SRTP context. The most invasive technique; powerful for keying/media but
+  fragile and highly sensitive.
+targets:
+  - keying
+  - media
+strengths:
+  - Can recover the actual plaintext key bytes that other techniques only see as
+    ciphertext or derivations.
+  - Provides ground-truth values to anchor speculative keying/media facts.
+limitations:
+  - Extremely build- and timing-dependent; layouts change constantly.
+  - Requires a rooted/owned device and careful handling — never dump a device or
+    account that is not yours.
+  - Recovered material is sensitive; only synthetic/own-account values may ever be
+    written to this repo, and never raw keys.
+tooling:
+  - Process memory acquisition on a rooted test device you own
+  - A debugger/instrumentation harness to snapshot at the right moment
+  - Frida (to locate the moment a key is in memory)
+maintainers: []
+references:
+  - title: SRTP (RFC 3711)
+    url: https://www.rfc-editor.org/rfc/rfc3711

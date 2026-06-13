@@ -1,0 +1,72 @@
+id: example-sanitized-offer
+title: Illustrative outgoing 1:1 audio call offer (synthetic)
+status: draft
+source:
+  technique: websocket-capture
+  contributor: ""
+  captured_at: ""
+stanza_tag: call
+direction: outgoing
+confidence: speculative
+raw:
+  format: xml
+  body: |
+    <call from="A@s.whatsapp.net" to="B@s.whatsapp.net" id="CALLID0001">
+      <offer call-id="CALLID0001" call-creator="A@s.whatsapp.net">
+        <audio enc="opus" rate="16000"/>
+        <net medium="3"/>
+        <capability ver="1">BINARYCAPSPLACEHOLDER</capability>
+        <encopt keygen="2"/>
+        <enc v="2" type="pkmsg">CIPHERTEXTPLACEHOLDERFORPEERDEVICE1</enc>
+        <destination>
+          <te latency="42">RELAYCANDIDATEPLACEHOLDER1</te>
+          <te latency="88">RELAYCANDIDATEPLACEHOLDER2</te>
+        </destination>
+      </offer>
+    </call>
+decoded: |
+  Synthetic and sanitized example — not a real capture.
+
+  Top-level <call> node routed from caller device A to callee device B via the
+  WhatsApp server. The call id ("CALLID0001" here, a placeholder) ties together
+  every subsequent stanza for this call (preaccept, accept, terminate, etc.).
+
+  Inside the <offer>:
+    - call-creator names the device that initiated the call.
+    - <audio enc="opus" rate="16000"> advertises the proposed audio codec and
+      sample rate. Values shown are plausible placeholders, not observed.
+    - <net medium="3"> is believed to carry network-type hints (e.g. wifi vs.
+      cellular). The exact meaning of medium is an open question.
+    - <capability ver="1"> normally carries a binary blob of device call
+      capabilities; replaced here with a text placeholder.
+    - <encopt keygen="2"> selects the key-generation / encryption option. The
+      meaning of the keygen value is not yet pinned down.
+    - <enc v="2" type="pkmsg"> carries the Signal-protocol ciphertext that
+      delivers the per-call media key to the peer device. type="pkmsg" implies a
+      fresh session is being established (a PreKeyWhisperMessage); an established
+      session would use type="msg". A multi-device callee would yield multiple
+      <enc> nodes, one per device.
+    - <destination> lists candidate relay transport endpoints (<te>) with a
+      latency hint each, used for ICE/relay selection on the media plane.
+attributes:
+  - name: from
+    value: A@s.whatsapp.net
+    note: Placeholder caller JID.
+  - name: to
+    value: B@s.whatsapp.net
+    note: Placeholder callee JID.
+  - name: call-id
+    value: CALLID0001
+    note: Placeholder; correlates all stanzas of this call.
+  - name: offer.audio.enc
+    value: opus
+    note: Plausible codec name; not observed in a real capture.
+  - name: offer.enc.type
+    value: pkmsg
+    note: Indicates a new Signal session is being established for keying.
+notes: >
+  Entirely synthetic. Every JID, id, ciphertext, capability blob, and relay
+  candidate is a placeholder. This record exists to exercise the capture schema
+  and the ingest pipeline, and to show contributors the expected shape. Do not
+  treat any value here as ground truth.
+sanitized: true

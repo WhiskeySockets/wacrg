@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this specification, please cite it as below."
+title: "WhatsApp Calls Research Group (wacrg) Protocol Spec"
+abstract: >
+  A collaborative, machine-readable specification of the WhatsApp 1:1 call
+  protocol, with provenance and confidence tracking across multiple research
+  techniques.
+type: software
+authors:
+  - family-names: Taher
+    given-names: Rajeh
+    alias: purpshell
+version: 0.1.0
+date-released: "2026-06-09"
+license: CC-BY-4.0
+repository-code: "https://github.com/WhiskeySockets/wacrg"
+url: "https://github.com/WhiskeySockets/wacrg"
+keywords:
+  - whatsapp
+  - protocol
+  - specification
+  - interoperability
+  - research

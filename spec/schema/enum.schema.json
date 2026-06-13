@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wacrg.whiskeysockets.io/schema/enum.schema.json",
+  "title": "Protocol enumeration",
+  "description": "A named set of values used by stanza attributes (e.g. call terminate reasons). Referenced from attribute types of the form enum:<id>.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "title", "status", "summary", "values"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable slug identifying this enum; matches the file name without extension and the suffix used in enum:<id> attribute types.",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "$ref": "#/$defs/status"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "values": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/value"
+      }
+    }
+  },
+  "$defs": {
+    "status": {
+      "type": "string",
+      "enum": ["draft", "review", "stable", "deprecated"]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["confirmed", "probable", "speculative", "unknown"]
+    },
+    "value": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "confidence", "description"],
+      "properties": {
+        "value": {
+          "type": ["string", "integer"],
+          "description": "The literal value as it appears on the wire."
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

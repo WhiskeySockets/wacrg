@@ -1,0 +1,41 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2026 WhiskeySockets and the WhatsApp Calls Research Group contributors
+
+This license applies to the specification and documentation content of this
+repository: the machine-readable corpus under spec/ and corpus/, and the
+human-readable documentation under docs/ (including generated Markdown). The
+code and tooling (for example everything under scripts/) are licensed
+separately under the MIT License; see LICENSE.
+
+You are free to:
+
+  - Share — copy and redistribute the material in any medium or format.
+  - Adapt — remix, transform, and build upon the material for any purpose,
+    even commercially.
+
+Under the following terms:
+
+  - Attribution — You must give appropriate credit to "WhiskeySockets and the
+    WhatsApp Calls Research Group contributors", provide a link to this
+    license, and indicate if changes were made. You may do so in any
+    reasonable manner, but not in any way that suggests the licensor endorses
+    you or your use.
+
+  - No additional restrictions — You may not apply legal terms or
+    technological measures that legally restrict others from doing anything
+    the license permits.
+
+This is a human-readable summary of (and not a substitute for) the license.
+The full legal text of the Creative Commons Attribution 4.0 International
+Public License is available at:
+
+  https://creativecommons.org/licenses/by/4.0/legalcode
+
+DISCLAIMER
+
+This repository documents the results of independent, clean-room reverse
+engineering for interoperability and research. The specification is a
+best-effort, provenance-tracked working model and is provided "as is", without
+warranty of any kind. It is not affiliated with, endorsed by, or derived from
+any proprietary source code of WhatsApp or Meta Platforms, Inc.

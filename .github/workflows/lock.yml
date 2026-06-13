@@ -1,0 +1,32 @@
+# Lock bot — locks long-inactive closed issues/PRs to keep discussion focused.
+# New activity belongs in a fresh issue or a Discussion.
+name: Lock threads
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: lock-threads
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dessant/lock-threads@v5
+        with:
+          issue-inactive-days: 120
+          pr-inactive-days: 120
+          issue-comment: >-
+            This thread was automatically locked after 120 days of inactivity
+            since it was closed. Please open a new issue or Discussion for
+            related topics.
+          pr-comment: >-
+            This thread was automatically locked after 120 days of inactivity
+            since it was closed. Please open a new issue or Discussion for
+            related topics.

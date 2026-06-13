@@ -1,0 +1,37 @@
+# Sync repository issue/PR labels from .github/labels.yml.
+# Keeps the GitHub label set in lockstep with the source-of-truth file so issue
+# forms and automation can rely on a stable label vocabulary. Runs when the
+# label file changes on main, or on manual dispatch.
+
+name: Labels sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/labels.yml"
+  workflow_dispatch:
+
+# Managing labels requires issues:write.
+permissions:
+  issues: write
+
+concurrency:
+  group: labels-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Sync labels
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Apply label configuration
+        uses: EndBug/label-sync@v2
+        with:
+          config-file: .github/labels.yml
+          # Delete labels not present in the config so the file is authoritative.
+          delete-other-labels: true
+          token: ${{ secrets.GITHUB_TOKEN }}

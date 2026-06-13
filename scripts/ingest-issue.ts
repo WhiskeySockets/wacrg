@@ -21,6 +21,7 @@ const HEADINGS = {
   DIRECTION: 'Direction',
   CLIENT: 'Client / platform',
   TECHNIQUE: 'Capture technique',
+  TOOLS: 'Tools used',
   CONFIDENCE: 'Confidence',
   RAW: 'Raw stanza',
   DECODED: 'Decoded structure',
@@ -122,6 +123,17 @@ function normalizeTechnique(value: string | undefined): string {
   return 'websocket-capture';
 }
 
+/** Split a comma/newline list of tool ids; lowercased and de-bulleted. */
+function parseTools(value: string | undefined): string[] {
+  if (!value) return [];
+  const seen = new Set<string>();
+  for (const raw of value.split(/[\n,]/)) {
+    const id = raw.replace(/^[-*]\s*/, '').trim().toLowerCase();
+    if (id) seen.add(id);
+  }
+  return [...seen];
+}
+
 /** Map free-text direction onto the enum; default outgoing. */
 function normalizeDirection(value: string | undefined): Capture['direction'] {
   const lowered = (value ?? '').trim().toLowerCase();
@@ -177,7 +189,10 @@ const rawBody = rawSection?.body;
 const decodedSection = unfence(get(sections, HEADINGS.DECODED));
 
 const techniqueRaw = get(sections, HEADINGS.TECHNIQUE);
-const contributor = undefined; // not collected by the form; left for maintainers
+// The submitter's GitHub login (passed by the workflow) is recorded as the
+// contributor — a GitHub-authenticated record of WHO contributed this capture.
+const contributor = (process.env.ISSUE_AUTHOR ?? '').trim() || undefined;
+const toolsList = parseTools(get(sections, HEADINGS.TOOLS));
 
 const numericIssue = /^\d+$/.test(issueNumber) ? Number(issueNumber) : undefined;
 
@@ -189,6 +204,7 @@ const capture: Capture = {
     technique: normalizeTechnique(techniqueRaw),
     ...(numericIssue !== undefined ? { issue: numericIssue } : {}),
     ...(contributor ? { contributor } : {}),
+    ...(toolsList.length ? { tools: toolsList } : {}),
   },
   stanza_tag: get(sections, HEADINGS.STANZA_TAG) ?? 'call',
   direction: normalizeDirection(get(sections, HEADINGS.DIRECTION)),

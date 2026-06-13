@@ -64,8 +64,9 @@ techniques converge on a single spec.
 Every protocol fact — an attribute, a child node, an enum value, a flow step — carries two
 things:
 
-1. **Provenance** — *which technique(s)* surfaced it, and *which source(s)* (issue/PR refs or
-   notes) confirmed it. The technique vocabulary is a **fixed set**:
+1. **Provenance** — *who* observed it (a registered contributor), *which technique(s)* and
+   *which tool(s)* produced it, and *which source(s)* (issue/PR refs) prove it. The technique
+   vocabulary is a **fixed set**:
 
    | technique id | what it is |
    | --- | --- |
@@ -85,8 +86,11 @@ least **two different techniques** independently agree. Until then it stays `pro
 `speculative`, and disagreements are tracked as `type/discrepancy` rather than silently
 resolved.
 
-This means the spec is *auditable*: for any claim you can trace back to the technique and the
-source that produced it.
+This means the spec is *auditable*: for any claim you can trace back to **who** observed it,
+the **technique** and **tool** that produced it, and the **source** that proves it.
+Contributors register in [`spec/contributors/`](./spec/contributors) and tools in
+[`spec/tools/`](./spec/tools); captures filed via the Issue Form are stamped with the
+submitter's GitHub identity automatically. See [Attribution & proof](./docs/attribution.md).
 
 ---
 
@@ -108,6 +112,9 @@ spec/*.yaml  ──▶  scripts/validate.ts   (schema + referential integrity)
   reject, …) and render to **mermaid sequence diagrams**.
 - **Enums** ([`spec/enums/`](./spec/enums)) capture closed value sets (terminate reasons, …).
 - **Techniques** ([`spec/techniques/`](./spec/techniques)) document each RE method.
+- **Tools** ([`spec/tools/`](./spec/tools)) and **Contributors**
+  ([`spec/contributors/`](./spec/contributors)) record *what tool* and *who* produced each
+  fact — see [attribution & proof](./docs/attribution.md).
 - **Glossary** ([`spec/glossary.yaml`](./spec/glossary.yaml)) defines shared terms (WABinary,
   Noise, SRTP, …).
 - **Captures** ([`corpus/captures/`](./corpus/captures)) are intake records — raw (synthetic)
@@ -144,7 +151,7 @@ the workflow, and [warden's repository](https://github.com/purpshell/warden) for
 
 | Path | What lives here |
 | --- | --- |
-| [`spec/`](./spec) | The machine-readable corpus: `stanzas/`, `flows/`, `enums/`, `techniques/`, `glossary.yaml`, and `schema/` (JSON Schemas). **The source of truth.** |
+| [`spec/`](./spec) | The machine-readable corpus: `stanzas/`, `flows/`, `enums/`, `techniques/`, `tools/`, `contributors/`, `glossary.yaml`, and `schema/` (JSON Schemas). **The source of truth.** |
 | [`corpus/`](./corpus) | Capture intake: `captures/` (synthetic/sanitized observations) and `schema/capture.schema.json`. |
 | [`docs/`](./docs) | **Generated** human docs + the Pages/mkdocs site. `docs/spec/` is produced by the generator; `docs/coverage-badge.json` feeds the badge. Do not hand-edit generated files. |
 | [`scripts/`](./scripts) | TypeScript tooling run via `tsx`: `validate.ts`, `generate-docs.ts`, `coverage.ts`, `ingest-issue.ts`, and shared helpers in `scripts/lib/corpus.ts`. |
@@ -248,6 +255,8 @@ and intentional. Raising it means independent corroboration, not guessing.
 - [SECURITY.md](./SECURITY.md) — responsible disclosure (report real WhatsApp vulnerabilities to
   Meta first, not here).
 - [DISCLAIMER.md](./DISCLAIMER.md) — research purpose, trademarks, legal/ToS compliance, no PII.
+- [docs/attribution.md](./docs/attribution.md) — how who/technique/tool/source attribution is
+  recorded and proven across multiple researchers.
 
 The rendered documentation site is published from [`docs/`](./docs) via GitHub Pages.
 

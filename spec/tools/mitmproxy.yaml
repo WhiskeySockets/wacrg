@@ -1,0 +1,8 @@
+id: mitmproxy
+name: mitmproxy
+url: https://mitmproxy.org/
+techniques:
+  - mitm-tls
+description: >
+  Interactive TLS-capable intercepting proxy. Observes auxiliary HTTPS endpoints
+  and relay/transport configuration around a call on an owned device.

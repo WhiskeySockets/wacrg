@@ -1,0 +1,14 @@
+id: purpshell
+name: Rajeh Taher
+github: purpshell
+affiliation: WhiskeySockets
+techniques:
+  - websocket-capture
+  - baileys-instrumentation
+  - wasm-analysis
+tools:
+  - baileys
+  - warden
+links:
+  - title: GitHub
+    url: https://github.com/purpshell

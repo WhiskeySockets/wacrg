@@ -30,12 +30,13 @@ these `### ` sections in the issue body:
 2. Direction
 3. Client / platform
 4. Capture technique
-5. Confidence
-6. Raw stanza
-7. Decoded structure
-8. Observed attributes
-9. Provenance
-10. Notes / open questions
+5. Tools used
+6. Confidence
+7. Raw stanza
+8. Decoded structure
+9. Observed attributes
+10. Provenance
+11. Notes / open questions
 
 Filing the form applies the labels `type/stanza-capture` and
 `status/needs-review`.
@@ -46,9 +47,11 @@ The [`issue-to-corpus`](../../.github/workflows/issue-to-corpus.yml) workflow
 triggers on issues labelled `type/stanza-capture`. It runs
 `scripts/ingest-issue.ts`, which:
 
-- reads `ISSUE_NUMBER`, `ISSUE_TITLE`, `ISSUE_BODY` from the event,
+- reads `ISSUE_NUMBER`, `ISSUE_TITLE`, `ISSUE_BODY`, and `ISSUE_AUTHOR` from the event,
 - splits the body on `^### ` into (heading, value) sections,
-- maps those sections to a [capture object](../../corpus/README.md),
+- maps those sections to a [capture object](../../corpus/README.md), recording the
+  tools used and stamping `source.contributor` with the submitter's GitHub login
+  (the [proof of who](../attribution.md)),
 - writes `corpus/captures/issue-<N>.yaml` with `sanitized: true` and
   `status: draft`, tolerating missing sections gracefully.
 

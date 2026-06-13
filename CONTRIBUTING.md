@@ -59,8 +59,10 @@ nested `children` (recursive, same shape), plus `examples`, `notes`, `open_quest
 Each **attribute** and **child** must carry:
 
 - `confidence` (one of the values above), and
-- `provenance` with `techniques` (subset of the fixed set) and `sources` (issue/PR refs like
-  `"#12"` or short notes).
+- `provenance` recording **how** (`techniques`, subset of the fixed set), **with what**
+  (`tools`, ids from `spec/tools/`), **who** (`contributors`, ids from
+  `spec/contributors/`), and **proof** (`sources`, issue/PR/commit refs like `"#12"`).
+  See [attribution & proof](./docs/attribution.md).
 
 Attribute `type` is one of `string|int|hex|bytes|bool|jid|timestamp|enum:<enum-id>`. When you use
 `enum:<id>`, that enum **must exist** as `spec/enums/<id>.yaml` — the validator enforces it.
@@ -77,6 +79,10 @@ real data.
   `description`.
 - **Technique** (`spec/techniques/<id>.yaml`): `id` MUST be from the fixed technique set;
   document `maturity`, `targets`, `strengths`, `limitations`, `tooling`, optional `guide` path.
+- **Contributor** (`spec/contributors/<id>.yaml`): register yourself once — `id` (your
+  GitHub handle), `name`, the techniques/tools you use. Referenced by `provenance.contributors`.
+- **Tool** (`spec/tools/<id>.yaml`): a concrete tool — `id`, `version`, `url`, `techniques`
+  it supports, `maintainer`. Referenced by `provenance.tools`.
 - **Glossary** (`spec/glossary.yaml`): shared `terms`.
 
 > When in doubt about a key name, copy an existing file of the same kind and adapt it. The
@@ -94,8 +100,9 @@ These rules are what keep the spec trustworthy. Please follow them strictly.
    no matter how clean, does not reach `confirmed`. This is enforced socially in review and
    defined in [GOVERNANCE.md](./GOVERNANCE.md).
 3. **Always record provenance.** Every attribute/child needs `provenance.techniques` (which
-   methods saw it) and `provenance.sources` (where — an issue/PR ref or a short note). No
-   orphan facts.
+   methods saw it); also record `provenance.contributors` (who — your contributor id),
+   `provenance.tools` (which tools), and `provenance.sources` (where — an issue/PR/commit
+   ref). No orphan facts. See [attribution & proof](./docs/attribution.md).
 4. **Put uncertainty in `open_questions`, not in confidence inflation.** If you're unsure what a
    field means, mark it `speculative` *and* add an open question. Do not round up.
 5. **Disagreements are first-class.** If two techniques contradict each other, do **not** silently
@@ -146,9 +153,11 @@ create-pull-request  ──▶  branch ingest/issue-<n>  ──▶  maintainer r
 ```
 
 The form's section headings are fixed (Stanza tag; Direction; Client / platform; Capture
-technique; Confidence; Raw stanza; Decoded structure; Observed attributes; Provenance; Notes /
-open questions) so the ingester can parse them. During review, maintainers promote the capture's
-facts into the relevant `spec/stanzas/*.yaml`, applying the confidence/provenance rules above.
+technique; Tools used; Confidence; Raw stanza; Decoded structure; Observed attributes;
+Provenance; Notes / open questions) so the ingester can parse them. The submitter's GitHub
+identity is recorded automatically as the capture's `source.contributor`. During review,
+maintainers promote the capture's facts into the relevant `spec/stanzas/*.yaml`, applying the
+confidence/provenance rules above.
 
 ---
 
@@ -160,8 +169,8 @@ Before requesting review, confirm:
 - [ ] `npm run build` passes locally and I committed the regenerated `docs/spec/**`,
       `COVERAGE.md`, and `docs/coverage-badge.json`.
 - [ ] `npm run check` is green (no uncommitted generated diffs).
-- [ ] Every new attribute/child/value has **confidence** and **provenance** (techniques +
-      sources).
+- [ ] Every new attribute/child/value has **confidence** and **provenance** (techniques,
+      tools, contributors, sources).
 - [ ] Confidence is honest; `confirmed` only with ≥ 2 independent techniques. Uncertainty lives
       in `open_questions`.
 - [ ] Any `enum:<id>` type, flow `stanza`, or `provenance.techniques` value **resolves** to a

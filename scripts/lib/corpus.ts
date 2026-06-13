@@ -39,7 +39,13 @@ export const SPEC_VERSION = '0.1.0';
 // ---------------------------------------------------------------------------
 
 export interface Provenance {
+  /** Which reverse-engineering technique(s) revealed this fact. */
   techniques?: string[];
+  /** Specific tool ids used (see spec/tools/); more granular than techniques. */
+  tools?: string[];
+  /** Contributor ids who observed/submitted this fact (see spec/contributors/). */
+  contributors?: string[];
+  /** Issue/PR/commit references that back the claim — the proof trail. */
   sources?: string[];
 }
 
@@ -146,6 +152,28 @@ export interface Technique {
   references?: Reference[];
 }
 
+/** A researcher who contributes to the spec. id is typically their GitHub handle. */
+export interface Contributor {
+  id: string;
+  name?: string;
+  github?: string;
+  affiliation?: string;
+  techniques?: string[];
+  tools?: string[];
+  links?: Reference[];
+}
+
+/** A concrete tool used to obtain evidence (more specific than a technique). */
+export interface Tool {
+  id: string;
+  name?: string;
+  version?: string;
+  url?: string;
+  techniques?: string[];
+  maintainer?: string;
+  description?: string;
+}
+
 export interface GlossaryTerm {
   term: string;
   definition: string;
@@ -160,6 +188,7 @@ export interface CaptureSource {
   issue?: number;
   contributor?: string;
   captured_at?: string;
+  tools?: string[];
 }
 
 export interface CaptureAttribute {
@@ -258,6 +287,14 @@ export function loadEnums(): Loaded<EnumDef>[] {
 
 export function loadTechniques(): Loaded<Technique>[] {
   return loadDir<Technique>('spec/techniques/*.yaml');
+}
+
+export function loadContributors(): Loaded<Contributor>[] {
+  return loadDir<Contributor>('spec/contributors/*.yaml');
+}
+
+export function loadTools(): Loaded<Tool>[] {
+  return loadDir<Tool>('spec/tools/*.yaml');
 }
 
 export function loadCaptures(): Loaded<Capture>[] {

@@ -53,6 +53,11 @@
         "captured_at": {
           "type": "string",
           "description": "Optional ISO date string for when the capture was taken."
+        },
+        "tools": {
+          "type": "array",
+          "description": "Tool ids (spec/tools/) or freeform tool@version strings used for this capture.",
+          "items": { "type": "string" }
         }
       }
     },

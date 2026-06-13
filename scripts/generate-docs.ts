@@ -16,11 +16,13 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import {
   fromRoot,
+  loadContributors,
   loadEnums,
   loadFlows,
   loadGlossary,
   loadStanzas,
   loadTechniques,
+  loadTools,
   type Attribute,
   type Child,
   type Flow,
@@ -60,9 +62,14 @@ function list(items: string[] | undefined): string {
 function provenanceLine(attr: Attribute): string {
   const prov = attr.provenance;
   if (!prov) return '';
-  const techniques = prov.techniques?.length ? prov.techniques.join(', ') : '—';
-  const sources = prov.sources?.length ? prov.sources.join(', ') : '—';
-  return `techniques: ${techniques}; sources: ${sources}`;
+  const parts: string[] = [];
+  parts.push(`techniques: ${prov.techniques?.length ? prov.techniques.join(', ') : '—'}`);
+  if (prov.tools?.length) parts.push(`tools: ${prov.tools.join(', ')}`);
+  if (prov.contributors?.length) {
+    parts.push(`by: ${prov.contributors.map((c) => '@' + c).join(', ')}`);
+  }
+  parts.push(`sources: ${prov.sources?.length ? prov.sources.join(', ') : '—'}`);
+  return parts.join('; ');
 }
 
 function fence(lang: string, body: string): string {
@@ -433,6 +440,80 @@ function guideLink(guidePath: string): string {
   return `../${stripped}`;
 }
 
+function renderContributors(contributors: ReturnType<typeof loadContributors>): string {
+  const out: string[] = [];
+  out.push('# Contributors');
+  out.push(
+    'Researchers who contribute to the spec. Provenance entries reference these ' +
+      'ids to record **who** contributed each fact. Generated from ' +
+      '`spec/contributors/`.',
+  );
+  if (contributors.length === 0) {
+    out.push('_No contributors registered yet._');
+    return out.join('\n\n');
+  }
+  const head =
+    '| Contributor | GitHub | Affiliation | Techniques | Tools |\n' +
+    '| --- | --- | --- | --- | --- |';
+  const rows = contributors
+    .slice()
+    .sort((a, b) => a.data.id.localeCompare(b.data.id))
+    .map(({ data }) => {
+      const gh = data.github
+        ? `[@${data.github}](https://github.com/${data.github})`
+        : '—';
+      const techniques = data.techniques?.length
+        ? data.techniques.map((t) => `\`${t}\``).join(', ')
+        : '—';
+      const tools = data.tools?.length
+        ? data.tools.map((t) => `\`${t}\``).join(', ')
+        : '—';
+      return (
+        `| ${cell(data.name ?? data.id)} | ${gh} | ${cell(data.affiliation ?? '—')} | ` +
+        `${techniques} | ${tools} |`
+      );
+    });
+  out.push([head, ...rows].join('\n'));
+  out.push('[Back to spec overview](./index.md)');
+  return out.join('\n\n');
+}
+
+function renderTools(tools: ReturnType<typeof loadTools>): string {
+  const out: string[] = [];
+  out.push('# Tools');
+  out.push(
+    'Concrete tools used to obtain evidence — more specific than a technique. ' +
+      'Provenance entries reference these ids to record **what tools** produced ' +
+      'a fact. Generated from `spec/tools/`.',
+  );
+  if (tools.length === 0) {
+    out.push('_No tools registered yet._');
+    return out.join('\n\n');
+  }
+  const head =
+    '| Tool | Version | Techniques | Maintainer | Description |\n' +
+    '| --- | --- | --- | --- | --- |';
+  const rows = tools
+    .slice()
+    .sort((a, b) => a.data.id.localeCompare(b.data.id))
+    .map(({ data }) => {
+      const name = data.url
+        ? `[${cell(data.name ?? data.id)}](${data.url})`
+        : cell(data.name ?? data.id);
+      const techniques = data.techniques?.length
+        ? data.techniques.map((t) => `\`${t}\``).join(', ')
+        : '—';
+      const maintainer = data.maintainer ? `@${data.maintainer}` : '—';
+      return (
+        `| ${name} | ${cell(data.version ?? '—')} | ${techniques} | ${maintainer} | ` +
+        `${cell(data.description ?? '')} |`
+      );
+    });
+  out.push([head, ...rows].join('\n'));
+  out.push('[Back to spec overview](./index.md)');
+  return out.join('\n\n');
+}
+
 function renderGlossary(): string {
   const glossary = loadGlossary();
   const out: string[] = [];
@@ -458,6 +539,8 @@ function renderOverview(counts: {
   flows: number;
   enums: number;
   techniques: number;
+  tools: number;
+  contributors: number;
 }): string {
   const out: string[] = [];
   out.push('# Specification overview');
@@ -480,6 +563,8 @@ function renderOverview(counts: {
       `| [Flows](./flows/index.md) | ${counts.flows} |\n` +
       `| [Enums](./enums.md) | ${counts.enums} |\n` +
       `| [Techniques](./techniques.md) | ${counts.techniques} |\n` +
+      `| [Tools](./tools.md) | ${counts.tools} |\n` +
+      `| [Contributors](./contributors.md) | ${counts.contributors} |\n` +
       `| [Glossary](./glossary.md) | — |\n` +
       `| [Coverage](./coverage.md) | — |`,
   );
@@ -491,7 +576,8 @@ function renderOverview(counts: {
       'mermaid diagrams.\n' +
       '- **Enums** capture closed value sets (e.g. terminate reasons).\n' +
       '- **Techniques** document the reverse-engineering methods that back ' +
-      'each fact.\n' +
+      'each fact; **Tools** and **Contributors** record what produced it and ' +
+      'who submitted it.\n' +
       '- **Coverage** quantifies how confirmed the spec currently is.',
   );
   return out.join('\n\n');
@@ -505,6 +591,8 @@ const stanzas = loadStanzas();
 const flows = loadFlows();
 const enums = loadEnums();
 const techniques = loadTechniques();
+const contributors = loadContributors();
+const tools = loadTools();
 
 for (const { data } of stanzas) {
   write(`docs/spec/stanzas/${data.id}.md`, renderStanza(data));
@@ -518,6 +606,8 @@ write('docs/spec/flows/index.md', renderFlowIndex(flows.map((f) => f.data)));
 
 write('docs/spec/enums.md', renderEnums(enums));
 write('docs/spec/techniques.md', renderTechniques(techniques));
+write('docs/spec/tools.md', renderTools(tools));
+write('docs/spec/contributors.md', renderContributors(contributors));
 write('docs/spec/glossary.md', renderGlossary());
 write(
   'docs/spec/index.md',
@@ -526,11 +616,14 @@ write(
     flows: flows.length,
     enums: enums.length,
     techniques: techniques.length,
+    tools: tools.length,
+    contributors: contributors.length,
   }),
 );
 
 console.log('Generated docs/spec from corpus:');
 console.log(
   `  stanzas: ${stanzas.length}  flows: ${flows.length}  enums: ${enums.length}  ` +
-    `techniques: ${techniques.length}`,
+    `techniques: ${techniques.length}  tools: ${tools.length}  ` +
+    `contributors: ${contributors.length}`,
 );

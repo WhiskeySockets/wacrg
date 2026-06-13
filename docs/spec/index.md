@@ -15,6 +15,8 @@ This is the generated, human-readable view of the wacrg corpus — a machine-rea
 | [Flows](./flows/index.md) | 4 |
 | [Enums](./enums.md) | 3 |
 | [Techniques](./techniques.md) | 7 |
+| [Tools](./tools.md) | 5 |
+| [Contributors](./contributors.md) | 1 |
 | [Glossary](./glossary.md) | — |
 | [Coverage](./coverage.md) | — |
 
@@ -23,5 +25,5 @@ This is the generated, human-readable view of the wacrg corpus — a machine-rea
 - **Stanzas** describe individual WABinary nodes (tag, attributes, nested children) with per-fact provenance and confidence.
 - **Flows** stitch stanzas into end-to-end signaling sequences with mermaid diagrams.
 - **Enums** capture closed value sets (e.g. terminate reasons).
-- **Techniques** document the reverse-engineering methods that back each fact.
+- **Techniques** document the reverse-engineering methods that back each fact; **Tools** and **Contributors** record what produced it and who submitted it.
 - **Coverage** quantifies how confirmed the spec currently is.

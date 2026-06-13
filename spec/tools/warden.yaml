@@ -1,0 +1,12 @@
+id: warden
+name: warden
+version: "0.1.0"
+url: https://github.com/purpshell/warden
+techniques:
+  - wasm-analysis
+maintainer: purpshell
+description: >
+  Living reverse-engineering knowledge base for Emscripten WebAssembly — parse,
+  fingerprint, auto-identify library code via the Emscripten Oracle, lift to
+  pseudo-C, and diff across releases, with annotations keyed to stable function
+  identity so they survive vendor rebuilds. Installable as warden-re.

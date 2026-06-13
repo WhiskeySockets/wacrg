@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wacrg.whiskeysockets.io/schema/contributor.schema.json",
+  "title": "Contributor",
+  "description": "A researcher who contributes facts to the spec. Provenance entries reference these ids to record WHO contributed what.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Stable contributor id; typically the lowercased GitHub handle. Matches the file name."
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name."
+    },
+    "github": {
+      "type": "string",
+      "description": "GitHub handle (without @). The verifiable identity that backs this contributor."
+    },
+    "affiliation": {
+      "type": "string",
+      "description": "Optional org/affiliation."
+    },
+    "techniques": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string" },
+      "description": "Technique ids this contributor commonly uses (must be in the fixed technique set)."
+    },
+    "tools": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string" },
+      "description": "Tool ids this contributor commonly uses (must match spec/tools/)."
+    },
+    "links": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/reference" },
+      "description": "Optional proof/identity links (profile, key fingerprint, site)."
+    }
+  },
+  "$defs": {
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "url": { "type": "string" }
+      }
+    }
+  }
+}

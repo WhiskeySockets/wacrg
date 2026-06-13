@@ -147,7 +147,7 @@
     },
     "provenance": {
       "type": "object",
-      "description": "Where this fact came from: the technique(s) that revealed it and any issue/PR/source references.",
+      "description": "Where this fact came from: the technique(s) and tool(s) that revealed it, who contributed it, and the issue/PR/commit references that prove it.",
       "additionalProperties": false,
       "required": ["techniques"],
       "properties": {
@@ -159,9 +159,25 @@
             "$ref": "#/$defs/technique"
           }
         },
+        "tools": {
+          "type": "array",
+          "description": "Tool ids used to obtain this fact; must match a spec/tools/<id>.yaml.",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "contributors": {
+          "type": "array",
+          "description": "Contributor ids who observed/submitted this fact; must match a spec/contributors/<id>.yaml.",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
         "sources": {
           "type": "array",
-          "description": "Issue/PR references (e.g. #12) or short free-text notes.",
+          "description": "Issue/PR/commit references (e.g. #12) or short notes that back the claim.",
           "items": {
             "type": "string"
           }

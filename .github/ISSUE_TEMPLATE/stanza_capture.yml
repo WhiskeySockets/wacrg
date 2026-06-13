@@ -61,6 +61,18 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: tools-used
+    attributes:
+      label: Tools used
+      description: >-
+        Specific tool(s) used, comma-separated — ideally ids from `spec/tools/`
+        (e.g. warden, baileys, frida, mitmproxy, ghidra). New tools are welcome;
+        a maintainer can add them to the registry.
+      placeholder: warden, baileys
+    validations:
+      required: false
+
   - type: dropdown
     id: confidence
     attributes:

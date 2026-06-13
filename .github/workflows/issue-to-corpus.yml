@@ -43,6 +43,9 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_BODY: ${{ github.event.issue.body }}
+          # The authenticated GitHub identity of the submitter — recorded as the
+          # capture's contributor (the "who" proof, backed by GitHub auth).
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
         run: npm run ingest
 
       - name: Create pull request

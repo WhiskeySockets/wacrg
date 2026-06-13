@@ -21,10 +21,5 @@ mitm_mcp_traffic.db
 .venv/
 __pycache__/
 
-# Stray warden RE output (WhatsApp Web WASM audio identity map) dropped under docs/.
-# Real, valuable data — but raw, unintegrated, and in the wrong place (docs/ is the
-# published site root). Relocate into corpus/ or a proper spec data path to track it.
-docs/media/
-
 # NOTE: docs/spec and COVERAGE.md are COMMITTED generated artifacts.
 # Do not add them here.

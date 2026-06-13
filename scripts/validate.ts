@@ -20,18 +20,22 @@ import {
   TECHNIQUE_IDS,
   fromRoot,
   loadCaptures,
+  loadContributors,
   loadEnums,
   loadFlows,
   loadStanzas,
   loadTechniques,
+  loadTools,
   readSchema,
   readYaml,
   walkAttributes,
   walkChildren,
   type Attribute,
+  type Contributor,
   type Loaded,
   type Provenance,
   type Stanza,
+  type Tool,
 } from './lib/corpus.ts';
 
 interface Problem {
@@ -71,6 +75,14 @@ const SCHEMAS: Record<string, SchemaKind> = {
   technique: {
     label: 'technique',
     schemaPath: 'spec/schema/technique.schema.json',
+  },
+  contributor: {
+    label: 'contributor',
+    schemaPath: 'spec/schema/contributor.schema.json',
+  },
+  tool: {
+    label: 'tool',
+    schemaPath: 'spec/schema/tool.schema.json',
   },
   glossary: {
     label: 'glossary',
@@ -132,12 +144,16 @@ const stanzas = loadStanzas();
 const flows = loadFlows();
 const enums = loadEnums();
 const techniques = loadTechniques();
+const contributors = loadContributors();
+const tools = loadTools();
 const captures = loadCaptures();
 
 // Reference sets for integrity checks.
 const techniqueIds = new Set<string>(techniques.map((t) => t.data.id));
 const stanzaIds = new Set<string>(stanzas.map((s) => s.data.id));
 const enumIds = new Set<string>(enums.map((e) => e.data.id));
+const contributorIds = new Set<string>(contributors.map((c) => c.data.id));
+const toolIds = new Set<string>(tools.map((t) => t.data.id));
 const fixedTechniqueIds = new Set<string>(TECHNIQUE_IDS);
 
 // During bootstrap the spec/techniques/ directory may not exist yet. When no
@@ -145,6 +161,8 @@ const fixedTechniqueIds = new Set<string>(TECHNIQUE_IDS);
 // but downgrade the "missing matching technique file" check to a warning so the
 // corpus remains validatable while that directory is being authored.
 const techniqueFilesPresent = techniques.length > 0;
+const contributorsPresent = contributors.length > 0;
+const toolsPresent = tools.length > 0;
 
 // ---------------------------------------------------------------------------
 // Schema validation pass.
@@ -154,6 +172,8 @@ for (const f of stanzas) validateFile('stanza', f);
 for (const f of flows) validateFile('flow', f);
 for (const f of enums) validateFile('enum', f);
 for (const f of techniques) validateFile('technique', f);
+for (const f of contributors) validateFile('contributor', f);
+for (const f of tools) validateFile('tool', f);
 for (const f of captures) validateFile('capture', f);
 
 // Validate the glossary file directly (single-file kind).
@@ -182,13 +202,27 @@ function checkProvenance(
   where: string,
   prov: Provenance | undefined,
 ): void {
-  if (!prov?.techniques) return;
-  for (const t of prov.techniques) {
+  if (!prov) return;
+  for (const t of prov.techniques ?? []) {
     if (!fixedTechniqueIds.has(t)) {
       fail(relPath, `${where}: provenance technique "${t}" is not in the fixed technique set`);
     } else if (!techniqueIds.has(t)) {
       const msg = `${where}: provenance technique "${t}" has no matching spec/techniques/${t}.yaml`;
       if (techniqueFilesPresent) fail(relPath, msg);
+      else warn(relPath, msg);
+    }
+  }
+  for (const tool of prov.tools ?? []) {
+    if (!toolIds.has(tool)) {
+      const msg = `${where}: provenance tool "${tool}" has no matching spec/tools/${tool}.yaml`;
+      if (toolsPresent) fail(relPath, msg);
+      else warn(relPath, msg);
+    }
+  }
+  for (const c of prov.contributors ?? []) {
+    if (!contributorIds.has(c)) {
+      const msg = `${where}: provenance contributor "${c}" has no matching spec/contributors/${c}.yaml`;
+      if (contributorsPresent) fail(relPath, msg);
       else warn(relPath, msg);
     }
   }
@@ -233,6 +267,34 @@ for (const { relPath, data } of techniques) {
   }
 }
 
+// Tools: declared techniques must be in the fixed set; maintainer must be a
+// known contributor.
+for (const { relPath, data } of tools as Loaded<Tool>[]) {
+  for (const t of data.techniques ?? []) {
+    if (!fixedTechniqueIds.has(t)) {
+      fail(relPath, `tool "${data.id}": technique "${t}" is not in the fixed technique set`);
+    }
+  }
+  if (data.maintainer && contributorsPresent && !contributorIds.has(data.maintainer)) {
+    fail(relPath, `tool "${data.id}": maintainer "${data.maintainer}" has no matching contributor`);
+  }
+}
+
+// Contributors: declared techniques must be in the fixed set; declared tools
+// must exist.
+for (const { relPath, data } of contributors as Loaded<Contributor>[]) {
+  for (const t of data.techniques ?? []) {
+    if (!fixedTechniqueIds.has(t)) {
+      fail(relPath, `contributor "${data.id}": technique "${t}" is not in the fixed technique set`);
+    }
+  }
+  for (const tool of data.tools ?? []) {
+    if (toolsPresent && !toolIds.has(tool)) {
+      fail(relPath, `contributor "${data.id}": tool "${tool}" has no matching spec/tools/${tool}.yaml`);
+    }
+  }
+}
+
 // Captures: source.technique must exist as a technique id; sanitized must hold.
 for (const { relPath, data } of captures) {
   const tech = data.source?.technique;
@@ -242,6 +304,15 @@ for (const { relPath, data } of captures) {
     fail(relPath, `source.technique "${tech}" is not in the fixed technique set`);
   } else if (!techniqueIds.has(tech)) {
     warn(relPath, `source.technique "${tech}" has no matching spec/techniques/${tech}.yaml`);
+  }
+  for (const tool of data.source?.tools ?? []) {
+    if (toolsPresent && !toolIds.has(tool)) {
+      warn(relPath, `source.tool "${tool}" has no matching spec/tools/${tool}.yaml`);
+    }
+  }
+  const cap = data.source?.contributor;
+  if (cap && contributorsPresent && !contributorIds.has(cap)) {
+    warn(relPath, `source.contributor "${cap}" has no matching spec/contributors/${cap}.yaml`);
   }
   if (data.sanitized !== true) {
     fail(relPath, 'capture must set sanitized: true');
@@ -253,13 +324,15 @@ for (const { relPath, data } of captures) {
 // ---------------------------------------------------------------------------
 
 const fileCount =
-  stanzas.length + flows.length + enums.length + techniques.length + captures.length;
+  stanzas.length + flows.length + enums.length + techniques.length +
+  contributors.length + tools.length + captures.length;
 
 console.log('wacrg corpus validation');
 console.log('-----------------------');
 console.log(
   `stanzas: ${stanzas.length}  flows: ${flows.length}  enums: ${enums.length}  ` +
-    `techniques: ${techniques.length}  captures: ${captures.length}  (total ${fileCount} files)`,
+    `techniques: ${techniques.length}  contributors: ${contributors.length}  ` +
+    `tools: ${tools.length}  captures: ${captures.length}  (total ${fileCount} files)`,
 );
 
 if (warnings.length) {

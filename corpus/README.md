@@ -59,9 +59,11 @@ Every file in `corpus/captures/` is validated against
 - `raw.format` + `raw.body` — the captured payload (`xml`, `hex`, `base64`, or `json`).
 - `sanitized` — **must be `true`**.
 
-Optional fields include `title`, `status`, `source.issue`, `source.contributor`,
-`source.captured_at`, `decoded` (a human-readable annotation), `attributes` (a
-flat list of `{name, value, note}`), and `notes`.
+Optional fields include `title`, `status`, `source.issue`, `source.contributor`
+(auto-stamped from the submitter's GitHub identity when filed via the Issue Form),
+`source.tools` (tool ids from `spec/tools/`), `source.captured_at`, `decoded` (a
+human-readable annotation), `attributes` (a flat list of `{name, value, note}`),
+and `notes`.
 
 ## Sanitization rules (mandatory)
 

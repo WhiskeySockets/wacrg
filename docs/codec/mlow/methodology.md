@@ -11,6 +11,7 @@ corroborate it.
 > (9,819,554 bytes), ingested into a warden knowledge base as version `v1`
 > (id `1`). All queries below run against that KB; none execute the binary, so no
 > live traffic and no key material are involved.
+> Technique `wasm-analysis` · tool `warden` · contributor `purpshell`.
 
 ## 0. The binary is the same one shipped to clients
 
@@ -53,9 +54,10 @@ for r in rows:
 dem = lambda s: subprocess.run(["c++filt","-t",s], capture_output=True, text=True).stdout.strip()
 ```
 
-The full result is committed as
-[`data/identity-map.json`](data/identity-map.json). The codec-relevant classes
-are in the [function map](function-map.md). Key reads:
+The full result is committed at `impl/mlow/data/identity-map.json` (kept under
+`impl/`, not the published `docs/` site, per the
+[attribution model](../../attribution.md)). The codec-relevant classes are in the
+[function map](function-map.md). Key reads:
 
 - `facebook::rtc::AudioDecoderMLowImpl` — the decoder.
 - `facebook::rtc::MLowFrame` — the audio frame.

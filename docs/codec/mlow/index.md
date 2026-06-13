@@ -21,10 +21,12 @@ information.
 > repo.
 >
 > **Provenance.** Module: WhatsApp Web calling engine `wa.wasm`,
-> SHA-1 `3638a506b4055c2fc6bec75edff18512ca79fe64` (9,819,554 bytes). Technique:
-> `wasm-analysis`. Method and exact queries: [methodology](methodology.md). The
-> machine-readable identity map: [`data/identity-map.json`](data/identity-map.json),
-> rendered in the [function map](function-map.md).
+> SHA-1 `3638a506b4055c2fc6bec75edff18512ca79fe64` (9,819,554 bytes).
+> Technique `wasm-analysis` · tool `warden` · contributor `purpshell` · sources:
+> commits `aa0996c`, `365daa6` and the machine-readable identity map at
+> `impl/mlow/data/identity-map.json` (rendered in the
+> [function map](function-map.md)). Method and exact queries:
+> [methodology](methodology.md).
 
 ## Why this is recoverable at all
 

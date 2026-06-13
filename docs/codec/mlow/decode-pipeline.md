@@ -13,8 +13,10 @@ unmodified**.
 > `probable`. Below, claims are split into **verified** (I read the body and
 > matched it to a known algorithm constant-for-constant) and **reported**
 > (surfaced by an analysis agent, consistent with the bodies but not yet
-> line-verified). Provenance: `wa.wasm` SHA-1 `3638a50…`; functions cited by
-> index.
+> line-verified). Provenance: module `wa.wasm` SHA-1 `3638a50…`; technique
+> `wasm-analysis` · tool `warden` · contributor `purpshell` · source: commit
+> `365daa6` (the range coder is additionally corroborated by the round-trip test
+> in `impl/mlow/`). Functions cited by index.
 
 ## Correction: #1839 is not the decoder
 

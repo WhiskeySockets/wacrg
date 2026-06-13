@@ -28,6 +28,7 @@ implementation mirrors that recovered structure rather than the prior guess.
 | --- | --- | --- |
 | `doc.go`, `mlow.go` | public API, architecture, honesty contract | [index.md](../../docs/codec/mlow/index.md) |
 | `rangecoder.go`, `ec_enc.go` **(done, tested)** | CELT range coder (decode + matched encoder) | [decode-pipeline.md](../../docs/codec/mlow/decode-pipeline.md) |
+| `tables.go` **(done, tested)** | recovered inverse-CDF tables for #8911 | [decode-pipeline.md](../../docs/codec/mlow/decode-pipeline.md) (decode schedule) |
 | `frame.go` *(pending)* | MLow frame / TOC parse | function-map.md |
 | `red.go`, `fec.go` *(pending)* | RED split + Reed-Solomon FEC | function-map.md |
 | `mdct.go` *(pending)* | CELT-style MDCT band decode | decode-pipeline.md |

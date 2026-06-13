@@ -55,6 +55,42 @@ and **round-trip tests** it against a matched CELT encoder (no guessing):
 [`rangecoder_test.go`](../../../impl/mlow/rangecoder_test.go). This is the first
 codec layer that is both recovered *and* verified by an executable test.
 
+## Decode schedule and CDF tables (verified, then data-dependent)
+
+The decoder that drives the range coder is `audio_mdct_quantization_decode`
+(#8911); it calls `ec_dec_init` then a sequence of `ec_dec_bit_logp` /
+`ec_dec_bits` / `ec_dec_icdf`. The **start** of the schedule is a fixed header
+read; after that the schedule becomes **data-dependent** (per-band loops whose
+bit counts and branch choices depend on the running entropy state), so it cannot
+be transcribed as a flat list past the header. That data-dependence is the core
+remaining decode work (see [reconstruction roadmap](reconstruction-roadmap.md)).
+
+What is **verified** is the set of inverse-CDF (`icdf`) tables the decoder uses.
+Each was confirmed twice: the address appears as an `ec_dec_icdf` argument in
+#8911's body, and the bytes at that address in the static memory image are a
+valid `icdf` (non-increasing, 0-terminated, `icdf[0] ~= 2^ftb`):
+
+| WASM address | `ftb` | `icdf` bytes | role (from the schedule) |
+| --- | --- | --- | --- |
+| `0x112ab0` (1125040) | 2 | `2, 1, 0` | frame-init read |
+| `0x111560` (1119584) | 2 | `2, 1, 0` | per-band quantization loop |
+| `0x112ab3` (1125043) | 5 | `25, 23, 2, 0` | conditional mid-range parameter |
+| `0x112ab7` (1125047) | 7 | `126, 124, 119, 109, 87, 41, 19, 9, 4, 2, 0` | conditional large parameter |
+
+These are shipped and round-trip tested in
+[`impl/mlow/tables.go`](../../../impl/mlow/tables.go) /
+[`tables_test.go`](../../../impl/mlow/tables_test.go): encoding then decoding any
+symbol of any table against the matched coder recovers it, which jointly
+validates the bytes, the `ftb`, and the `ec_dec_icdf` transcription.
+
+Extraction is reproducible: the binary uses bulk-memory **passive** data
+segments placed by `memory.init` in `__wasm_init_memory` (#224), so there is no
+static segment offset; the segment-to-address map is rebuilt from the 117
+`memory.init` placements, after which any table is read by address (the
+`analysis/extract_table.py` helper in the warden repo). This same tool will lift
+the remaining DSP tables (e.g. the float-constant table at `1155664`) as the
+data-dependent schedule is traced.
+
 ## DSP kernels (LPC verified; MDCT reported)
 
 The synthesis cluster is classic transform-codec DSP:

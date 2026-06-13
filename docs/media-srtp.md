@@ -31,10 +31,13 @@ endpoints negotiated during signaling.
 
 This section is deliberately long, because it is where the honesty lives.
 
-- **Codecs.** Audio is widely assumed to be **Opus** (with some narrowband path
-  for poor networks), and the offer's `<audio enc rate>` likely names it — but
-  the exact codec set, bitrates, FEC/DTX usage, and how/whether they renegotiate
-  mid-call are unverified. Video codec(s) and parameters are entirely open.
+- **Codecs.** Static `wasm-analysis` now identifies the **audio** codec at
+  `probable`: the primary codec is **MLow** (an in-house CELP speech codec with
+  an optional neural "companion"), with **Opus** present as an alternate, carried
+  over an RED + Reed-Solomon FEC layer into a WebRTC-NetEq receive engine. See
+  [MLow and the audio media plane](codec/mlow/index.md). What remains open: the
+  MLow bitstream/bitrates, DTX usage, mid-call renegotiation, and the exact
+  `<audio enc rate>` mapping. Video codec(s) and parameters are still open.
 - **RTP details.** Payload type numbers, SSRC assignment, header extensions,
   marker/sequence handling, and whether multiple media (audio+video) are
   multiplexed on one 5-tuple are all unknown.
@@ -67,7 +70,10 @@ The above is summarized as `open_questions` on the relevant
 [stanza](spec/stanzas/index.md) and [technique](spec/techniques.md) entries.
 Priorities for moving any of this from `speculative` toward `probable`:
 
-1. Confirm the audio codec and its `<audio enc rate>` mapping.
+1. Confirm the audio codec and its `<audio enc rate>` mapping. *(Codec
+   identified at `probable` by static [MLow analysis](media/mlow/index.md);
+   promoting to `confirmed` needs a second technique, e.g. a Frida hook or a live
+   media capture of the same frames.)*
 2. Determine the SRTP cipher suite and key-derivation steps.
 3. Establish whether/how media keys rotate during a long call.
 

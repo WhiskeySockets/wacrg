@@ -76,21 +76,27 @@ This is the same fan-out model as encrypted messaging; calls inherit it directly
 
 ## SRTP key derivation
 
-This is the **most speculative** part of the whole spec.
+This was long the **most speculative** part of the spec; static
+`wasm-analysis` (corroborated by a runtime trace) has now recovered its
+**structure** to `probable`. The full schedule is in
+[SRTP key schedule](keying/srtp-key-schedule.md); in brief, it is two layers:
 
-Once both endpoints hold the shared call/media key, the [media plane](media-srtp.md)
-needs concrete **SRTP master keys and salts**. The expectation is that a **key
-derivation function** expands the call key into the SRTP keying material, likely:
+1. **WAHKDF:** `HKDF-SHA256(IKM = callKey, salt = nil, info = participantLID,
+   L = 46)` -> `masterKey(16) || masterSalt(14) || unused(16)`. Each participant
+   derives distinct master keying via the LID `info`.
+2. **RFC 3711 KDF:** an AES-128-CM PRF over the master key/salt yields the
+   SRTP/SRTCP cipher, auth, and salt keys (labels `0x00`-`0x05`). The 20-byte
+   auth keys and AES-CM cipher point to the **`AES_CM_128_HMAC_SHA1_80`** suite.
 
-- per-direction keys (send vs. receive), and
-- possibly periodic rekeying for long calls.
+Hop-by-hop SRTP skips Layer 1: the relay supplies a 30-byte
+`masterKey || masterSalt` directly. The primitives are statically confirmed in
+the binary (SHA-256, AES-128-CTR), and a reference implementation with an
+RFC 5869 known-answer test lives at [`impl/keying/`](../impl/keying/README.md).
 
-**What we do not know:** the exact KDF, the input labels/context, the SRTP cipher
-suite the keys feed, and whether the derivation incorporates call-id or other
-signaling fields as salt. None of this is confirmed. It is captured as
-`open_questions` and will only move to `probable` when a technique that can
-observe derived SRTP keys (e.g. [Frida hooking](spec/techniques.md) of the media
-engine, or a memory dump) corroborates a hypothesis.
+**What is still open:** the exact HKDF `info` beyond the LID, the
+`<encopt keygen>` / `<enc v>` selectors, and any mid-call rekeying. Reaching
+`confirmed` wants the runtime trace formalized as a recorded capture (a second
+independent technique). These stay in `open_questions`.
 
 ## What this means for contributors
 

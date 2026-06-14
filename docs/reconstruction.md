@@ -73,6 +73,50 @@ a *fully functional* client is concentrated in two places:
    the per-frame E2EE media crypto (`facebook::rtc::e2ee::*`, SFrame-style). These
    are `speculative` in the spec today.
 
+## Binary coverage: verified vs guessed
+
+A warden knowledge base of `wa.wasm` reports every one of its **13,219 defined
+functions** as "named", which is misleading. The breakdown:
+
+| Provenance | Count | Trust |
+| --- | --- | --- |
+| oracle (libc / musl / Emscripten runtime) | ~1,235 | reliable (fingerprinted) |
+| human (body-verified in this work) | ~dozen | reliable |
+| agent (the LLM deep pass) | ~11,942 | **guesses** - repeatedly wrong |
+
+So **~9% is reliably mapped; ~90% is an unverified guess.** The agent names and
+their "understanding" notes are a *starting index*, not knowledge: this work has
+already caught them naming a config function the "decoder", tagging H.264 video as
+MLow, and missing the HKDF layer entirely. Treat any single agent name as a lead
+to verify, never a fact.
+
+What is **verified** so far is a few dozen functions: the audio entropy coder
+(CELT range coder), one LPC kernel, SHA-256, the four CDF tables, the SRTP crypto
+primitives, and the codec class identities. Everything below is **unmapped** in
+the strong sense (no body verification), grouped by subsystem the binary's own
+RTTI reveals:
+
+- **Audio codec internals** - the data-dependent decode loop (the actual MDCT/LPC
+  synthesis grammar), the NLSF/gain/excitation tables, the encoder, and the exact
+  RED + Reed-Solomon byte format. The frame format is only *agent-reported*.
+- **SFrame per-frame E2EE** (`facebook::sframe`) - located, key schedule unread.
+- **NetEq** (`concerto::*`, ~266 fns) - named verbatim from WebRTC, algorithms
+  unread (jitter, PLC Expand/Merge, delay manager).
+- **Bandwidth estimation** (`concerto` BWE: PacketPairBwe, AimdRateControl) - named,
+  unread.
+- **Video** - an entire OpenH264 codec (`WelsEnc`/`WelsDec`/`WelsCommon`/`WelsVP`,
+  ~260 fns) plus H.26x packetization. Out of the audio scope, wholly unmapped.
+- **The companion NN runtime** (`executorch`, ~378 fns; XNNPACK) - the ML inference
+  engine behind `mlowcompanion`. Wholly unmapped (and out of scope).
+- **Transport in the WASM** - the Noise socket, the relay/STUN dialect builders,
+  and DTLS/SCTP. Only preliminary survey, no body verification.
+- **Platform glue** (`whatsapp::wasm::WasmAudioDriver` ~494 fns, capture/playback
+  drivers) - named, not deeply understood.
+- **JSON / utility** (`nlohmann`, ~37) and the long tail of app logic.
+
+The honest one-liner: the *architecture* is mapped, a handful of *load-bearing
+algorithms* are verified, and the *other ~90%* is indexed-but-unverified.
+
 ## wasm-analysis is the unlock
 
 The wacrg [coverage report](spec/coverage.md) shows `wasm-analysis` has

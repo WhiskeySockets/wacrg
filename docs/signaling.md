@@ -104,3 +104,8 @@ See also:
 
 These are tracked as `open_questions` on the relevant
 [stanza entries](spec/stanzas/index.md).
+
+For the **WASM-side** view of the same machinery - the engine's own offer/accept/
+rekey handlers, the call state machine, and the group/call-link surface, recovered
+by `wasm-analysis` as an independent second technique - see
+[call signaling from the WASM](signaling/wasm-call-handling.md).

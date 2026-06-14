@@ -90,10 +90,11 @@ A frame is encrypted E2E first, then HBH on transmit; the reverse on receive.
 
 ## Relationship to SFrame
 
-Distinct from SRTP, the binary also carries `facebook::sframe` (an
-`SFrameKeyProvider`, #226/#234/#457/#482/#497) - a per-frame media-encryption
-layer. Its key schedule is separate from the SRTP master/session derivation here
-and is tracked as its own [open question](#open-questions).
+Distinct from SRTP, the binary also carries `facebook::sframe` /
+`wa::sframe` - a per-frame media-encryption layer (AES-CTR + HMAC-SHA1). Its key
+schedule is separate from the SRTP master/session derivation here. See
+[SFrame: per-frame media E2EE](sframe-media-e2ee.md); whether SFrame and the E2E
+SRTP are one layer or two stacked layers is an open question.
 
 ## Open questions
 

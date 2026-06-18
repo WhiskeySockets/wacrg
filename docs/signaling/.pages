@@ -1,4 +1,5 @@
 title: Signaling detail
 nav:
+  - stanza-reference.md
   - wasm-call-handling.md
   - ...

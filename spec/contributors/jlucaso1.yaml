@@ -1,0 +1,10 @@
+id: jlucaso1
+name: João Lucas
+github: jlucaso1
+techniques:
+  - wasm-analysis
+tools:
+  - whatsapp-rust
+links:
+  - title: whatsapp-rust
+    url: https://github.com/jlucaso1/whatsapp-rust

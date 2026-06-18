@@ -1,0 +1,10 @@
+id: auties
+name: Auties
+github: Auties00
+techniques:
+  - wasm-analysis
+tools:
+  - zapo-caller
+links:
+  - title: GitHub
+    url: https://github.com/Auties00

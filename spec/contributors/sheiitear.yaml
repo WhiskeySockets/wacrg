@@ -1,0 +1,6 @@
+id: sheiitear
+name: Sheiitear
+techniques:
+  - wasm-analysis
+tools:
+  - zapo-caller

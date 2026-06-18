@@ -6,6 +6,10 @@ Researchers who contribute to the spec. Provenance entries reference these ids t
 
 | Contributor | GitHub | Affiliation | Techniques | Tools |
 | --- | --- | --- | --- | --- |
+| Auties | [@Auties00](https://github.com/Auties00) | — | `wasm-analysis` | `zapo-caller` |
+| Edgard | — | — | `wasm-analysis` | `zapo-caller` |
+| João Lucas | [@jlucaso1](https://github.com/jlucaso1) | — | `wasm-analysis` | `whatsapp-rust` |
 | Rajeh Taher | [@purpshell](https://github.com/purpshell) | WhiskeySockets | `websocket-capture`, `baileys-instrumentation`, `wasm-analysis` | `baileys`, `warden` |
+| Sheiitear | — | — | `wasm-analysis` | `zapo-caller` |
 
 [Back to spec overview](./index.md)

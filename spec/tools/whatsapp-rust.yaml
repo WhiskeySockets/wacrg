@@ -1,0 +1,14 @@
+id: whatsapp-rust
+name: whatsapp-rust (VoIP)
+url: https://github.com/jlucaso1/whatsapp-rust
+techniques:
+  - wasm-analysis
+maintainer: jlucaso1
+description: >
+  Pure-Rust reconstruction of the WhatsApp Web client with a working VoIP media
+  stack (wacore/src/voip): a from-scratch MLow/SMPL CELP codec, SFrame, E2E and
+  hop-by-hop SRTP, WARP, STUN/relay, RTP/RTCP, and call signaling. The codec is a
+  port of a byte-exact Go reference (meowmeow) reverse-engineered op-by-op from
+  the WhatsApp WASM and pinned against captured decode vectors; the crypto and
+  signaling are ported from zapo-caller. An independent corroboration source for
+  the keying, media, transport, and signaling planes.

@@ -1,0 +1,6 @@
+id: edgard
+name: Edgard
+techniques:
+  - wasm-analysis
+tools:
+  - zapo-caller

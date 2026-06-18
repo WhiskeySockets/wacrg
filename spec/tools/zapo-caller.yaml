@@ -1,0 +1,12 @@
+id: zapo-caller
+name: zapo-caller
+techniques:
+  - wasm-analysis
+  - frida-hooking
+maintainer: auties
+description: >
+  A TypeScript reconstruction of the WhatsApp call client (caller side), authored
+  by the community (Edgard, Sheiitear, Auties). Implements the call signaling,
+  callKey/SRTP/SFrame/WARP keying, STUN/relay transport, and RTP framing, with
+  primitives pinned to known-answer vectors. The upstream source that the
+  whatsapp-rust VoIP crypto and signaling were ported from.

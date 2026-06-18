@@ -8,19 +8,20 @@
 it. The call/media key delivered via Signal `<enc>` is expanded into SRTP master
 keys, then into SRTP/SRTCP session keys, in **two layers**.
 
-> **Confidence.** The *algorithm* below is `probable`: its structure was recovered
-> by a runtime **trace** of the WASM (a working, trace-verified Go implementation
-> derives identical keys), and the **primitives it needs are statically confirmed**
-> present in the binary (this page's new contribution). Promoting to `confirmed`
-> wants the runtime trace formalized as a capture so two independent techniques are
-> on record. The exact HKDF `info` and rekey policy stay `speculative`
-> ([open questions](#open-questions)).
+> **Confidence: `confirmed`** for the E2E SRTP derivation. It is now agreed by
+> **multiple independent paths**: static `wasm-analysis` of the binary (this
+> page), a runtime WASM trace (the `meowmeow`/`dublin` Go reference), and two
+> independent reconstructions whose primitives are pinned to known-answer test
+> vectors - [zapo-caller](../../spec/tools.md) (TypeScript) and
+> [whatsapp-rust](../../spec/tools.md) (Rust). All derive byte-identical keys.
+> The HBH two-stage schedule (below) is `probable` (recovered by the
+> reconstructions; one technique class). Rekey policy stays `speculative`.
 >
-> **Provenance.** Module `wa.wasm` SHA-1 `3638a50…`. Technique `wasm-analysis`
-> (static, this page) corroborated by a prior runtime WASM trace · tool `warden` ·
-> contributor `purpshell` · sources: the trace-verified reference
-> `dublin/srtp.go` and commit history. **No key material is in this repo** -
-> structure only.
+> **Provenance.** Technique `wasm-analysis` · tools `warden`, `meowmeow`,
+> `zapo-caller`, `whatsapp-rust` · contributors `purpshell`, `jlucaso1`,
+> `auties`, `sheiitear`, `edgard` · sources: `wacore/src/voip/e2e_srtp.rs:55`,
+> `hbh_srtp.rs:51`, the trace-verified Go reference, commit history. **No key
+> material is in this repo** - structure only.
 
 ## Layer 1: WAHKDF (call key to SRTP master)
 
@@ -82,17 +83,31 @@ WhatsApp protects media twice (see [media-srtp](../media-srtp.md)):
 - **End-to-end (E2E) SRTP** uses the master derived above (Layer 1+2), so relays
   forward ciphertext they cannot read.
 - **Hop-by-hop (HBH) SRTP** is keyed by a 30-byte key the relay supplies
-  (`<hbh_key>`), packed as `masterKey(16) || masterSalt(14)` - i.e. **no HKDF**;
-  the 30 bytes are fed straight into the same Layer-2 RFC 3711 KDF. The binary
-  references `hbh_srtp_key` / `hbh_srtcp_key` (e.g. #4496, #5597, #7006, #11416).
+  (`<hbh_key>`, base64 in the offer/accept), packed as
+  `masterKey(16) || masterSalt(14)`. Unlike E2E it does **not** start from the
+  call key; instead the 30-byte relay key runs through a **two-stage HKDF-SHA256**
+  (`wa_sfu_kdf`) with directional string labels:
+
+  ```
+  stage 1:  srtcp_salt = HKDF-SHA256(salt = zeros(32), ikm = masterSalt,
+                                     info = "uplink hbh srtcp salt", L = 32)
+  stage 2:  crypto_key = HKDF-SHA256(salt = srtcp_salt, ikm = masterKey,
+                                     info = "uplink hbh srtcp key",  L = 30)
+              -> crypto_key(16) || crypto_salt(14)
+  ```
+
+  with a matching `downlink hbh srtcp salt` / `downlink hbh srtcp key` pair for
+  the other direction. The binary references `hbh_srtp_key` / `hbh_srtcp_key`;
+  the labels and two-stage chain are recovered from the reconstructions
+  (`wacore/src/voip/hbh_srtp.rs:51`).
 
 A frame is encrypted E2E first, then HBH on transmit; the reverse on receive.
 
 ## Relationship to SFrame
 
 Distinct from SRTP, the binary also carries `facebook::sframe` /
-`wa::sframe` - a per-frame media-encryption layer (AES-CTR + HMAC-SHA1). Its key
-schedule is separate from the SRTP master/session derivation here. See
+`wa::sframe` - a per-frame media-encryption layer using **AES-128-GCM** (keyed by
+a separate HKDF label `e2e sframe key`). See
 [SFrame: per-frame media E2EE](sframe-media-e2ee.md); whether SFrame and the E2E
 SRTP are one layer or two stacked layers is an open question.
 

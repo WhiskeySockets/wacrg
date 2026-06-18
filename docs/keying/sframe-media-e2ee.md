@@ -1,75 +1,100 @@
 <!-- Hand-written narrative. Companion to srtp-key-schedule.md; the per-frame layer.
-     Honest about the function-level uncertainty (agent crypto names are unreliable here). -->
+     CORRECTED 2026-06 from two independent reconstructions (KAT-pinned): the cipher
+     is AES-128-GCM (not AES-CTR), and the key schedule is now known. -->
 
 # SFrame: per-frame media E2EE
 
 Alongside [SRTP](srtp-key-schedule.md), the binary carries a second media-crypto
 layer: **SFrame** (Secure Frames), which encrypts each media frame's content end
-to end. This page records what is verified about it and is explicit about what is
-not, because the function-level naming here is unreliable (see the caveat).
+to end. An earlier version of this page (from a single static `wasm-analysis`
+read) reported the cipher as AES-CTR with an unknown key schedule. **Two
+independent reconstructions corrected that**: the cipher is **AES-128-GCM**, and
+the key schedule is now fully recovered.
 
-> **Confidence.** The *layer* and its *cipher suites* are `probable` (recovered
-> from the binary's own RTTI and cipher-suite strings). The *key schedule*, the
-> *frame header*, and *how SFrame composes with E2E SRTP* are `speculative` /
-> open. One technique (static `wasm-analysis`), so `probable` at most.
+> **Confidence.** The key schedule and GCM framing are **`probable`**: recovered
+> by `wasm-analysis` and corroborated by two reconstructions
+> ([zapo-caller](../../spec/tools.md) in TypeScript and
+> [whatsapp-rust](../../spec/tools.md) in Rust) whose primitives are pinned to
+> known-answer test vectors. Promoting to `confirmed` wants a recorded live
+> capture as a third, independent technique.
 >
-> **Provenance.** Module `wa.wasm` SHA-1 `3638a50…`. Technique `wasm-analysis` ·
-> tool `warden` · contributor `purpshell` · sources: commit history. No key
-> material in the repo.
+> **Provenance.** Technique `wasm-analysis` · tools `warden`, `zapo-caller`,
+> `whatsapp-rust` · contributors `purpshell`, `jlucaso1`, `auties`, `sheiitear`,
+> `edgard` · sources: `wacore/src/voip/sframe.rs` (Rust, ported from
+> `zapo-caller src/media/sframe.ts`), commit history. No key material in the repo.
 
-## What is verified
+## Correction: AES-128-GCM, not AES-CTR
 
-- **The layer exists and is WhatsApp-wrapped.** The binary contains Meta's
-  `facebook::sframe` (`SFrameKeyProvider`, `ISFrameKeyProvider`, `Key`,
-  `CipherInterface`, `KeyCryptoInterface`) and a WhatsApp wrapper
-  `wa::sframe` - `wa::sframe::cipher::WASframeAESCipher`,
-  `wa::sframe::cipher::WASframeCipherFactory`, `wa::sframe::crypto::WASframeKeyCrypto`.
-- **Cipher suites: AES-CTR, 128 and 256-bit.** The data section holds the literal
-  suite names `"AES-128 integer counter mode"` and `"AES-256 integer counter mode"`
-  (addresses 80 and 160). "Integer counter mode" is CTR. Authentication is
-  **HMAC-SHA1** (the binary's only HMAC string is `"hmac sha-1 authentication
-  function"`, shared with SRTP). So the suite is an **AES-CTR + HMAC-SHA1** SFrame
-  profile, in 128 and 256-bit key variants.
-- **Per-frame keying by key id.** `SFrameKeyProvider` looks keys up by a **KID**
-  (key index), with a bound of 64 slots - consistent with SFrame's per-sender /
-  per-epoch key identification.
-- **It covers audio and video.** A key-provider decrypt path references
-  `webrtc_shim::VideoFrameBuffer`, so SFrame protects media frames generally, not
-  just audio.
+The prior AES-CTR reading was string-based and weak (it leaned on the data
+strings `"AES-128/256 integer counter mode"`, which in fact describe the **SRTP**
+cipher, plus a function the deep pass mislabeled `sframe_aes256_ctr` that is
+actually float DSP). Both reconstructions implement SFrame as **AES-128-GCM**, and
+their GCM round-trips are KAT-validated. The CTR strings belong to the
+[SRTP layer](srtp-key-schedule.md), not SFrame.
 
-## What is NOT recovered (and why)
+## Key derivation (recovered)
 
-- **The key schedule.** Standard SFrame (RFC 9605) derives the per-frame key/salt/
-  auth key from a base secret with `HKDF` and labels like
-  `"SFrame 1.0 AES CM AEAD Key"`. **Those labels are absent** from this binary, so
-  `wa::sframe` uses a **custom** derivation. The base-key source (does it chain
-  from the call key? a separate ratchet?) and the exact HKDF inputs are unmapped.
-- **The frame header format** (config byte, KID, counter encoding) - unread.
-- **Composition with E2E SRTP.** Whether SFrame *is* the end-to-end layer (with
-  SRTP only hop-by-hop), or whether E2E SRTP and SFrame are **stacked**, is an
-  open question. The [SRTP page](srtp-key-schedule.md) documents an E2E SRTP
-  derived from the call key; reconciling that with this per-frame SFrame layer is
-  the key unknown.
+A per-participant key is derived from the 32-byte `callKey` with HKDF-SHA256,
+**splitting the call key into the HKDF salt and IKM**:
 
-> **Caveat - function names here are unreliable.** The deep-analysis pass named
-> several functions in this cluster for crypto they do not perform.
-> `sframe_aes256_ctr_crypt_blocks` (#1522), for instance, is **float vector math**
-> (`vector_divide_f32`, `memf32` multiply), not AES - it merely references the
-> `"AES-256 integer counter mode"` string via an `i32.const` address collision
-> (the same trap as the H.264 false positives #7466/#7952). So the *suite strings*
-> and *RTTI classes* are trustworthy anchors; the *agent crypto names*
-> (`sframe_encrypt_counter`, `sframe_key_provider_compute`, …) are not, and the
-> real cipher backend is most likely the shared `aes_*_ctr` primitives (#430/#465/
-> #468/#514) rather than the sframe-named functions. Mapping the true
-> implementation needs body-by-body reads.
+```
+sframe_key(participant) =
+    HKDF-SHA256( salt = callKey[0:16],
+                 ikm  = callKey[16:32],
+                 info = "e2e sframe key" + participantID,
+                 L    = 32 )
+```
+
+- The `info` label is the literal string **`e2e sframe key`** concatenated with
+  the participant's formatted id, e.g. `e2e sframe key1234567890:0@lid`.
+- **Participant id formatting:** a bare `@lid` jid with no device suffix gets a
+  `:0` device, i.e. `user@lid` -> `user:0@lid`. This `:0` convention is load
+  bearing - the label must match byte-for-byte or the key is wrong.
+- **Direction:** the sender derives the key for the *peer* id, the receiver for
+  *self* - the opposite convention to E2E SRTP (which uses self for send).
+
+The related **WARP authentication key** (the media MESSAGE-INTEGRITY tag key) is a
+separate HKDF with an empty salt:
+
+```
+warp_auth_key = HKDF-SHA256( salt = "", ikm = callKey, info = "warp auth key", L = 32 )
+```
+
+## Cipher and nonce (three byte-level traps)
+
+SFrame uses **AES-128-GCM with a non-standard 16-byte nonce** (not the RFC 5116
+12-byte nonce). All three of these silently fail if done the obvious way and are
+pinned by KATs in the reconstructions:
+
+1. **Nonce** = `8 zero bytes || counter` where the counter is a **little-endian
+   u64**, producing a 16-byte value used as the GCM nonce (GHASH-derived J0).
+2. **The SFrame header is appended *after* the ciphertext+tag and is *not* GCM
+   AAD.** (Intuition says prepend-and-authenticate; it is neither.)
+3. **Wire layout:** `[ ciphertext || 16-byte GCM tag || varint-header ]`. The
+   header is a varint-encoded `(counter, key_id, ...)` trailer.
+
+## Per-frame keying by key id
+
+Keys are looked up by a **KID** (key index), consistent with SFrame's
+per-sender / per-epoch identification. The class set in the binary
+(`facebook::sframe::SFrameKeyProvider` + a WhatsApp wrapper `wa::sframe`) backs
+this; the reconstructions implement the single-key path used by 1:1 calls.
+
+## Composition with E2E SRTP
+
+A 1:1 call therefore has **two end-to-end media-crypto layers** over the relay:
+the [E2E SRTP](srtp-key-schedule.md) cipher (AES-CM) *and* SFrame (AES-GCM),
+both keyed from the same `callKey` by different HKDF labels. Plus the relay's
+**hop-by-hop SRTP**. The exact order in which they apply on the wire (SFrame
+inside SRTP vs. alongside) is tracked below.
 
 ## Open questions
 
-- The `wa::sframe` key derivation: base secret, KDF, and labels.
-- The SFrame frame header byte layout and the KID/counter encoding.
-- E2E SRTP vs SFrame: one layer or two, and in what order relative to HBH SRTP.
-- Which functions actually implement the AES-CTR + HMAC cipher (vs the
-  mislabelled DSP/utility functions in this cluster).
+- The precise on-wire **ordering** of SFrame, E2E SRTP, and HBH SRTP for one
+  media packet.
+- The **KID / epoch** semantics for rekeying (the multi-key path beyond 1:1).
+- The exact `key_id` and length fields inside the varint header.
+- Whether a recorded live capture confirms GCM end-to-end (to reach `confirmed`).
 
 ## See also
 

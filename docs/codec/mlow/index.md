@@ -137,9 +137,12 @@ These are the gaps between "we can name the component" and "we can re-implement
 it bit-exactly." They are `speculative` until recovered.
 
 1. **MLow bitstream layout.** Frame header/TOC and how subframes are packed.
-   Partly recovered: the codec is an **LPC + MDCT hybrid** (CELT-family) whose
-   synthesis path is the float DSP cluster around #9013, not the config function
-   #1839 an earlier note misread. See [decode-pipeline](decode-pipeline.md).
+   Recovered by the reconstructions: MLow is a **split-band CELP** codec
+   (internally "SMPL"), *not* the MDCT hybrid an earlier note guessed - the MDCT
+   DSP cluster in `wa.wasm` is the **standard-Opus/CELT fallback path**, which
+   the decoder routes to separately (a TOC with top bits `11` is stock Opus; an
+   MLow "smpl" TOC goes to the CELP decoder). See
+   [decode-pipeline](decode-pipeline.md).
 2. **Sample rate and frame size.** The binary references **8000** and **16000**
    internally, while configuration language elsewhere suggests a super-wideband
    (32 kHz) path with 20 ms frames. Whether MLow's core runs at 16 kHz with SWB
@@ -159,8 +162,8 @@ it bit-exactly." They are `speculative` until recovered.
 
 ## See also
 
-- [Decode pipeline](decode-pipeline.md) — the verified CELT range coder, the LPC
-  and MDCT DSP kernels, and the #1839 correction.
+- [Decode pipeline](decode-pipeline.md) — the verified CELT range coder, the
+  SMPL CELP synthesis path, and the standard-Opus-vs-MLow TOC routing.
 - [Function map](function-map.md) — the class/source/function identity table and
   the corrected names.
 - [Methodology](methodology.md) — every query used to derive this, reproducibly.

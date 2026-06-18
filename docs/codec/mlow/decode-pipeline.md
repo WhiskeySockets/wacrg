@@ -1,20 +1,24 @@
-<!-- Hand-written narrative. Findings split into "verified by direct body read" vs
-     "agent-reported, pending verification". One technique => probable cap. -->
+<!-- Hand-written narrative. CORRECTED 2026-06 from two KAT-pinned reconstructions:
+     MLow is split-band CELP (not an MDCT hybrid); the MDCT path is standard Opus. -->
 
 # MLow decode pipeline
 
-This page records what the MLow **decode** path actually is, recovered by reading
-the lifted bodies of the codec's DSP functions. The headline: MLow is **not** the
-bare SILK-style LPC codec earlier guesses assumed. It is an **LPC + MDCT hybrid
-transform codec whose entropy layer is the CELT/Opus range coder, present
-unmodified**.
+This page records what the MLow **decode** path actually is. The headline,
+**corrected** by two independent KAT-pinned reconstructions: MLow is a
+**split-band CELP** speech codec (internally "SMPL") whose entropy layer is the
+**CELT/Opus range coder, present unmodified**. It is **not** an MDCT transform
+codec - the MDCT DSP cluster in `wa.wasm` belongs to the **standard-Opus/CELT
+fallback path**, which the decoder selects separately by TOC (see
+[TOC routing](#toc-routing-mlow-vs-standard-opus)).
 
-> **Confidence.** Still one technique (static `wasm-analysis`), so capped at
-> `probable`. Below, claims are split into **verified** (I read the body and
-> matched it to a known algorithm constant-for-constant) and **reported**
-> (surfaced by an analysis agent, consistent with the bodies but not yet
-> line-verified). Provenance: module `wa.wasm` SHA-1 `3638a50…`; technique
-> `wasm-analysis` · tool `warden` · contributor `purpshell` · source: commit
+> **Confidence.** The CELP architecture and the CELT range coder are now
+> **corroborated** (static `wasm-analysis` + the [meowmeow](../../spec/tools.md)
+> Go reference + the [whatsapp-rust](../../spec/tools.md) Rust port, both pinned
+> to captured decode vectors) - `probable` with executable backing. Per-stage
+> constants below are `probable` where two sources agree, `speculative` where
+> only the WASM read has them. Provenance: technique `wasm-analysis` · tools
+> `warden`, `meowmeow`, `whatsapp-rust` · contributors `purpshell`, `jlucaso1` ·
+> source: `wacore/src/voip/mlow/` (Rust), commit
 > `365daa6` (the range coder is additionally corroborated by the round-trip test
 > in `impl/mlow/`). Functions cited by index.
 
@@ -91,47 +95,48 @@ static segment offset; the segment-to-address map is rebuilt from the 117
 the remaining DSP tables (e.g. the float-constant table at `1155664`) as the
 data-dependent schedule is traced.
 
-## DSP kernels (LPC verified; MDCT reported)
+## TOC routing: MLow vs standard Opus
 
-The synthesis cluster is classic transform-codec DSP:
+The decoder inspects the **first payload byte** (the TOC). If its top two bits are
+both set (`(b & 0xC0) == 0xC0`) the frame is **standard Opus/CELT** and goes to
+stock libopus; otherwise it is an **MLow "smpl" frame** and goes to the CELP
+decoder. This is the fact that resolves the earlier MDCT confusion: `wa.wasm`
+contains a full Opus stack (which has a CELT/MDCT path), but **MLow proper is the
+non-MDCT CELP branch**. The MDCT functions found in the WASM
+(`#9086`/`#9032`/`#9013`, window table at `1155664`) belong to the standard-Opus
+fallback, not to MLow.
 
-- **Levinson-Durbin LPC — verified.** #9083 (`lpc_levinson_durbin_recurse`) is a
-  double-precision Levinson-Durbin recursion: reflection-coefficient stability
-  clamp `k*k > 0.9994999766349792` and the `1/(1 - k*k)` update. #9082 drives it
-  iteratively. Confirms an LPC (linear-predictive / SILK-like) stage.
-- **Inverse MDCT — reported.** #9086/#9032 are reported as IMDCT + windowing, and
-  #9013 (the float synthesis kernel) indexes an MDCT window/scale table at data
-  address `1155664` and codec state at `1379056` (both confirmed present in the
-  body). The presence of both LPC and MDCT is the basis for the "hybrid" claim.
-- **Excitation / overlap-add — reported.** #9043, #9056-#9061, #9060, #9065 are
-  the excitation and overlap-add helpers called from #9013.
+## The CELP decode pipeline
 
-So the picture is an Opus-like split: an **LPC/SILK-style** stage and a
-**CELT-style MDCT** stage sharing the CELT range coder. Whether MLow is a thin
-customization of Opus or an independent codec reusing Opus components is an open
-question.
+The MLow ("SMPL") decode path is a classic split-band CELP chain, recovered from
+the reconstructions (`wacore/src/voip/mlow/`) and consistent with the verified
+WASM kernels:
 
-## Frame parameters (reported, pending verification)
+1. **Range decode** - the CELT range coder (`ec_dec`, [verified](#entropy-coder-the-celt-range-coder-verified)).
+2. **LSF / NLSF decode** - a three-way split (stage-1 VQ, an interpolation grid,
+   stage-2 residual) against runtime CDF tables, then convert to **LPC** of
+   **order 16** (matches the verified Levinson-Durbin kernel #9083: stability
+   clamp `k*k > 0.9995`).
+3. **Long-term / pitch prediction (LTP)** - a fractional-delay adaptive codebook
+   with multi-tap gains.
+4. **Excitation** - a sparse **algebraic pulse codebook** (PVQ-like).
+5. **Synthesis** - LPC synthesis filter, then a **harmonic-comb postfilter**
+   (≈48-sample group delay) - an MLow-specific stage with no MDCT.
 
-These came from an analysis agent and are **not yet line-verified**; treated as
-`speculative`:
-
-- **LPC order ~16** (a loop bound `!= 16`).
-- **Frame sizes 320 / 640 / 1280 samples** (20 / 40 / 80 ms at 16 kHz).
-- Output low-pass via `mlow_dec_cutoff_hz` / the
-  `WebRTC-MLowDecoder-lowPassCutoffFrequencyHz` field trial.
-
-The sample-rate discrepancy from [index](index.md#open-questions) (8 vs 16 vs
-32 kHz) is unresolved; the range coder and LPC are rate-agnostic, so they do not
-settle it.
+`smpl` frames carry **SID** (silence/DTX), a **VAD** flag, the **frame duration**,
+and per-subframe **voiced** flags in the TOC. **RED** redundancy uses a
+`SplitRed` layout with 2-byte block headers. Config 0 runs at **16 kHz**
+(narrow-band); the `mlow_dec_cutoff_hz` field trial sets the output low-pass.
 
 ## What the reference implementation does with this
 
 - **Implemented + tested:** the range coder (decode and a matched encoder).
-- **Next, in order of how well it is recovered:** the CELT-style band/MDCT
-  decode that consumes the range coder, then the LPC synthesis stage, then frame
-  framing. Each lands with the WASM evidence cited and returns `ErrNotRecovered`
-  until its body is read, never a guess.
+- **A complete, validated reference now exists** in Rust
+  ([whatsapp-rust](../../spec/tools.md) `wacore/src/voip/mlow/`) and Go
+  ([meowmeow](../../spec/tools.md)), both pinned to captured decode vectors. The
+  wacrg `impl/mlow/` Go reference can now follow that recovered CELP pipeline
+  (LSF/NLSF -> LPC -> LTP -> algebraic pulse -> synthesis -> harmonic comb)
+  rather than re-deriving it; the cross-check is the existing reconstructions.
 
 ## See also
 

@@ -2,6 +2,18 @@
 
 # MLow reconstruction roadmap
 
+> **Superseded in part (2026-06).** This page was the gap analysis written when
+> the only source was a static `wasm-analysis` read. Independent reconstructions
+> have since landed - a byte-exact Go decoder ([meowmeow](../../spec/tools.md))
+> and a Rust port ([whatsapp-rust](../../spec/tools.md)), both validated against
+> captured decode vectors. They **resolve most of the open items below** and
+> **correct the architecture**: MLow is split-band **CELP** (internally "SMPL"),
+> not the "custom MDCT + LPC" this page speculated - the MDCT cluster in the WASM
+> is the standard-Opus fallback. Read [index](index.md) and
+> [decode-pipeline](decode-pipeline.md) first; the inventory below is kept for the
+> from-scratch re-derivation view and for the items still genuinely open
+> (encoder bit-allocation, a spec-not-port derivation).
+
 This page answers one question end to end: **what would it take to fully
 reconstruct MLow** from the binary, and how far along is each piece? It is the
 consolidated gap analysis behind the [decode pipeline](decode-pipeline.md) and the

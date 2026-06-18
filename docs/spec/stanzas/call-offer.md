@@ -176,21 +176,23 @@ A single transport endpoint candidate (relay or host). Naming is uncertain: capt
 
 ## Notes
 
-The offer simultaneously performs three jobs: it signals intent to call, it delivers the media key (keying) to each peer device via Signal, and it seeds the transport negotiation (candidate endpoints). Keeping those concerns in one stanza is why call-offer is the richest node in the corpus. Treat every child here as a hypothesis to be confirmed or corrected by a real capture.
+The offer simultaneously performs three jobs: it signals intent to call, it delivers the media key (keying) to each peer device via Signal, and it seeds the transport negotiation (candidate endpoints). Keeping those concerns in one stanza is why call-offer is the richest node in the corpus. Two working reconstructions (zapo-caller in TypeScript, ported into whatsapp-rust in Rust) now corroborate the structure and pin the load-bearing details: the child order is mandatory and the server rejects a mis-ordered offer with error 439. The exact order is privacy -> audio(8000) -> audio(16000) -> net(medium=3) -> capability -> (destination \| enc) -> encopt(keygen=2) -> device-identity. The <capability ver="1"> body is a fixed 7-byte blob (01 05 f7 09 e4 bb 13). See the full stanza reference at docs/signaling/stanza-reference.md.
 
 ## Open questions
 
-- Are media descriptors named <audio>/<video>, or is there a single <media> node with a kind attribute?
-- Is <capability> always binary, and what does its packed structure encode (feature bits, build version)?
-- What is the full vocabulary and meaning of encopt.keygen, and how does it map to SRTP key derivation?
-- Are transport candidates carried as <te>, <endpoint>, or attributes directly on <destination>?
+- Resolved: media is advertised as two <audio enc="opus" rate="8000|16000"> nodes (reconstruction).
+- Resolved: <capability> is a fixed 7-byte blob with ver="1" (01 05 f7 09 e4 bb 13 for offer); the packed bit meaning is still open.
+- Resolved: encopt keygen="2" selects the v2/<raw_e2e> SRTP key path (see docs/keying/srtp-key-schedule.md).
+- Resolved: transport candidates are carried as <te> blobs; multi-device fan-out uses <destination><to jid><enc>.
 - Does the offer include an explicit media-key length or salt, or is everything derived from the Signal plaintext?
-- In multi-device, does the caller include its own other devices, or only the callee's devices?
+- What do the individual bits of the capability blob encode (feature flags, build version)?
 
 ## References
 
 - [Signal Protocol (X3DH + Double Ratchet) overview](https://signal.org/docs/)
 - [Baileys (WhatsApp Web multi-device library)](https://github.com/WhiskeySockets/Baileys)
+- [whatsapp-rust voip stanza builders (reconstruction)](https://github.com/jlucaso1/whatsapp-rust)
+- [wacrg stanza reference](docs/signaling/stanza-reference.md)
 
 ---
 

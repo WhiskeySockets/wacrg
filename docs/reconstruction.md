@@ -48,30 +48,37 @@ Maturity = how close to "reconstructable end to end". Coverage = the wacrg
 [metric](spec/coverage.md). "Frontier" = the specific thing blocking full
 reconstruction.
 
-| Plane | wacrg coverage | Reconstructable now | Frontier (what's missing) | Best technique to finish |
-| --- | --- | --- | --- | --- |
-| **Signaling** | ~29% (74 facts) | Yes, mostly. The `<call>` family (offer/accept/preaccept/terminate, relay/transport, mute) is the best-mapped layer. See [signaling](signaling.md). | Edge stanzas, exact enum values, group vs 1:1. | websocket-capture (have it) |
-| **Keying** | low / `speculative` | Partly. Delivery via Signal `<enc>` fan-out is `probable`; reusing the messaging stack works. See [keying](encryption-keying.md). | **SRTP key derivation** (KDF, labels, cipher suite, rekey) — "the most speculative part of the whole spec". | **wasm-analysis** (the WASM implements the KDF) + a runtime key observation |
-| **Transport** | ~15% (27 facts) | Partly. Signaling rides the Noise socket; media uses ICE/STUN to relays. The relay STUN dialect (bind `0x0001`, keepalive `0x0801`, teardown `0x0800`) is partly recovered from captures. See [transport](transport-noise.md), [ICE & relays](ice-and-relays.md). | Exact STUN attribute layouts, DTLS/SCTP data-channel role, relay auth tokens. | wasm-analysis + capture |
-| **Media** | ~27% (11 facts) | Setup yes; **audio no**. SRTP/RTP transport is `probable`. The codec is now identified: MLow (LPC+MDCT hybrid) / Opus over RED + Reed-Solomon. See [media](media-srtp.md), [MLow](codec/mlow/index.md). | **The codec itself** (encode/decode to PCM) and the exact RED/RS + RTP framing. The codec is the single biggest unknown in the whole system. | **wasm-analysis** (the [MLow roadmap](codec/mlow/reconstruction-roadmap.md)) |
+As of 2026-06, **independent reconstructions exist and largely work**: a Go
+reference ([meowmeow](spec/tools.md), byte-exact codec from captured vectors), a
+TypeScript caller ([zapo-caller](spec/tools.md)), and a Rust stack
+([whatsapp-rust](spec/tools.md)) that wires the whole media plane. That changes
+the question from "is it reconstructable" (mostly yes) to "is it *documented and
+confirmed*".
+
+| Plane | wacrg confidence | Reconstruction status | Frontier (what's missing) |
+| --- | --- | --- | --- |
+| **Signaling** | ~29% mapped | **Working** in all three reconstructions: `<call>` offer/accept/preaccept/terminate, the child order, receipt-ack, keygen v2, the call state machine. See [signaling](signaling.md), [WASM view](signaling/wasm-call-handling.md). | Edge stanzas, exact enums, group/waiting-room detail. |
+| **Keying** | E2E SRTP **`confirmed`**; SFrame/HBH `probable` | **Working + KAT-pinned**: E2E SRTP, HBH two-stage KDF, SFrame (AES-GCM), WARP auth key. See [SRTP](keying/srtp-key-schedule.md), [SFrame](keying/sframe-media-e2ee.md). | Rekey policy; exact layer ordering; a live capture for `confirmed` on SFrame. |
+| **Transport** | now `probable` | **Working**: WARP/RTP, STUN relay dialect, derived SSRC, MESSAGE-INTEGRITY. See [WARP/STUN/relay](transport/warp-stun-relay.md). Live DTLS/SCTP data-channel deferred in the Rust stack (PORT_PLAN). | Allocate protobuf schema; RTCP layout; a fresh capture. |
+| **Media codec** | `probable` (corroborated) | **Working decoder** (Go + Rust, byte-exact vs captured vectors): MLow = split-band CELP + CELT range coder; RED SplitRed. See [MLow](codec/mlow/index.md), [decode pipeline](codec/mlow/decode-pipeline.md). | A from-spec re-derivation (vs port); the encoder's bit-allocation detail. |
 
 ## The implementation reality
 
-The control path is further along than the spec coverage suggests, because prior
-Go work (the `meowmeow`/`dublin` line, outside this repo) already drives **live
-calls**: it implements `<call>` signaling, the Noise transport, ICE/relay binding,
-and SRTP setup well enough to capture real relay traffic. So **signaling,
-transport, and SRTP-establishment are demonstrably reconstructable** — the gap to
-a *fully functional* client is concentrated in two places:
+The earlier "the codec is the single biggest unknown" framing is **out of date**.
+Three independent reconstructions now drive the media plane, and the codec - long
+the long pole - has a **byte-exact, vector-validated decoder** in both Go and
+Rust. So a fully functional 1:1 audio call is **demonstrably reconstructable
+end to end** today; what remains for wacrg is to *document and confirm* it:
 
-1. **Audio media (the long pole).** Sending and receiving actual sound requires a
-   working **MLow encode/decode** plus correct **RED/RS + RTP/SRTP media framing**.
-   This is the frontier the [MLow work](codec/mlow/reconstruction-roadmap.md) is
-   attacking. Until it lands, a "call" connects but carries no intelligible audio.
-2. **End-to-end keying detail.** Establishing a call needs *enough* keying to set
-   up SRTP; a *correct, E2E-faithful* client also needs the exact **SRTP KDF** and
-   the per-frame E2EE media crypto (`facebook::rtc::e2ee::*`, SFrame-style). These
-   are `speculative` in the spec today.
+1. **Audio media** - solved in practice. MLow CELP decode/encode + RED + WARP
+   framing all exist and validate against captured vectors. wacrg's job is the
+   spec text and an independent re-derivation, not discovery.
+2. **End-to-end keying** - the SRTP KDF is now `confirmed`; SFrame (AES-GCM) and
+   the HBH two-stage KDF are recovered and KAT-pinned. The remaining gap is a
+   *recorded live capture* to promote SFrame to `confirmed`, plus rekey policy.
+3. **Live transport orchestration** (DTLS/SCTP data-channel, relay media loop) is
+   the piece the Rust stack explicitly defers (PORT_PLAN.md) - the last mile to a
+   turnkey call, not a protocol unknown.
 
 ## Binary coverage: verified vs guessed
 

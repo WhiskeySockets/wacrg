@@ -26,7 +26,9 @@ techniques or contributors agreeing. Never round up; put uncertainty in
 spec/                 the CURATED corpus (YAML, schema-validated): the source of truth
   stanzas/ flows/ enums/ techniques/ glossary.yaml
   contributors/<id>.yaml   WHO (one per researcher)
-  tools/<id>.yaml          WHAT tools exist (warden, ghidra, frida, ...)
+  tools/<id>.yaml          WHAT evidence tools exist (warden, ghidra, frida, ...)
+  flavors/<id>.yaml        WHICH reimplementations exist (meowmeow, whatsapp-rust, ...)
+  flavors/<id>.map.yaml    WHERE each flavor realizes the spec (inverse Source-of-truth)
   schema/*.schema.json     validation
 corpus/captures/      raw observations (intake), sanitized
 docs/                 the published MkDocs site (hand-written narrative + generated)
@@ -62,10 +64,13 @@ No Claude/AI attribution in commit messages. No real PII/keys/media, ever.
 ## Attribution: the four provenance dimensions
 
 Every spec attribute/child carries `provenance` with: `techniques` (fixed set),
-`tools` (must exist in `spec/tools/`), `contributors` (must exist in
-`spec/contributors/`), `sources` (issue/PR/commit refs). Raw tool output
-(identity maps, dumps) lives under `impl/` or `corpus/`, not `docs/`. Full
-model: [docs/attribution.md](docs/attribution.md). Register yourself once at
+`tools` (evidence tools, must exist in `spec/tools/`), `flavors` (independent
+reimplementations that corroborate it, must exist in `spec/flavors/` — a
+corroborating source, **not** a technique, and a port does not corroborate its
+upstream), `contributors` (must exist in `spec/contributors/`), `sources`
+(issue/PR/commit refs). Raw tool output (identity maps, dumps) lives under
+`impl/` or `corpus/`, not `docs/`. Full model:
+[docs/attribution.md](docs/attribution.md). Register yourself once at
 `spec/contributors/<handle>.yaml`.
 
 ## Methodology: techniques and independent reconstructions
@@ -79,12 +84,13 @@ The under-served area is keying and media internals. The main approach is
 as WASM) plus independent reconstructions by the community. When two of
 these agree on a fact, it is corroborated toward `confirmed`. Treat an
 independent working reimplementation (e.g. a Rust/TS port that places real calls)
-as strong evidence, but record it as a distinct contributor/source, and
-only call a fact `confirmed` when the agreeing techniques are genuinely
-independent (a reimplementation derived from the same capture is *not*
-independent of that capture). External reconstructions are tracked in
-[docs/reconstruction.md](docs/reconstruction.md); cite them in
-`provenance.sources`.
+as strong evidence, but record it as a **flavor** (`spec/flavors/<id>.yaml`) and
+cite it in `provenance.flavors` — a corroborating *source*, not a technique. Only
+call a fact `confirmed` when the agreeing *techniques* are genuinely independent
+(a reimplementation derived from the same capture is *not* independent of that
+capture, and a flavor that `derives_from` another is *not* independent of its
+upstream). External reconstructions are also surveyed in
+[docs/reconstruction.md](docs/reconstruction.md).
 
 ## wasm-analysis operational guide
 

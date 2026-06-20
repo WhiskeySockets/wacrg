@@ -11,13 +11,13 @@ technique; where it adds structure (child order, magic blobs, encodings) it is
 new and `probable`.
 
 > **Confidence.** `probable` for the structures below: they come from
-> reconstructions ([zapo-caller](../../spec/tools.md) TS, ported into
-> [whatsapp-rust](../../spec/tools.md) Rust) that place real calls, with the
+> reconstructions ([zapo-caller](../../spec/flavors.md) TS, ported into
+> [whatsapp-rust](../../spec/flavors.md) Rust) that place real calls, with the
 > stanza builders unit-tested. Facts that also match the websocket-capture
 > model are noted as candidates for `confirmed` (two independent techniques).
 >
 > **Provenance.** Technique `wasm-analysis` (+ the capture model it corroborates)
-> · tools `zapo-caller`, `whatsapp-rust`, `warden` · contributors `auties`,
+> · tools `warden` · flavors `zapo-caller`, `whatsapp-rust` · contributors `auties`,
 > `sheiitear`, `edgard`, `jlucaso1`, `purpshell` · sources:
 > `wacore/src/voip/stanza.rs` (Rust, ported from `zapo-caller src/signaling.ts`).
 > Synthetic examples only; no real ids/keys.

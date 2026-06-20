@@ -12,13 +12,13 @@ keys, then into SRTP/SRTCP session keys, in two layers.
 > multiple independent paths: static `wasm-analysis` of the binary (this
 > page), a runtime WASM trace (the `meowmeow`/`dublin` Go reference), and two
 > independent reconstructions whose primitives are pinned to known-answer test
-> vectors: [zapo-caller](../../spec/tools.md) (TypeScript) and
-> [whatsapp-rust](../../spec/tools.md) (Rust). All derive byte-identical keys.
+> vectors: [zapo-caller](../../spec/flavors.md) (TypeScript) and
+> [whatsapp-rust](../../spec/flavors.md) (Rust). All derive byte-identical keys.
 > The HBH two-stage schedule (below) is `probable` (recovered by the
 > reconstructions; one technique class). Rekey policy stays `speculative`.
 >
-> **Provenance.** Technique `wasm-analysis` · tools `warden`, `meowmeow`,
-> `zapo-caller`, `whatsapp-rust` · contributors `purpshell`, `jlucaso1`,
+> **Provenance.** Technique `wasm-analysis` · tools `warden` · flavors
+> `meowmeow`, `zapo-caller`, `whatsapp-rust` · contributors `purpshell`, `jlucaso1`,
 > `auties`, `sheiitear`, `edgard` · sources: `wacore/src/voip/e2e_srtp.rs:55`,
 > `hbh_srtp.rs:51`, the trace-verified Go reference, commit history. **No key
 > material is in this repo**: structure only.

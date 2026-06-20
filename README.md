@@ -65,7 +65,8 @@ Every protocol fact (an attribute, a child node, an enum value, a flow step) car
 things:
 
 1. **Provenance**: who observed it (a registered contributor), which technique(s) and
-   which tool(s) produced it, and which source(s) (issue/PR refs) prove it. The technique
+   which tool(s) produced it, which independent reimplementations (**flavors**)
+   corroborate it, and which source(s) (issue/PR refs) prove it. The technique
    vocabulary is a fixed set:
 
    | technique id | what it is |
@@ -88,8 +89,9 @@ resolved.
 
 This means the spec is auditable: for any claim you can trace back to who observed it,
 the technique and tool that produced it, and the source that proves it.
-Contributors register in [`spec/contributors/`](./spec/contributors) and tools in
-[`spec/tools/`](./spec/tools); captures filed via the Issue Form are stamped with the
+Contributors register in [`spec/contributors/`](./spec/contributors), tools in
+[`spec/tools/`](./spec/tools), and independent reimplementations in
+[`spec/flavors/`](./spec/flavors); captures filed via the Issue Form are stamped with the
 submitter's GitHub identity automatically. See [Attribution & proof](./docs/attribution.md).
 
 ---
@@ -115,6 +117,11 @@ spec/*.yaml  ──▶  scripts/validate.ts   (schema + referential integrity)
 - **Tools** ([`spec/tools/`](./spec/tools)) and **Contributors**
   ([`spec/contributors/`](./spec/contributors)) record what tool and who produced each
   fact. See [attribution & proof](./docs/attribution.md).
+- **Flavors** ([`spec/flavors/`](./spec/flavors)) are independent reimplementations
+  (libraries/ports) that corroborate the spec by realizing it in code — distinct from
+  evidence-gathering tools. Each flavor's [implementation map](./docs/spec/flavor-map.md)
+  records where every bit of the spec lives in its source: the inverse of a
+  code-to-reference pointer.
 - **Glossary** ([`spec/glossary.yaml`](./spec/glossary.yaml)) defines shared terms (WABinary,
   Noise, SRTP, and others).
 - **Captures** ([`corpus/captures/`](./corpus/captures)) are intake records: raw (synthetic)
@@ -151,7 +158,7 @@ the workflow, and [warden's repository](https://github.com/purpshell/warden) for
 
 | Path | What lives here |
 | --- | --- |
-| [`spec/`](./spec) | The machine-readable corpus: `stanzas/`, `flows/`, `enums/`, `techniques/`, `tools/`, `contributors/`, `glossary.yaml`, and `schema/` (JSON Schemas). **The source of truth.** |
+| [`spec/`](./spec) | The machine-readable corpus: `stanzas/`, `flows/`, `enums/`, `techniques/`, `tools/`, `flavors/` (+ `<id>.map.yaml` implementation maps), `contributors/`, `glossary.yaml`, and `schema/` (JSON Schemas). **The source of truth.** |
 | [`corpus/`](./corpus) | Capture intake: `captures/` (synthetic/sanitized observations) and `schema/capture.schema.json`. |
 | [`docs/`](./docs) | **Generated** human docs + the Pages/mkdocs site. `docs/spec/` is produced by the generator; `docs/coverage-badge.json` feeds the badge. Do not hand-edit generated files. |
 | [`scripts/`](./scripts) | TypeScript tooling run via `tsx`: `validate.ts`, `generate-docs.ts`, `coverage.ts`, `ingest-issue.ts`, and shared helpers in `scripts/lib/corpus.ts`. |

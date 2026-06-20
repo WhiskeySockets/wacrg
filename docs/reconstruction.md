@@ -49,9 +49,9 @@ Maturity = how close to "reconstructable end to end". Coverage = the wacrg
 reconstruction.
 
 As of 2026-06, independent reconstructions exist and largely work: a Go
-reference ([meowmeow](spec/tools.md), byte-exact codec from captured vectors), a
-TypeScript caller ([zapo-caller](spec/tools.md)), and a Rust stack
-([whatsapp-rust](spec/tools.md)) that wires the whole media plane. That changes
+reference ([meowmeow](spec/flavors.md), byte-exact codec from captured vectors), a
+TypeScript caller ([zapo-caller](spec/flavors.md)), and a Rust stack
+([whatsapp-rust](spec/flavors.md)) that wires the whole media plane. That changes
 the question from "is it reconstructable" (mostly yes) to "is it documented and
 confirmed".
 

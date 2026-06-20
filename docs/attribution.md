@@ -5,17 +5,25 @@ trustworthy, every fact must be traceable to who observed it, what technique
 and tool produced it, and a source that proves it. This page describes how
 that attribution works and why it is verifiable.
 
-## The four provenance dimensions
+## The provenance dimensions
 
 Every fact in the corpus (each attribute and child of a stanza) carries a
-`provenance` block with up to four dimensions:
+`provenance` block with up to five dimensions:
 
 | Field | Answers | Required | References |
 | --- | --- | --- | --- |
 | `techniques` | *By what method?* | yes | the fixed technique set (`spec/techniques/`) |
 | `tools` | *With what tool?* | recommended | the tool registry (`spec/tools/`) |
+| `flavors` | *Which reimplementations corroborate it?* | optional | the flavor registry (`spec/flavors/`) |
 | `contributors` | *Who observed/submitted it?* | recommended | the contributor registry (`spec/contributors/`) |
 | `sources` | *Where is the proof?* | recommended | issue/PR/commit refs, e.g. `#42` |
+
+A **tool** gathers evidence (warden, frida); a **flavor** is an independent
+reimplementation that corroborates a fact by realizing it in code. A flavor is a
+*corroborating source*, not a technique: it never on its own promotes a fact to
+`confirmed`, and a flavor does not corroborate a flavor it `derives_from` (a port and
+its upstream count once). See [flavors](spec/flavors.md) and the
+[implementation map](spec/flavor-map.md).
 
 Example, inside a stanza YAML:
 
@@ -40,9 +48,14 @@ The validator enforces referential integrity: every `techniques`, `tools`, and
 - **Contributors**: `spec/contributors/<id>.yaml`, one file per researcher: `id`
   (your GitHub handle), `name`, `affiliation`, the `techniques`/`tools` you use, and
   proof `links`. Rendered to [the contributors page](spec/contributors.md).
-- **Tools**: `spec/tools/<id>.yaml`, one file per tool: `id`, `version`, `url`, the
-  `techniques` it supports, and `maintainer`. Rendered to
+- **Tools**: `spec/tools/<id>.yaml`, one file per evidence-gathering tool: `id`,
+  `version`, `url`, the `techniques` it supports, and `maintainer`. Rendered to
   [the tools page](spec/tools.md).
+- **Flavors**: `spec/flavors/<id>.yaml`, one file per independent reimplementation:
+  `id`, `language`, `maturity`, `maintainer`, `covers`, `basis`, and `derives_from`.
+  An optional `spec/flavors/<id>.map.yaml` records, per spec bit, the code permalink and
+  validating vector (the inverse Source-of-truth). Rendered to
+  [the flavors page](spec/flavors.md) and the [implementation map](spec/flavor-map.md).
 
 Registering yourself once means every fact you contribute is attributed
 consistently, and your toolset is documented in one place.
@@ -91,6 +104,9 @@ different people using two independent techniques.
 
 - Register yourself once at `spec/contributors/<your-handle>.yaml`.
 - Add your tool(s) under `spec/tools/` if not already there.
+- If you maintain an independent reimplementation, register it under `spec/flavors/`
+  (and optionally add an `<id>.map.yaml` pointing at your code).
 - On every fact you add, set `provenance.techniques`, `provenance.tools`,
-  `provenance.contributors: [<your-handle>]`, and `provenance.sources`.
+  `provenance.contributors: [<your-handle>]`, `provenance.sources`, and
+  `provenance.flavors` for any reimplementation that reproduces it.
 - File captures via the Issue Form; your identity is stamped automatically.

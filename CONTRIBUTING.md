@@ -60,7 +60,8 @@ Each **attribute** and **child** must carry:
 
 - `confidence` (one of the values above), and
 - `provenance` recording how (`techniques`, subset of the fixed set), with what
-  (`tools`, ids from `spec/tools/`), who (`contributors`, ids from
+  (`tools`, ids from `spec/tools/`), which independent reimplementations corroborate it
+  (`flavors`, ids from `spec/flavors/`), who (`contributors`, ids from
   `spec/contributors/`), and proof (`sources`, issue/PR/commit refs like `"#12"`).
   See [attribution & proof](./docs/attribution.md).
 
@@ -81,8 +82,16 @@ real data.
   document `maturity`, `targets`, `strengths`, `limitations`, `tooling`, optional `guide` path.
 - **Contributor** (`spec/contributors/<id>.yaml`): register yourself once with `id` (your
   GitHub handle), `name`, and the techniques/tools you use. Referenced by `provenance.contributors`.
-- **Tool** (`spec/tools/<id>.yaml`): a concrete tool with `id`, `version`, `url`, `techniques`
-  it supports, and `maintainer`. Referenced by `provenance.tools`.
+- **Tool** (`spec/tools/<id>.yaml`): a concrete tool that *gathers evidence* (warden,
+  ghidra, frida, …) with `id`, `version`, `url`, `techniques` it supports, and
+  `maintainer`. Referenced by `provenance.tools`.
+- **Flavor** (`spec/flavors/<id>.yaml`): an independent reimplementation (library/port)
+  that *realizes the spec in code* — `id`, `language`, `maturity`, `maintainer`, `covers`
+  (planes), `basis` (techniques it was reconstructed from), and `derives_from` (flavors it
+  ports, so a port is not counted as independent of its upstream). Referenced by
+  `provenance.flavors`. Optionally ships a `spec/flavors/<id>.map.yaml` implementation map:
+  per spec bit, a code permalink and the vector that validates it — the inverse of a
+  code-to-reference pointer. A flavor is a corroborating source, not an evidence tool.
 - **Glossary** (`spec/glossary.yaml`): shared `terms`.
 
 > When in doubt about a key name, copy an existing file of the same kind and adapt it. The
@@ -101,8 +110,10 @@ These rules are what keep the spec trustworthy. Please follow them strictly.
    defined in [GOVERNANCE.md](./GOVERNANCE.md).
 3. **Always record provenance.** Every attribute/child needs `provenance.techniques` (which
    methods saw it); also record `provenance.contributors` (who: your contributor id),
-   `provenance.tools` (which tools), and `provenance.sources` (where: an issue/PR/commit
-   ref). No orphan facts. See [attribution & proof](./docs/attribution.md).
+   `provenance.tools` (which tools), `provenance.flavors` (which independent
+   reimplementations reproduce it — a corroborating source, not a technique; it does not by
+   itself reach `confirmed`), and `provenance.sources` (where: an issue/PR/commit ref). No
+   orphan facts. See [attribution & proof](./docs/attribution.md).
 4. **Put uncertainty in `open_questions`, not in confidence inflation.** If you're unsure what a
    field means, mark it `speculative` *and* add an open question. Do not round up.
 5. **Disagreements are first-class.** If two techniques contradict each other, do not silently

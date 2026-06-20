@@ -29,6 +29,12 @@ Confidence is governed by a single rule, applied in review:
 4. When two techniques disagree, the conflict is filed as a `type/discrepancy` issue
    and **both** observations stay documented until it is resolved. We do not
    silently overwrite history.
+5. An independent reimplementation (a **flavor**, `spec/flavors/`) that reproduces a
+   fact is a corroborating *source*, not a technique. It is recorded in
+   `provenance.flavors` and strengthens a fact, but it does **not** on its own reach
+   `confirmed` — that still requires two independent techniques. A flavor that
+   `derives_from` another (a port of it) is not independent of its upstream, so a port
+   and its upstream count once.
 
 Provenance (`techniques` + `sources`) is mandatory on every attribute and child so a
 reviewer can verify the rule has been met. See

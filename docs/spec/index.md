@@ -18,7 +18,7 @@ This is the generated, human-readable view of the wacrg corpus, a machine-readab
 | [Tools](./tools.md) | 5 |
 | [Flavors](./flavors.md) | 4 |
 | [Implementation map](./flavor-map.md) | - |
-| [Contributors](./contributors.md) | 5 |
+| [Contributors](./contributors.md) | 6 |
 | [Glossary](./glossary.md) | - |
 | [Coverage](./coverage.md) | - |
 

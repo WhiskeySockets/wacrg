@@ -1,5 +1,6 @@
 id: edgard
 name: Edgard
+github: edgardmessias
 techniques:
   - wasm-analysis
 flavors:

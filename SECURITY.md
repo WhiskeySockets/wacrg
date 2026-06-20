@@ -22,7 +22,7 @@ Use this path for issues that are about wacrg itself, for example:
 
 - a tooling/CI weakness (e.g. a workflow that could leak a token),
 - a dependency advisory affecting our scripts,
-- **sensitive data that was committed by mistake** — real phone numbers, JIDs, keys,
+- **sensitive data that was committed by mistake**: real phone numbers, JIDs, keys,
   tokens, or media (see the [disclaimer](./DISCLAIMER.md)).
 
 Please report these **privately**:

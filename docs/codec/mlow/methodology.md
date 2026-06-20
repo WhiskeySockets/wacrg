@@ -39,7 +39,7 @@ This returns the Itanium-mangled typeinfo strings verbatim, e.g.
 
 ## 2. Demangle the typeinfo to class identities
 
-Each `function_strings` row that looks like Itanium RTTI (`N…E`) is demangled
+Each `function_strings` row that looks like Itanium RTTI (`N...E`) is demangled
 with `c++filt -t`, then grouped by class:
 
 ```python
@@ -59,17 +59,17 @@ The full result is committed at `impl/mlow/data/identity-map.json` (kept under
 [attribution model](../../attribution.md)). The codec-relevant classes are in the
 [function map](function-map.md). Key reads:
 
-- `facebook::rtc::AudioDecoderMLowImpl` — the decoder.
-- `facebook::rtc::MLowFrame` — the audio frame.
-- `concerto::MlowRedPayloadSplitter` — the RED split.
+- `facebook::rtc::AudioDecoderMLowImpl`: the decoder.
+- `facebook::rtc::MLowFrame`: the audio frame.
+- `concerto::MlowRedPayloadSplitter`: the RED split.
 - `facebook::rtc::ReedSolomonCode` / `ReedSolomonFactoryImpl` / `RSEncoderDecoder`
-  / `RSCodec` — Reed-Solomon FEC.
-- the `concerto::NetEq*` family — a verbatim WebRTC NetEq fork.
+  / `RSCodec`: Reed-Solomon FEC.
+- the `concerto::NetEq*` family: a verbatim WebRTC NetEq fork.
 
 ## 3. Tie functions to source files
 
 The same `function_strings` rows include `__FILE__` paths from asserts/logs. A
-regex for `…(\.cc|\.cpp|\.h)` over the rows yields the source tree under
+regex for `...(\.cc|\.cpp|\.h)` over the rows yields the source tree under
 `xplat/wa-voip/wacall/media/src/`, which independently corroborates the codec /
 audio / RED grouping (e.g. `wa_opus.cc`, `hybrid_codec.cc`, `codec_utils.cc`,
 `multistream_forward_error_correction.cc`).
@@ -86,8 +86,8 @@ print(kb.callees_of(VID, 1839))                          # the per-branch handle
 ```
 
 But its callees are string/format helpers and several branches set error code 18,
-so it may be a **config or serialized-message validator that constructs** an
-`AudioDecoderMLowImpl`, not the audio hot path. The honest read today is
+so it may be a config or serialized-message validator that constructs an
+`AudioDecoderMLowImpl`, not the decode path. The current read is
 "belongs to the MLow decoder class; exact role pending." Mapping each branch is
 [open work](index.md#open-questions).
 
@@ -95,24 +95,24 @@ so it may be a **config or serialized-message validator that constructs** an
 
 The string index attributes a data string to a function by an `i32.const` equal
 to the string's address. Big functions reference many constants, so this
-**over-matches**. Concrete false positives caught here: indices **7466** and
-**7952** surfaced under an MLow needle, but their bodies are unmistakably H.264
-(macroblock sizing `(w+15)>>4`, profile `== 66`, NAL header `b>>7`/`b>>5`/`b&31`)
-— genuinely video, correctly auto-named. The lesson is structural: **rename from
+over-matches. Concrete false positives caught here: indices 7466 and
+7952 surfaced under an MLow needle, but their bodies are unmistakably H.264
+(macroblock sizing `(w+15)>>4`, profile `== 66`, NAL header `b>>7`/`b>>5`/`b&31`):
+genuinely video, correctly auto-named. Rename from
 the body, corroborated by typeinfo and source path, never from a single string
-hit.**
+hit.
 
 ## 5. Config and tuning strings
 
 Filtering `function_strings` for `mlow`/`companion` surfaces the decoder's
 configuration surface, which names real fields without running anything:
 
-- `WebRTC-MLowDecoder-lowPassCutoffFrequencyHz`, `p->mlow_dec_cutoff_hz` — output
+- `WebRTC-MLowDecoder-lowPassCutoffFrequencyHz`, `p->mlow_dec_cutoff_hz`: output
   low-pass cutoff (a band-limiting post step).
-- `p->mlow_red_secondary_complexity`, `mvp->mlow_red_proactive_update_limit` —
+- `p->mlow_red_secondary_complexity`, `mvp->mlow_red_proactive_update_limit`:
   RED redundancy strength and update cadence.
 - `mlowcompanion_af1_kernel_bias`, `mlowcompanion_fnet_tconv_bias`,
-  `mlowcompanion_ft2_subias`, `mlowcompanion_tdshape1_alpha1_f_bias` — companion
+  `mlowcompanion_ft2_subias`, `mlowcompanion_tdshape1_alpha1_f_bias`: companion
   NN weights (out of scope).
 
 ## Applying corrections
@@ -128,15 +128,15 @@ kb.set_summary(sid, "<class>; <role observed in body>; evidence: <typeinfo/file>
 ```
 
 Every rename is logged (`add_rename`) and can be undone in the studio, so a later
-correction never silently overwrites history. Names are applied **only** with a
-body justification — the class table in the [function map](function-map.md) is the
+correction never silently overwrites history. Names are applied only with a
+body justification. The class table in the [function map](function-map.md) is the
 worklist, and the running list of verified renames is kept there as the read
 proceeds.
 
 ## Confidence discipline
 
 Per the [corroboration rule](../../methodology/index.md), all of the above is one
-technique (`wasm-analysis`) and is therefore capped at **`probable`**. The RTTI
+technique (`wasm-analysis`) and is therefore capped at `probable`. The RTTI
 and `__FILE__` evidence make the *structural* claims strong within that cap; the
 *algorithmic* claims (bitstream, sample rate, RS parameters) stay `speculative`
 until a body-by-body read or a second technique corroborates them. Discrepancies

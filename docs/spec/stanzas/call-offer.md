@@ -1,4 +1,4 @@
-<!-- GENERATED FILE — do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
+<!-- GENERATED FILE. Do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
 
 # Call Offer
 
@@ -17,9 +17,9 @@ The opening stanza of a 1:1 call. A caller device emits a top-level <call> node 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
 | `from` | `jid` | yes | probable | JID of the caller. On outgoing offers the client usually omits this and the server stamps it; on the copy delivered to the callee it identifies the calling account (and, in multi-device, often the specific calling device). <br/>_observed:_ `A@s.whatsapp.net`, `A.0:12@s.whatsapp.net` | techniques: websocket-capture, baileys-instrumentation; sources: Analogy to message stanza routing in WA multi-device |
-| `to` | `jid` | yes | probable | JID of the callee account the offer is addressed to. The server fans the stanza out to the callee's registered devices. <br/>_observed:_ `B@s.whatsapp.net` | techniques: websocket-capture; sources: — |
-| `id` | `string` | yes | probable | Stanza id used to correlate the server <ack>/receipt with this <call>. This is the transport-level message id, distinct from the call-id that identifies the logical call session. <br/>_observed:_ `1A2B3C4D5E` | techniques: websocket-capture, baileys-instrumentation; sources: — |
-| `t` | `timestamp` | no | speculative | Unix timestamp (seconds) at which the offer was created. Presence and exact semantics are unconfirmed; some call stanzas carry a t attribute, others appear to rely on the offer child's own timing. <br/>_observed:_ `1733779200` | techniques: websocket-capture; sources: — |
+| `to` | `jid` | yes | probable | JID of the callee account the offer is addressed to. The server fans the stanza out to the callee's registered devices. <br/>_observed:_ `B@s.whatsapp.net` | techniques: websocket-capture; sources: none |
+| `id` | `string` | yes | probable | Stanza id used to correlate the server <ack>/receipt with this <call>. This is the transport-level message id, distinct from the call-id that identifies the logical call session. <br/>_observed:_ `1A2B3C4D5E` | techniques: websocket-capture, baileys-instrumentation; sources: none |
+| `t` | `timestamp` | no | speculative | Unix timestamp (seconds) at which the offer was created. Presence and exact semantics are unconfirmed; some call stanzas carry a t attribute, others appear to rely on the offer child's own timing. <br/>_observed:_ `1733779200` | techniques: websocket-capture; sources: none |
 
 ## Children
 
@@ -33,8 +33,8 @@ Container describing the proposed call. Carries the logical call-id and the iden
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `call-id` | `string` | yes | probable | Opaque identifier of the logical call session. Echoed verbatim in every subsequent stanza for this call (preaccept/accept/reject/terminate) so both ends and the server can correlate them. <br/>_observed:_ `CALLID-0001-synthetic` | techniques: websocket-capture, baileys-instrumentation; sources: — |
-| `call-creator` | `jid` | yes | probable | JID of the device/account that created the call. Used by the callee and server to attribute control stanzas (e.g. terminate) to the originator. <br/>_observed:_ `A@s.whatsapp.net` | techniques: websocket-capture; sources: — |
+| `call-id` | `string` | yes | probable | Opaque identifier of the logical call session. Echoed verbatim in every subsequent stanza for this call (preaccept/accept/reject/terminate) so both ends and the server can correlate them. <br/>_observed:_ `CALLID-0001-synthetic` | techniques: websocket-capture, baileys-instrumentation; sources: none |
+| `call-creator` | `jid` | yes | probable | JID of the device/account that created the call. Used by the callee and server to attribute control stanzas (e.g. terminate) to the originator. <br/>_observed:_ `A@s.whatsapp.net` | techniques: websocket-capture; sources: none |
 
 #### `<audio>`
 
@@ -46,8 +46,8 @@ Audio media descriptor. Present for any call that requests audio, which is effec
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `enc` | `string` | no | speculative | Marks the audio stream as encrypted and/or selects the SRTP profile. The exact value vocabulary is unknown; it may name a codec/crypto suite or simply be a boolean-like flag. <br/>_observed:_ `opus` | techniques: websocket-capture; sources: — |
-| `rate` | `int` | no | speculative | Advertised audio sample rate in Hz (Opus is typically negotiated at 16000 or 48000). Whether this is a hard requirement or a hint is unconfirmed. <br/>_observed:_ `16000`, `48000` | techniques: websocket-capture, frida-hooking; sources: — |
+| `enc` | `string` | no | speculative | Marks the audio stream as encrypted and/or selects the SRTP profile. The exact value vocabulary is unknown; it may name a codec/crypto suite or simply be a boolean-like flag. <br/>_observed:_ `opus` | techniques: websocket-capture; sources: none |
+| `rate` | `int` | no | speculative | Advertised audio sample rate in Hz (Opus is typically negotiated at 16000 or 48000). Whether this is a hard requirement or a hint is unconfirmed. <br/>_observed:_ `16000`, `48000` | techniques: websocket-capture, frida-hooking; sources: none |
 
 #### `<video>`
 
@@ -59,8 +59,8 @@ Video media descriptor, present only for video calls. Advertises the video codec
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `enc` | `string` | no | speculative | Encryption/codec marker for the video stream (e.g. a VP8/H264 hint). <br/>_observed:_ `vp8` | techniques: websocket-capture; sources: — |
-| `orientation` | `int` | no | speculative | Initial camera orientation in degrees; existence unconfirmed. <br/>_observed:_ `0`, `90` | techniques: frida-hooking; sources: — |
+| `enc` | `string` | no | speculative | Encryption/codec marker for the video stream (e.g. a VP8/H264 hint). <br/>_observed:_ `vp8` | techniques: websocket-capture; sources: none |
+| `orientation` | `int` | no | speculative | Initial camera orientation in degrees; existence unconfirmed. <br/>_observed:_ `0`, `90` | techniques: frida-hooking; sources: none |
 
 #### `<net>`
 
@@ -72,7 +72,7 @@ Network information advertised by the caller (e.g. connection medium and a coars
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `medium` | `int` | no | speculative | Connection medium hint (e.g. an enum distinguishing cellular vs wifi). <br/>_observed:_ `1`, `3` | techniques: frida-hooking, static-smali-analysis; sources: — |
+| `medium` | `int` | no | speculative | Connection medium hint (e.g. an enum distinguishing cellular vs wifi). <br/>_observed:_ `1`, `3` | techniques: frida-hooking, static-smali-analysis; sources: none |
 
 #### `<capability>`
 
@@ -84,7 +84,7 @@ Device capability descriptor. The payload is commonly an opaque binary blob (a p
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `ver` | `int` | no | probable | Capability format version, selecting how the binary payload is interpreted. <br/>_observed:_ `1`, `2` | techniques: websocket-capture, static-smali-analysis; sources: — |
+| `ver` | `int` | no | probable | Capability format version, selecting how the binary payload is interpreted. <br/>_observed:_ `1`, `2` | techniques: websocket-capture, static-smali-analysis; sources: none |
 
 #### `<encopt>`
 
@@ -96,7 +96,7 @@ Encryption options for the call. Notably carries the keygen attribute that indic
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `keygen` | `int` | no | probable | Key-generation scheme version for the call/media key. Couples the <enc> payload format to a derivation method the callee must use to recover the SRTP master key. <br/>_observed:_ `1`, `2` | techniques: websocket-capture, frida-hooking; sources: — |
+| `keygen` | `int` | no | probable | Key-generation scheme version for the call/media key. Couples the <enc> payload format to a derivation method the callee must use to recover the SRTP master key. <br/>_observed:_ `1`, `2` | techniques: websocket-capture, frida-hooking; sources: none |
 
 #### `<enc>`
 
@@ -108,9 +108,9 @@ The keying payload. One <enc> node per recipient device: the call/media key is e
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `v` | `int` | no | probable | Envelope/version of the enc payload format. <br/>_observed:_ `2` | techniques: websocket-capture, baileys-instrumentation; sources: — |
+| `v` | `int` | no | probable | Envelope/version of the enc payload format. <br/>_observed:_ `2` | techniques: websocket-capture, baileys-instrumentation; sources: none |
 | `type` | `string` | yes | probable | Signal message type. pkmsg (PreKeySignalMessage) when establishing a new session with the target device, otherwise msg (SignalMessage) when an established session already exists. Mirrors the same attribute on message <enc> nodes. <br/>_observed:_ `pkmsg`, `msg` | techniques: websocket-capture, baileys-instrumentation; sources: Mirrors message-layer enc.type semantics |
-| `count` | `int` | no | speculative | Possible retry/rekey counter seen on some enc nodes; semantics for calls are unconfirmed. <br/>_observed:_ `0`, `1` | techniques: baileys-instrumentation; sources: — |
+| `count` | `int` | no | speculative | Possible retry/rekey counter seen on some enc nodes; semantics for calls are unconfirmed. <br/>_observed:_ `0`, `1` | techniques: baileys-instrumentation; sources: none |
 
 #### `<destination>`
 
@@ -128,15 +128,15 @@ A single transport endpoint candidate (relay or host). Naming is uncertain: capt
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `ip` | `string` | no | speculative | Candidate IP address (synthetic example only; real values are PII-sensitive). <br/>_observed:_ `203.0.113.10` | techniques: websocket-capture; sources: — |
-| `port` | `int` | no | speculative | Candidate UDP port for media. <br/>_observed:_ `3478`, `50000` | techniques: websocket-capture; sources: — |
-| `latency` | `int` | no | speculative | Measured/estimated round-trip latency to this relay in milliseconds. <br/>_observed:_ `18`, `42` | techniques: websocket-capture; sources: — |
+| `ip` | `string` | no | speculative | Candidate IP address (synthetic example only; real values are PII-sensitive). <br/>_observed:_ `203.0.113.10` | techniques: websocket-capture; sources: none |
+| `port` | `int` | no | speculative | Candidate UDP port for media. <br/>_observed:_ `3478`, `50000` | techniques: websocket-capture; sources: none |
+| `latency` | `int` | no | speculative | Measured/estimated round-trip latency to this relay in milliseconds. <br/>_observed:_ `18`, `42` | techniques: websocket-capture; sources: none |
 
 ## Examples
 
 ### Illustrative outgoing audio offer (synthetic)
 
-> Synthetic and sanitized — not a real capture. Element/attribute shapes are a working hypothesis. The <enc> payload is shown as a placeholder; in reality it is opaque Signal ciphertext. A single recipient device is shown; multi-device offers repeat <enc> per device.
+> Synthetic and sanitized, not a real capture. Element/attribute shapes are a working hypothesis. The <enc> payload is shown as a placeholder; in reality it is opaque Signal ciphertext. A single recipient device is shown; multi-device offers repeat <enc> per device.
 
 
 ```xml

@@ -86,7 +86,7 @@ children:
 examples:
   - title: Illustrative caller cancels an unanswered call (synthetic)
     note: >
-      Synthetic and sanitized — not a real capture. Shows a timeout termination
+      Synthetic and sanitized, not a real capture. Shows a timeout termination
       emitted toward the callee after no answer.
     format: xml
     body: |

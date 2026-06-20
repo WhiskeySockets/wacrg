@@ -133,7 +133,7 @@ children:
 examples:
   - title: Illustrative call acceptance (synthetic)
     note: >
-      Synthetic and sanitized — not a real capture. Whether <accept> carries its own
+      Synthetic and sanitized, not a real capture. Whether <accept> carries its own
       <enc>/<destination> or is a bare confirmation is an open question; both are
       shown for illustration.
     format: xml

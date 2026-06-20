@@ -1,4 +1,4 @@
-<!-- GENERATED FILE — do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
+<!-- GENERATED FILE. Do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
 
 # Mute / Video Toggle State Update
 
@@ -16,9 +16,9 @@ A call-routed stanza that communicates in-call media state changes between peers
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `from` | `jid` | yes | probable | Sender device JID announcing the media state change. | techniques: websocket-capture; sources: — |
-| `to` | `jid` | yes | probable | Destination peer device JID. | techniques: websocket-capture; sources: — |
-| `id` | `string` | yes | probable | Stanza id used to correlate with the server <ack>. | techniques: websocket-capture; sources: — |
+| `from` | `jid` | yes | probable | Sender device JID announcing the media state change. | techniques: websocket-capture; sources: none |
+| `to` | `jid` | yes | probable | Destination peer device JID. | techniques: websocket-capture; sources: none |
+| `id` | `string` | yes | probable | Stanza id used to correlate with the server <ack>. | techniques: websocket-capture; sources: none |
 
 ## Children
 
@@ -32,10 +32,10 @@ Indicates the sender muted (or, paired with a value attribute, unmuted) a media 
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `call-id` | `string` | yes | probable | Identifier of the call whose media state changed. | techniques: websocket-capture; sources: — |
-| `call-creator` | `jid` | no | probable | JID of the call-creating device, used with call-id to key the call. | techniques: websocket-capture; sources: — |
-| `media` | `enum:media-types` | no | speculative | Which media track the state change applies to (audio or video). Defaults to audio if absent in the audio-only case. | techniques: websocket-capture; sources: — |
-| `value` | `bool` | no | speculative | New mute state (true = muted). Present only if a single tag encodes both mute and unmute via a boolean rather than using separate tags. | techniques: websocket-capture; sources: — |
+| `call-id` | `string` | yes | probable | Identifier of the call whose media state changed. | techniques: websocket-capture; sources: none |
+| `call-creator` | `jid` | no | probable | JID of the call-creating device, used with call-id to key the call. | techniques: websocket-capture; sources: none |
+| `media` | `enum:media-types` | no | speculative | Which media track the state change applies to (audio or video). Defaults to audio if absent in the audio-only case. | techniques: websocket-capture; sources: none |
+| `value` | `bool` | no | speculative | New mute state (true = muted). Present only if a single tag encodes both mute and unmute via a boolean rather than using separate tags. | techniques: websocket-capture; sources: none |
 
 ### `<video>`
 
@@ -47,14 +47,14 @@ Toggles the outgoing video track on/off, or requests an audio-to-video upgrade. 
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `call-id` | `string` | yes | probable | Identifier of the call whose video state changed. | techniques: websocket-capture; sources: — |
-| `state` | `string` | no | speculative | New video state. Observed/assumed values include on, off, and possibly an upgrade-request marker; exact vocabulary unconfirmed. <br/>_observed:_ `on`, `off` | techniques: websocket-capture; sources: — |
+| `call-id` | `string` | yes | probable | Identifier of the call whose video state changed. | techniques: websocket-capture; sources: none |
+| `state` | `string` | no | speculative | New video state. Observed/assumed values include on, off, and possibly an upgrade-request marker; exact vocabulary unconfirmed. <br/>_observed:_ `on`, `off` | techniques: websocket-capture; sources: none |
 
 ## Examples
 
 ### Illustrative audio mute notification (synthetic)
 
-> Synthetic and sanitized — not a real capture. Tag/attribute names are hypothetical.
+> Synthetic and sanitized, not a real capture. Tag/attribute names are hypothetical.
 
 ```xml
 <call from="A.1@s.whatsapp.net" to="B.2@s.whatsapp.net" id="MU-0001">
@@ -64,7 +64,7 @@ Toggles the outgoing video track on/off, or requests an audio-to-video upgrade. 
 
 ### Illustrative video-toggle (camera on) notification (synthetic)
 
-> Synthetic and sanitized — not a real capture.
+> Synthetic and sanitized, not a real capture.
 
 ```xml
 <call from="A.1@s.whatsapp.net" to="B.2@s.whatsapp.net" id="MU-0002">

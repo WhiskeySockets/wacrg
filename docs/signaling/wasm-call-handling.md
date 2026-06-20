@@ -4,22 +4,22 @@
 # Call signaling, from the WASM
 
 [signaling](../signaling.md) documents the `<call>` stanza family as seen on the
-wire (websocket-capture). This page is the **WASM-side** view: what the Web
-calling engine's own code reveals about how it **builds and parses** those
+wire (websocket-capture). This page is the WASM-side view: what the Web
+calling engine's own code reveals about how it builds and parses those
 stanzas. Because it is a *different technique* over the same protocol, where the
 two agree a fact is corroborated toward `confirmed`; where the WASM shows
 something the wire captures have not, it is a new `probable` lead.
 
 > **Confidence.** `probable` (one static technique). Provenance: module `wa.wasm`
-> SHA-1 `3638a50…`; technique `wasm-analysis` · tool `warden` · contributor
+> SHA-1 `3638a50...`; technique `wasm-analysis` · tool `warden` · contributor
 > `purpshell` · source: commit history. Evidence here is the engine's own log and
-> parse-error **strings**, which name operations and attributes literally; the
+> parse-error strings, which name operations and attributes literally; the
 > stanza *tags* themselves are WABinary tokens, not strings, so this recovers the
-> **vocabulary and logic**, not raw tag bytes.
+> vocabulary and logic, not raw tag bytes.
 
 ## The call control is Rust
 
-A load-bearing structural finding: the call-control core is **Rust**
+The call-control core is **Rust**
 (`call_control::ffi`, `call_control::ffi_utils`), compiled into the module and
 heavily inlined. That is why the signaling handlers do not appear as clean,
 separately-named functions (they collapse into a few mega-functions alongside the
@@ -34,7 +34,7 @@ The engine's strings name the handlers for each phase of a call:
 - **Offer.** `parse_xmpp_offer` (`fill_common_header`), `handle_incoming_xmpp_offer`,
   `preprocess_offer` (with a "caller has been timeout already / sending call
   missed event" path), pending-offer buffering (`can_buffer_as_pending_call_offer`,
-  `handle_pending_call_offer`), and an **offer v2** path
+  `handle_pending_call_offer`), and an offer v2 path
   (`make_v2_offer_for_invite`, `enable_offer_v2_upgrade`,
   `fast_call_setup_callee_v2`).
 - **Ack / nack.** `handle_offer_ack` (de-dupes "duplicate call offer ack"),
@@ -67,7 +67,7 @@ child nodes:
 ## Call state machine
 
 The engine runs an explicit state machine via `change_call_state`, with named
-states - one captured verbatim is **`ConnectedLonely`** ("call is ConnectedLonely,
+states - one captured verbatim is `ConnectedLonely` ("call is ConnectedLonely,
 ignore the request to set call state to %s"). Reconnection logic is visible too
 ("entering reconnecting while e2e signaling probe works", "... while relay e2e
 bind probe works"), as is device-switch handling
@@ -95,15 +95,15 @@ calls, and mark where a 1:1-scoped spec stops.
   the `relaylatency` and `call-creator` facts now have a *second* technique behind
   them (static `wasm-analysis` alongside websocket-capture) - candidates to
   promote toward `confirmed`.
-- **New leads** (WASM-only so far): the **offer v2** upgrade path, the explicit
-  **call state machine** (`ConnectedLonely`, reconnect probes), **precall E2E
-  bind**, the **waiting-room / call-link** flow, and the `fill_call_summary`
+- **New leads** (WASM-only so far): the offer v2 upgrade path, the explicit
+  call state machine (`ConnectedLonely`, reconnect probes), precall E2E
+  bind, the waiting-room / call-link flow, and the `fill_call_summary`
   attribute set (`call_duration`, `user_pn`, `state`).
 
 ## Open questions
 
-- The raw WABinary **tag tokens** for each `<call>` child (offer/accept/…), which
-  are tokenized, not string-literal, in the binary.
+- The raw WABinary tag tokens for each `<call>` child (offer, accept, and the
+  rest), which are tokenized, not string-literal, in the binary.
 - The full **call-state enum** and its transitions (owned by the Rust core).
 - The exact **offer v1 vs v2** structural difference.
 - How `precall_e2e_bind` sequences relative to the SRTP/SFrame

@@ -1,6 +1,6 @@
 <!-- Copy to docs/decisions/YYYY-MM-DD-<slug>.md. Fill every section. -->
 
-# YYYY-MM-DD — <short decision title>
+# YYYY-MM-DD: <short decision title>
 
 **Status:** accepted | superseded by <link> | revisited <date>
 **Area:** signaling | keying | media | transport | codec
@@ -14,7 +14,7 @@ spec page (the RFC-level description) and the implementation site.
 ## Options considered
 
 The choices that were genuinely on the table, each with its trade-off. Include the
-one not taken — the record is more useful for showing what was rejected and why.
+one not taken: the record is more useful for showing what was rejected and why.
 
 ## Decision
 

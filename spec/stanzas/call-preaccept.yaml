@@ -103,7 +103,7 @@ children:
 examples:
   - title: Illustrative pre-accept / ringing (synthetic)
     note: >
-      Synthetic and sanitized — not a real capture. Whether <preaccept> carries early
+      Synthetic and sanitized, not a real capture. Whether <preaccept> carries early
       <destination> candidates is an open question; a bare form is also plausible.
     format: xml
     body: |

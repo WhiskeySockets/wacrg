@@ -1,8 +1,8 @@
-<!-- GENERATED FILE — do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
+<!-- GENERATED FILE. Do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
 
 # Specification overview
 
-This is the generated, human-readable view of the wacrg corpus — a machine-readable model of the WhatsApp 1:1 call protocol. Every page below is generated from YAML under `spec/`; do not edit the Markdown by hand.
+This is the generated, human-readable view of the wacrg corpus, a machine-readable model of the WhatsApp 1:1 call protocol. Every page below is generated from YAML under `spec/`; do not edit the Markdown by hand.
 
 !!! warning "Research scaffold, not authoritative truth"
     No real captures exist yet. Examples are synthetic and clearly labeled, and most facts carry `probable` or `speculative` confidence with open questions. Trust the confidence levels, not the prose.
@@ -17,8 +17,8 @@ This is the generated, human-readable view of the wacrg corpus — a machine-rea
 | [Techniques](./techniques.md) | 7 |
 | [Tools](./tools.md) | 8 |
 | [Contributors](./contributors.md) | 5 |
-| [Glossary](./glossary.md) | — |
-| [Coverage](./coverage.md) | — |
+| [Glossary](./glossary.md) | - |
+| [Coverage](./coverage.md) | - |
 
 ## How the spec is organized
 

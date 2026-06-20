@@ -2,7 +2,7 @@
   "name": "@whiskeysockets/wacrg",
   "private": true,
   "version": "0.1.0",
-  "description": "WhatsApp Calls Research Group — machine-readable specification of the WhatsApp 1:1 call protocol with provenance tracking.",
+  "description": "WhatsApp Calls Research Group: machine-readable specification of the WhatsApp 1:1 call protocol with provenance tracking.",
   "type": "module",
   "license": "MIT",
   "engines": {

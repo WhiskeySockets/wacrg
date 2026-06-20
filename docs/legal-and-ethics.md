@@ -2,7 +2,7 @@
 
 # Legal & ethics
 
-wacrg is **interoperability and security research**. The goal is to document how
+wacrg is interoperability and security research. The goal is to document how
 the WhatsApp 1:1 call protocol works so that independent clients (such as
 [Baileys](https://github.com/WhiskeySockets/Baileys)) can interoperate and so the
 security community can reason about the protocol. This page sets the boundaries
@@ -15,13 +15,13 @@ everyone working in this repository agrees to.
 
 ## Framing: research, not exploitation
 
-- We study the **protocol**, not people. The object of study is message
-  structure, keying, and transport behavior — never the content of anyone's
+- We study the protocol, not people. The object of study is message
+  structure, keying, and transport behavior, never the content of anyone's
   communications.
-- We document; we do not weaponize. Findings exist to enable **interoperability**
-  and **defensive understanding**, not to attack accounts, infrastructure, or
+- We document; we do not weaponize. Findings exist to enable interoperability
+  and defensive understanding, not to attack accounts, infrastructure, or
   users.
-- We value **honesty over completeness**. Speculative findings are labelled
+- We value honesty over completeness. Speculative findings are labelled
   speculative. We do not overstate certainty to look more authoritative.
 
 ## Comply with the law and platform terms
@@ -49,7 +49,7 @@ This is absolute:
 - **Never** include real phone numbers, JIDs, names, device identifiers, IPs, or
   any other personal data.
 
-There are **no real captures** in this repository, and there must never be. Every
+There are no real captures in this repository, and there must never be. Every
 example is synthetic and clearly labelled as such.
 
 ## PII & sanitization rules
@@ -61,7 +61,7 @@ essentials:
 1. **No PII.** Replace JIDs and phone numbers with placeholders
    (`A@s.whatsapp.net`, `B@s.whatsapp.net`).
 2. **No secrets or key material.** Signal ciphertext, prekeys, session state,
-   media keys, and SRTP keys become labelled placeholders — never real bytes.
+   media keys, and SRTP keys become labelled placeholders, never real bytes.
 3. **No identifying network specifics.** Latency hints are fine; IPs tied to a
    real session are not.
 4. **`sanitized: true` is an assertion.** Setting it certifies you verified the

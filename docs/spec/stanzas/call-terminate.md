@@ -1,4 +1,4 @@
-<!-- GENERATED FILE — do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
+<!-- GENERATED FILE. Do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
 
 # Call Terminate
 
@@ -16,9 +16,9 @@ Ends an existing call or a still-ringing offer. Either party (or the server on t
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `from` | `jid` | yes | probable | JID of the party (or server) ending the call. <br/>_observed:_ `A@s.whatsapp.net`, `B.0:7@s.whatsapp.net` | techniques: websocket-capture; sources: — |
-| `to` | `jid` | yes | probable | JID of the peer the termination is routed to. <br/>_observed:_ `B@s.whatsapp.net`, `A@s.whatsapp.net` | techniques: websocket-capture; sources: — |
-| `id` | `string` | yes | probable | Stanza id used to correlate the server <ack> for this termination. <br/>_observed:_ `4D5E6F7081` | techniques: websocket-capture; sources: — |
+| `from` | `jid` | yes | probable | JID of the party (or server) ending the call. <br/>_observed:_ `A@s.whatsapp.net`, `B.0:7@s.whatsapp.net` | techniques: websocket-capture; sources: none |
+| `to` | `jid` | yes | probable | JID of the peer the termination is routed to. <br/>_observed:_ `B@s.whatsapp.net`, `A@s.whatsapp.net` | techniques: websocket-capture; sources: none |
+| `id` | `string` | yes | probable | Stanza id used to correlate the server <ack> for this termination. <br/>_observed:_ `4D5E6F7081` | techniques: websocket-capture; sources: none |
 
 ## Children
 
@@ -32,15 +32,15 @@ Container that ends the session. Carries the call-id and the reason. Some reason
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `call-id` | `string` | yes | probable | The logical call session id being terminated, copied from the offer. <br/>_observed:_ `CALLID-0001-synthetic` | techniques: websocket-capture, baileys-instrumentation; sources: — |
-| `reason` | `enum:terminate-reasons` | no | probable | Why the call ended, drawn from enum:terminate-reasons. May be absent on a plain user hang-up, where the absence itself implies a normal end-of-call. <br/>_observed:_ `timeout`, `busy`, `declined`, `connection_lost`, `accept_elsewhere` | techniques: websocket-capture, baileys-instrumentation; sources: — |
-| `call-creator` | `jid` | no | speculative | JID of the original call creator, sometimes echoed for attribution. Whether terminate always includes it is unconfirmed. <br/>_observed:_ `A@s.whatsapp.net` | techniques: websocket-capture; sources: — |
+| `call-id` | `string` | yes | probable | The logical call session id being terminated, copied from the offer. <br/>_observed:_ `CALLID-0001-synthetic` | techniques: websocket-capture, baileys-instrumentation; sources: none |
+| `reason` | `enum:terminate-reasons` | no | probable | Why the call ended, drawn from enum:terminate-reasons. May be absent on a plain user hang-up, where the absence itself implies a normal end-of-call. <br/>_observed:_ `timeout`, `busy`, `declined`, `connection_lost`, `accept_elsewhere` | techniques: websocket-capture, baileys-instrumentation; sources: none |
+| `call-creator` | `jid` | no | speculative | JID of the original call creator, sometimes echoed for attribution. Whether terminate always includes it is unconfirmed. <br/>_observed:_ `A@s.whatsapp.net` | techniques: websocket-capture; sources: none |
 
 ## Examples
 
 ### Illustrative caller cancels an unanswered call (synthetic)
 
-> Synthetic and sanitized — not a real capture. Shows a timeout termination emitted toward the callee after no answer.
+> Synthetic and sanitized, not a real capture. Shows a timeout termination emitted toward the callee after no answer.
 
 
 ```xml

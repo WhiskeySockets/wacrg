@@ -45,7 +45,7 @@ export interface Provenance {
   tools?: string[];
   /** Contributor ids who observed/submitted this fact (see spec/contributors/). */
   contributors?: string[];
-  /** Issue/PR/commit references that back the claim — the proof trail. */
+  /** Issue/PR/commit references that back the claim: the proof trail. */
   sources?: string[];
 }
 

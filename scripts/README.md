@@ -3,7 +3,7 @@
 These TypeScript scripts turn the machine-readable corpus under
 [`spec/`](../spec) and [`corpus/`](../corpus) into validated, generated,
 human-readable docs. They run on Node 20+ via [`tsx`](https://github.com/privatenumber/tsx)
-with ESM `import` syntax — no build step.
+with ESM `import` syntax, with no build step.
 
 ```bash
 npm i              # install dev dependencies
@@ -40,7 +40,7 @@ The single place that knows the on-disk shapes. It exports:
   `REPO_ROOT` so every script resolves paths relative to the repository root
   regardless of the current working directory.
 - `walkAttributes(stanza)` / `walkChildren(stanza)` generators that recurse
-  into nested children — used by both the validator and the coverage tool.
+  into nested children, used by both the validator and the coverage tool.
 
 ### `validate.ts` (`npm run validate`, `npm test`)
 
@@ -82,7 +82,7 @@ info string is the word `mermaid`, which both GitHub and mkdocs-material render.
 Walks every attribute and child across all stanzas, tallies by confidence, and
 computes `coverage% = (confirmed + 0.5 × probable) / total`, rounded. It breaks
 the score down by category and by technique, then writes `COVERAGE.md` (repo
-root), `docs/spec/coverage.md` (identical), and `docs/coverage-badge.json` — a
+root), `docs/spec/coverage.md` (identical), and `docs/coverage-badge.json`, a
 [shields.io endpoint](https://shields.io/endpoint) object whose color is orange
 (< 34%), yellow (34–66%), or green (≥ 67%).
 

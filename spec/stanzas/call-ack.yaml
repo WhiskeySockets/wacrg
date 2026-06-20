@@ -101,12 +101,12 @@ children:
           sources: []
 examples:
   - title: Illustrative server ack for a call offer (synthetic)
-    note: Synthetic and sanitized — not a real capture.
+    note: Synthetic and sanitized, not a real capture.
     format: xml
     body: |
       <ack id="OF-0001" class="call" from="s.whatsapp.net" t="1700000000"/>
   - title: Illustrative ack carrying a routing error (synthetic)
-    note: Synthetic and sanitized — not a real capture; error framing on call acks is unconfirmed.
+    note: Synthetic and sanitized, not a real capture; error framing on call acks is unconfirmed.
     format: xml
     body: |
       <ack id="OF-0002" class="call" from="s.whatsapp.net">
@@ -115,7 +115,7 @@ examples:
 notes: >
   The ack is the reliability backbone of call signaling: absence of an ack within a
   timeout is what drives client-side retransmission of offers and other control stanzas.
-  Note this stanza's tag is <ack>, not <call> — it is the server/peer response to a call
+  Note this stanza's tag is <ack>, not <call>. It is the server/peer response to a call
   stanza rather than a call stanza itself.
 open_questions:
   - Do peer devices ack received call stanzas, or only the server?

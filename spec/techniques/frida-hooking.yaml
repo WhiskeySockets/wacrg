@@ -4,7 +4,7 @@ status: review
 maturity: emerging
 summary: >
   Attach Frida to the WhatsApp app on a device you own and hook native functions
-  around call setup and cryptography to observe values the WebSocket never carries —
+  around call setup and cryptography to observe values the WebSocket never carries,
   notably derived media keys and the SRTP/RTP path. Highest effort, highest reach
   into the keying and media planes.
 targets:

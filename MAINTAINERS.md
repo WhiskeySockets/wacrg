@@ -19,8 +19,8 @@ yourself here.
 
 | Area | Status | Needs |
 | --- | --- | --- |
-| `area/media` | _seeking maintainer_ | SRTP/RTP, codecs — strongest with `frida-hooking` / `static-smali-analysis` |
-| `area/transport` | _seeking maintainer_ | ICE/relay/endpoint selection — `frida-hooking` / `mitm-tls` |
+| `area/media` | _seeking maintainer_ | SRTP/RTP, codecs; strongest with `frida-hooking` / `static-smali-analysis` |
+| `area/transport` | _seeking maintainer_ | ICE/relay/endpoint selection; `frida-hooking` / `mitm-tls` |
 | `area/keying` | _co-owner welcome_ | Signal-protocol keying of the media key, SRTP derivation |
 
 ## How to join

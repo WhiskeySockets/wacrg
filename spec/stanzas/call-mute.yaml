@@ -112,14 +112,14 @@ children:
           sources: []
 examples:
   - title: Illustrative audio mute notification (synthetic)
-    note: Synthetic and sanitized — not a real capture. Tag/attribute names are hypothetical.
+    note: Synthetic and sanitized, not a real capture. Tag/attribute names are hypothetical.
     format: xml
     body: |
       <call from="A.1@s.whatsapp.net" to="B.2@s.whatsapp.net" id="MU-0001">
         <mute call-id="9f86d081" call-creator="A@s.whatsapp.net" media="audio" value="true"/>
       </call>
   - title: Illustrative video-toggle (camera on) notification (synthetic)
-    note: Synthetic and sanitized — not a real capture.
+    note: Synthetic and sanitized, not a real capture.
     format: xml
     body: |
       <call from="A.1@s.whatsapp.net" to="B.2@s.whatsapp.net" id="MU-0002">

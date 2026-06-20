@@ -5,11 +5,11 @@
 Implementation decisions, recorded. When a conversation over a specific
 implementation detail of a derivative implementation (e.g.
 [meowcaller](https://github.com/), the pure-Go flavor) concludes with a choice
-worth remembering, that choice is written here as a timestamped record: **what was
-decided, the context, the options weighed, and why**.
+worth remembering, that choice is written here as a timestamped record: what was
+decided, the context, the options weighed, and why.
 
 wacrg is the agreed spec, so it is also the home of the agreed *decisions*. A
-record here is the durable answer to "why is it built this way?" — and, over time,
+record here is the durable answer to "why is it built this way?", and, over time,
 the source from which the spec itself is updated.
 
 ## What belongs here
@@ -22,7 +22,7 @@ the source from which the spec itself is updated.
 
 - Routine code changes, refactors, or anything a commit message already covers.
 - Pre-emptive or speculative records. A decision record is written **after** a real
-  decision, **on direction** — never autonomously and never for its own sake.
+  decision, on direction, never autonomously and never for its own sake.
 
 ## How records are made
 

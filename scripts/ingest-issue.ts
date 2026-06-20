@@ -1,5 +1,5 @@
 /**
- * ingest-issue.ts — turn a stanza-capture Issue Form submission into a corpus
+ * ingest-issue.ts: turn a stanza-capture Issue Form submission into a corpus
  * capture YAML file.
  *
  * Reads ISSUE_NUMBER, ISSUE_TITLE, ISSUE_BODY from the environment. The body is
@@ -190,7 +190,7 @@ const decodedSection = unfence(get(sections, HEADINGS.DECODED));
 
 const techniqueRaw = get(sections, HEADINGS.TECHNIQUE);
 // The submitter's GitHub login (passed by the workflow) is recorded as the
-// contributor — a GitHub-authenticated record of WHO contributed this capture.
+// contributor, a GitHub-authenticated record of WHO contributed this capture.
 const contributor = (process.env.ISSUE_AUTHOR ?? '').trim() || undefined;
 const toolsList = parseTools(get(sections, HEADINGS.TOOLS));
 

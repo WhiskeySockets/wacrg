@@ -1,5 +1,5 @@
 /**
- * generate-docs.ts — render the YAML corpus into human-readable Markdown.
+ * generate-docs.ts: render the YAML corpus into human-readable Markdown.
  *
  * Input -> output (idempotent; every file is overwritten each run):
  *   spec/stanzas/*.yaml    -> docs/spec/stanzas/<id>.md + docs/spec/stanzas/index.md
@@ -30,7 +30,7 @@ import {
 } from './lib/corpus.ts';
 
 const BANNER =
-  '<!-- GENERATED FILE — do not edit by hand. Source: spec/ corpus. ' +
+  '<!-- GENERATED FILE. Do not edit by hand. Source: spec/ corpus. ' +
   'Run `npm run generate` to regenerate. -->\n';
 
 function write(relPath: string, body: string): void {
@@ -63,12 +63,12 @@ function provenanceLine(attr: Attribute): string {
   const prov = attr.provenance;
   if (!prov) return '';
   const parts: string[] = [];
-  parts.push(`techniques: ${prov.techniques?.length ? prov.techniques.join(', ') : '—'}`);
+  parts.push(`techniques: ${prov.techniques?.length ? prov.techniques.join(', ') : 'none'}`);
   if (prov.tools?.length) parts.push(`tools: ${prov.tools.join(', ')}`);
   if (prov.contributors?.length) {
     parts.push(`by: ${prov.contributors.map((c) => '@' + c).join(', ')}`);
   }
-  parts.push(`sources: ${prov.sources?.length ? prov.sources.join(', ') : '—'}`);
+  parts.push(`sources: ${prov.sources?.length ? prov.sources.join(', ') : 'none'}`);
   return parts.join('; ');
 }
 
@@ -202,7 +202,7 @@ function renderStanzaIndex(stanzas: Stanza[]): string {
     .slice()
     .sort((a, b) => a.id.localeCompare(b.id))
     .map((s) => {
-      const dir = s.direction?.length ? s.direction.join(', ') : '—';
+      const dir = s.direction?.length ? s.direction.join(', ') : '-';
       return (
         `| [${cell(s.display_name ?? s.id)}](./${s.id}.md) | \`<${cell(s.tag)}>\` | ` +
         `${cell(s.category)} | ${dir} | ${cell(s.status ?? 'draft')} |`
@@ -282,7 +282,7 @@ function renderFlow(flow: Flow): string {
     const rows = flow.steps.map((s, i) => {
       const stanzaLink = s.stanza
         ? `[\`${s.stanza}\`](../stanzas/${s.stanza}.md)`
-        : '—';
+        : '-';
       return (
         `| ${i + 1} | ${cell(s.from)} | ${cell(s.to)} | ${cell(s.label)} | ` +
         `${stanzaLink} | ${cell(s.confidence ?? '')} | ${cell(s.note)} |`
@@ -377,10 +377,10 @@ function renderTechniques(techniques: ReturnType<typeof loadTechniques>): string
     .slice()
     .sort((a, b) => a.data.id.localeCompare(b.data.id))
     .map(({ data }) => {
-      const targets = data.targets?.length ? data.targets.join(', ') : '—';
+      const targets = data.targets?.length ? data.targets.join(', ') : '-';
       const guide = data.guide
         ? `[guide](${guideLink(data.guide)})`
-        : '—';
+        : '-';
       const anchor = (data.title ?? data.id).toLowerCase().replace(/[^a-z0-9]+/g, '-');
       return (
         `| [${cell(data.title ?? data.id)}](#${anchor}) | ${cell(data.maturity ?? '')} | ` +
@@ -461,15 +461,15 @@ function renderContributors(contributors: ReturnType<typeof loadContributors>): 
     .map(({ data }) => {
       const gh = data.github
         ? `[@${data.github}](https://github.com/${data.github})`
-        : '—';
+        : '-';
       const techniques = data.techniques?.length
         ? data.techniques.map((t) => `\`${t}\``).join(', ')
-        : '—';
+        : '-';
       const tools = data.tools?.length
         ? data.tools.map((t) => `\`${t}\``).join(', ')
-        : '—';
+        : '-';
       return (
-        `| ${cell(data.name ?? data.id)} | ${gh} | ${cell(data.affiliation ?? '—')} | ` +
+        `| ${cell(data.name ?? data.id)} | ${gh} | ${cell(data.affiliation ?? '-')} | ` +
         `${techniques} | ${tools} |`
       );
     });
@@ -482,7 +482,7 @@ function renderTools(tools: ReturnType<typeof loadTools>): string {
   const out: string[] = [];
   out.push('# Tools');
   out.push(
-    'Concrete tools used to obtain evidence — more specific than a technique. ' +
+    'Concrete tools used to obtain evidence, more specific than a technique. ' +
       'Provenance entries reference these ids to record **what tools** produced ' +
       'a fact. Generated from `spec/tools/`.',
   );
@@ -502,10 +502,10 @@ function renderTools(tools: ReturnType<typeof loadTools>): string {
         : cell(data.name ?? data.id);
       const techniques = data.techniques?.length
         ? data.techniques.map((t) => `\`${t}\``).join(', ')
-        : '—';
-      const maintainer = data.maintainer ? `@${data.maintainer}` : '—';
+        : '-';
+      const maintainer = data.maintainer ? `@${data.maintainer}` : '-';
       return (
-        `| ${name} | ${cell(data.version ?? '—')} | ${techniques} | ${maintainer} | ` +
+        `| ${name} | ${cell(data.version ?? '-')} | ${techniques} | ${maintainer} | ` +
         `${cell(data.description ?? '')} |`
       );
     });
@@ -545,7 +545,7 @@ function renderOverview(counts: {
   const out: string[] = [];
   out.push('# Specification overview');
   out.push(
-    'This is the generated, human-readable view of the wacrg corpus — a ' +
+    'This is the generated, human-readable view of the wacrg corpus, a ' +
       'machine-readable model of the WhatsApp 1:1 call protocol. Every page ' +
       'below is generated from YAML under `spec/`; do not edit the Markdown by ' +
       'hand.',
@@ -565,8 +565,8 @@ function renderOverview(counts: {
       `| [Techniques](./techniques.md) | ${counts.techniques} |\n` +
       `| [Tools](./tools.md) | ${counts.tools} |\n` +
       `| [Contributors](./contributors.md) | ${counts.contributors} |\n` +
-      `| [Glossary](./glossary.md) | — |\n` +
-      `| [Coverage](./coverage.md) | — |`,
+      `| [Glossary](./glossary.md) | - |\n` +
+      `| [Coverage](./coverage.md) | - |`,
   );
   out.push(
     '## How the spec is organized\n\n' +

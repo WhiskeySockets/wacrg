@@ -3,7 +3,7 @@
 # Corpus
 
 `corpus/` is the **intake area** of the WhatsApp Calls Research Group (wacrg). It
-holds raw, sanitized, machine-readable *captures* — individual observations of
+holds raw, sanitized, machine-readable *captures*: individual observations of
 call stanzas contributed by maintainers using different reverse-engineering
 techniques. Captures are the unrefined input; the curated, cross-referenced
 specification lives one step downstream under [`spec/`](../spec/) and is rendered
@@ -49,15 +49,15 @@ pipeline](../docs/methodology/capture-pipeline.md) for the full lifecycle.
 Every file in `corpus/captures/` is validated against
 [`capture.schema.json`](schema/capture.schema.json). The required fields are:
 
-- `id` — stable identifier (e.g. `issue-12`).
-- `source.technique` — one of the seven fixed technique ids:
+- `id`: stable identifier (e.g. `issue-12`).
+- `source.technique`: one of the seven fixed technique ids:
   `websocket-capture`, `baileys-instrumentation`, `frida-hooking`, `mitm-tls`,
   `static-smali-analysis`, `memory-dump`, `wasm-analysis`.
-- `stanza_tag` — the top-level WABinary tag, e.g. `call`.
-- `direction` — `outgoing`, `incoming`, or `bidirectional`.
-- `confidence` — `confirmed`, `probable`, `speculative`, or `unknown`.
-- `raw.format` + `raw.body` — the captured payload (`xml`, `hex`, `base64`, or `json`).
-- `sanitized` — **must be `true`**.
+- `stanza_tag`: the top-level WABinary tag, e.g. `call`.
+- `direction`: `outgoing`, `incoming`, or `bidirectional`.
+- `confidence`: `confirmed`, `probable`, `speculative`, or `unknown`.
+- `raw.format` + `raw.body`: the captured payload (`xml`, `hex`, `base64`, or `json`).
+- `sanitized`: **must be `true`**.
 
 Optional fields include `title`, `status`, `source.issue`, `source.contributor`
 (auto-stamped from the submitter's GitHub identity when filed via the Issue Form),
@@ -80,7 +80,7 @@ capture is committed:
    shapes are fine; concrete IPs tied to a real session are not.
 4. **`sanitized: true` is an assertion, not a formality.** Setting it means you
    personally verified the record is clean. The schema rejects anything else.
-5. **When in doubt, redact.** Honesty over completeness — a partial, clearly
+5. **When in doubt, redact.** Honesty over completeness: a partial, clearly
    placeholdered capture is worth far more than a "complete" one that leaks data.
 
 See [legal and ethics](../docs/legal-and-ethics.md) for the broader framing and

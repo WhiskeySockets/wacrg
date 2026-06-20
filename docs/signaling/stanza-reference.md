@@ -6,14 +6,14 @@
 This is the exact wire structure of every `<call>` signaling stanza in a WhatsApp
 1:1 call, recovered from two working reconstructions whose builders are exercised
 by tests. Where this agrees with the earlier capture-derived model in
-[signaling](../signaling.md), the fact is **corroborated by a second independent
-technique**; where it adds structure (child order, magic blobs, encodings) it is
+[signaling](../signaling.md), the fact is corroborated by a second independent
+technique; where it adds structure (child order, magic blobs, encodings) it is
 new and `probable`.
 
 > **Confidence.** `probable` for the structures below: they come from
 > reconstructions ([zapo-caller](../../spec/tools.md) TS, ported into
 > [whatsapp-rust](../../spec/tools.md) Rust) that place real calls, with the
-> stanza builders unit-tested. Facts that **also** match the websocket-capture
+> stanza builders unit-tested. Facts that also match the websocket-capture
 > model are noted as candidates for `confirmed` (two independent techniques).
 >
 > **Provenance.** Technique `wasm-analysis` (+ the capture model it corroborates)
@@ -28,14 +28,14 @@ Every action is wrapped in a top-level `<call>` node:
 
 ```xml
 <call to="{peer-jid}" [id="{wrapper-id}"]>
-  <{action} call-id="{call-id}" call-creator="{creator-jid}"> … </{action}>
+  <{action} call-id="{call-id}" call-creator="{creator-jid}"> ... </{action}>
 </call>
 ```
 
 - `to` is the peer JID (LID in modern calls). `id` (the wrapper stanza id) is
   present on the actions that the client originates with a random id
   (`preaccept`, `heartbeat`); on others the IQ layer supplies it.
-- The **action** node (`offer`/`accept`/`preaccept`/`transport`/`relaylatency`/
+- The action node (`offer`/`accept`/`preaccept`/`transport`/`relaylatency`/
   `terminate`/`mute_v2`/`reject`/`heartbeat`) carries `call-id` and
   `call-creator` attributes - the call identity and the JID of the device that
   created the call.
@@ -60,12 +60,12 @@ Every action is wrapped in a top-level `<call>` node:
 </call>
 ```
 
-**The child order is load-bearing**: the server rejects a mis-ordered offer with
-**error 439**. The order is exactly: `privacy` -> `audio`(8k) -> `audio`(16k) ->
+The child order is load-bearing: the server rejects a mis-ordered offer with
+error 439. The order is exactly: `privacy` -> `audio`(8k) -> `audio`(16k) ->
 `net` -> `capability` -> (`destination` | `enc`) -> `encopt` ->
 `device-identity`.
 
-- **`<audio enc="opus" rate="...">`** - the offer advertises **two** audio
+- **`<audio enc="opus" rate="...">`** - the offer advertises two audio
   formats, 8000 and 16000 Hz. The rate is the lever for codec selection (see
   [accept](#accept-answer-the-call)).
 - **`<net medium="3">`** - the network medium on the offer (accept/transport use
@@ -76,9 +76,9 @@ Every action is wrapped in a top-level `<call>` node:
   `callKey`), encrypted with the recipient device's Signal session. `type` is
   `pkmsg` (no session yet) or `msg` (existing session) - the same multi-device
   fan-out as messaging (see [encryption-keying](../encryption-keying.md)). One
-  callee device uses a bare `<enc>`; **multiple devices** wrap each in
-  `<destination><to jid="..."><enc>…</enc></to>…</destination>`.
-- **`<encopt keygen="2">`** selects key-generation **v2** (the `<raw_e2e>` keying
+  callee device uses a bare `<enc>`; multiple devices wrap each in
+  `<destination><to jid="..."><enc>...</enc></to>...</destination>`.
+- **`<encopt keygen="2">`** selects key-generation v2 (the `<raw_e2e>` keying
   path; see [SRTP](../keying/srtp-key-schedule.md)).
 
 ## `<preaccept>` - early ring acknowledgement
@@ -86,7 +86,7 @@ Every action is wrapped in a top-level `<call>` node:
 ```xml
 <call to="{peer}" id="{random-wrapper}">
   <preaccept call-id="{cid}" call-creator="{creator}">
-    <audio enc="opus" rate="..."/> …
+    <audio enc="opus" rate="..."/> ...
     <encopt keygen="2"/>
     <capability ver="1">01 05 f7 09 e4 bb 07</capability>
   </preaccept>
@@ -94,8 +94,8 @@ Every action is wrapped in a top-level `<call>` node:
 ```
 
 Sent by the callee to signal the call is ringing before the user answers. Child
-order: `audio`* -> `encopt` -> `capability`. Note the **distinct preaccept
-capability blob** `01 05 f7 09 e4 bb 07` (the offer/accept blob ends `13`,
+order: `audio`* -> `encopt` -> `capability`. Note the distinct preaccept
+capability blob `01 05 f7 09 e4 bb 07` (the offer/accept blob ends `13`,
 preaccept ends `07`).
 
 ## `<accept>` - answer the call
@@ -103,11 +103,11 @@ preaccept ends `07`).
 ```xml
 <call to="{peer}">
   <accept call-id="{cid}" call-creator="{creator}">
-    <audio enc="opus" rate="..."/> …
+    <audio enc="opus" rate="..."/> ...
     <te priority="2">{relay transport-endpoint bytes}</te>   <!-- optional -->
     <net medium="2"/>
     <encopt keygen="2"/>
-    <capability ver="1">…</capability>                        <!-- optional -->
+    <capability ver="1">...</capability>                        <!-- optional -->
     <rte>{bytes}</rte>                                         <!-- optional -->
     <voip_settings uncompressed="1">{bytes}</voip_settings>   <!-- optional -->
   </accept>
@@ -118,9 +118,9 @@ Child order: `audio`* -> `te`(priority 2) -> `net`(medium 2) -> `encopt` ->
 `capability` -> `rte` -> `voip_settings`.
 
 - **Codec selection lever:** the `<audio rate>` formats are advertised in
-  preference order. Advertising **only `8000`** steers the caller off Meta's
-  16 kHz **MLow** codec and onto standard Opus narrow-band - a useful
-  interoperability knob.
+  preference order. Advertising only `8000` steers the caller off Meta's
+  16 kHz MLow codec and onto standard Opus narrow-band, an interoperability
+  knob.
 - **`<te priority>`** carries a relay transport-endpoint blob (priority 2 on
   accept, 1 on transport).
 - **`<voip_settings uncompressed="1">`** carries the call's tunable settings.
@@ -137,7 +137,7 @@ Child order: `audio`* -> `te`(priority 2) -> `net`(medium 2) -> `encopt` ->
 </call>
 ```
 
-- **`net` protocol rule:** `<net medium="2">` carries `protocol="0"` **unless**
+- **`net` protocol rule:** `<net medium="2">` carries `protocol="0"` unless
   `transport-message-type="9"` (a keepalive), in which case `protocol` is
   omitted. This is the wire signal that distinguishes a candidate update from a
   transport keepalive.
@@ -149,7 +149,7 @@ Child order: `audio`* -> `te`(priority 2) -> `net`(medium 2) -> `encopt` ->
 <call to="{peer}">
   <relaylatency call-id="{cid}" call-creator="{creator}">
     <te latency="{encoded}" relay_name="{relay}">{address bytes}</te>
-    <destination>…</destination>    <!-- peer devices; omitted for inbound callee -->
+    <destination>...</destination>    <!-- peer devices; omitted for inbound callee -->
   </relaylatency>
 </call>
 ```
@@ -176,7 +176,7 @@ call.
 ```xml
 <call to="{peer}">
   <terminate call-id="{cid}" call-creator="{creator}" [reason="..."]>
-    <destination>…</destination>    <!-- other devices to hang up -->
+    <destination>...</destination>    <!-- other devices to hang up -->
   </terminate>
 </call>
 ```

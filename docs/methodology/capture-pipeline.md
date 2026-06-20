@@ -59,7 +59,7 @@ triggers on issues labelled `type/stanza-capture`. It runs
 
 The workflow then opens a pull request (`peter-evans/create-pull-request`) from a
 branch `ingest/issue-<N>`. The PR contains exactly the new capture file. Nothing
-is auto-merged — a human reviews it.
+is auto-merged. A human reviews it.
 
 ### 4. Review → corpus
 
@@ -70,15 +70,15 @@ in `corpus/captures/`. It is now part of the raw evidence record.
 ### 5. Curate → spec
 
 Captures are *evidence*, not yet *spec*. Maintainers reconcile one or more
-captures into curated [`spec/`](../../spec/) entries — adding or updating stanza
-attributes, attaching **provenance**, and setting **confidence** per the
+captures into curated [`spec/`](../../spec/) entries: adding or updating stanza
+attributes, attaching provenance, and setting confidence per the
 [corroboration rule](index.md#the-corroboration-rule-how-confidence-is-promoted).
 When this lands, the generator rebuilds [`docs/spec/`](../spec/index.md) and the
 [coverage report](../spec/coverage.md).
 
 ## The provenance trail
 
-The point of the pipeline is that **nothing loses its origin**:
+The point of the pipeline is that nothing loses its origin:
 
 - The capture records its `source.technique`, optional `source.issue`,
   `source.contributor`, and `confidence`.
@@ -91,18 +91,18 @@ The point of the pipeline is that **nothing loses its origin**:
 
 ## Sanitization requirements
 
-Sanitization is **non-negotiable** and happens *before* anything is committed.
+Sanitization is mandatory and happens *before* anything is committed.
 The [corpus README](../../corpus/README.md) has the full rules; the essentials:
 
 - Replace JIDs/phone numbers with placeholders (`A@s.whatsapp.net`,
   `B@s.whatsapp.net`).
-- Replace **all** key material and Signal ciphertext with labelled placeholders.
+- Replace all key material and Signal ciphertext with labelled placeholders.
   Never paste real bytes.
 - Strip identifying relay/IP specifics.
 - `sanitized: true` is an explicit assertion that you verified the record is
-  clean — the [schema](../../corpus/schema/capture.schema.json) rejects anything
+  clean. The [schema](../../corpus/schema/capture.schema.json) rejects anything
   else, and reviewers double-check it.
-- Use **synthetic test accounts** for any live capture. Do not capture other
+- Use synthetic test accounts for any live capture. Do not capture other
   people. See [legal and ethics](../legal-and-ethics.md).
 
 ## Adding a capture by hand

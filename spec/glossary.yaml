@@ -29,7 +29,7 @@ terms:
       secrecy and break-in recovery. Established <enc> messages (type msg) use it.
   - term: SRTP
     definition: >
-      Secure Real-time Transport Protocol — the encrypted media transport for call audio/video,
+      Secure Real-time Transport Protocol, the encrypted media transport for call audio/video,
       carried as UDP packets to WhatsApp voip relay servers. SRTP session keys are derived from
       the call/media key delivered over the Signal-encrypted <enc> nodes in signaling.
   - term: ICE

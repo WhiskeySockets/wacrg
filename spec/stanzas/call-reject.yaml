@@ -84,7 +84,7 @@ children:
 examples:
   - title: Illustrative user declines an incoming call (synthetic)
     note: >
-      Synthetic and sanitized — not a real capture. Shows a declined rejection routed
+      Synthetic and sanitized, not a real capture. Shows a declined rejection routed
       back to the caller while the call is still ringing.
     format: xml
     body: |

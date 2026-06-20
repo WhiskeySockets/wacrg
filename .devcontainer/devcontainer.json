@@ -1,5 +1,5 @@
 {
-  // wacrg research lab — a reproducible workspace for the WhatsApp Calls
+  // wacrg research lab: a reproducible workspace for the WhatsApp Calls
   // Research Group tooling (corpus validation, doc generation, coverage).
   "name": "wacrg research lab",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:20",

@@ -6,7 +6,7 @@ summary: >
   Capture and decode the binary WABinary nodes that flow over the Noise-encrypted
   WhatsApp multi-device WebSocket. Because call signaling rides the same socket as
   messaging, the entire <call> stanza family can be observed at the framing boundary
-  on an account you control — without touching the native media engine.
+  on an account you control, without touching the native media engine.
 targets:
   - signaling
   - keying
@@ -17,7 +17,7 @@ strengths:
     though the ciphertext payload stays opaque.
   - Reproducible from a plain library session; no rooted device or app patching needed.
 limitations:
-  - Completely blind to the media plane (SRTP, RTP, codecs) — that traffic never
+  - Completely blind to the media plane (SRTP, RTP, codecs), that traffic never
     crosses the WebSocket.
   - Sees the <enc> envelope but not the plaintext call/media key inside it.
   - Only as complete as your client's own session; multi-device fan-out beyond your

@@ -1,5 +1,5 @@
 /**
- * coverage.ts — quantify how confirmed the spec currently is.
+ * coverage.ts: quantify how confirmed the spec currently is.
  *
  * Walks every attribute and child across all stanzas, tallies counts by
  * confidence, and computes:
@@ -119,8 +119,8 @@ function tallyRow(label: string, t: Tally): string {
 
 function buildReport(forDocs: boolean): string {
   const banner = forDocs
-    ? '<!-- GENERATED FILE — do not edit by hand. Run `npm run coverage`. -->\n\n'
-    : '<!-- GENERATED FILE — do not edit by hand. Run `npm run coverage`. -->\n\n';
+    ? '<!-- GENERATED FILE. Do not edit by hand. Run `npm run coverage`. -->\n\n'
+    : '<!-- GENERATED FILE. Do not edit by hand. Run `npm run coverage`. -->\n\n';
 
   const lines: string[] = [];
   lines.push(banner.trimEnd());
@@ -134,8 +134,8 @@ function buildReport(forDocs: boolean): string {
   lines.push('> `coverage% = (confirmed + 0.5 × probable) / total`');
   lines.push('');
   lines.push(
-    'It is a progress signal for the research speedrun, not a quality score — ' +
-      'a low number is expected and honest while captures are still scarce.',
+    'It is a progress signal for the research speedrun, not a quality score. ' +
+      'A low number is expected and honest while captures are still scarce.',
   );
   lines.push('');
   lines.push(`**Overall coverage: ${overallPct}%** across ${overall.total} documented facts.`);

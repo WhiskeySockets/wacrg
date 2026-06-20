@@ -1,4 +1,4 @@
-<!-- GENERATED FILE — do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
+<!-- GENERATED FILE. Do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
 
 # Call Pre-Accept
 
@@ -16,9 +16,9 @@ An early-acknowledgement stanza emitted by a callee device after it has received
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `from` | `jid` | yes | probable | JID of the ringing callee device emitting the pre-accept. <br/>_observed:_ `B.0:7@s.whatsapp.net` | techniques: websocket-capture; sources: — |
-| `to` | `jid` | yes | probable | JID of the caller the pre-accept is routed to. <br/>_observed:_ `A@s.whatsapp.net` | techniques: websocket-capture; sources: — |
-| `id` | `string` | yes | probable | Stanza id used to correlate the server <ack> for this pre-accept. <br/>_observed:_ `3C4D5E6F70` | techniques: websocket-capture; sources: — |
+| `from` | `jid` | yes | probable | JID of the ringing callee device emitting the pre-accept. <br/>_observed:_ `B.0:7@s.whatsapp.net` | techniques: websocket-capture; sources: none |
+| `to` | `jid` | yes | probable | JID of the caller the pre-accept is routed to. <br/>_observed:_ `A@s.whatsapp.net` | techniques: websocket-capture; sources: none |
+| `id` | `string` | yes | probable | Stanza id used to correlate the server <ack> for this pre-accept. <br/>_observed:_ `3C4D5E6F70` | techniques: websocket-capture; sources: none |
 
 ## Children
 
@@ -32,8 +32,8 @@ Container marking the call as received-and-ringing. Echoes the session identifie
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `call-id` | `string` | yes | probable | The logical call session id, copied verbatim from the offer. <br/>_observed:_ `CALLID-0001-synthetic` | techniques: websocket-capture, baileys-instrumentation; sources: — |
-| `call-creator` | `jid` | yes | probable | JID of the call creator (the caller), copied from the offer. <br/>_observed:_ `A@s.whatsapp.net` | techniques: websocket-capture; sources: — |
+| `call-id` | `string` | yes | probable | The logical call session id, copied verbatim from the offer. <br/>_observed:_ `CALLID-0001-synthetic` | techniques: websocket-capture, baileys-instrumentation; sources: none |
+| `call-creator` | `jid` | yes | probable | JID of the call creator (the caller), copied from the offer. <br/>_observed:_ `A@s.whatsapp.net` | techniques: websocket-capture; sources: none |
 
 #### `<destination>`
 
@@ -51,14 +51,14 @@ A transport endpoint candidate advertised early by the ringing device.
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `ip` | `string` | no | speculative | Candidate IP address (synthetic example only). <br/>_observed:_ `203.0.113.20` | techniques: websocket-capture; sources: — |
-| `port` | `int` | no | speculative | Candidate UDP port for media. <br/>_observed:_ `3478` | techniques: websocket-capture; sources: — |
+| `ip` | `string` | no | speculative | Candidate IP address (synthetic example only). <br/>_observed:_ `203.0.113.20` | techniques: websocket-capture; sources: none |
+| `port` | `int` | no | speculative | Candidate UDP port for media. <br/>_observed:_ `3478` | techniques: websocket-capture; sources: none |
 
 ## Examples
 
 ### Illustrative pre-accept / ringing (synthetic)
 
-> Synthetic and sanitized — not a real capture. Whether <preaccept> carries early <destination> candidates is an open question; a bare form is also plausible.
+> Synthetic and sanitized, not a real capture. Whether <preaccept> carries early <destination> candidates is an open question; a bare form is also plausible.
 
 
 ```xml

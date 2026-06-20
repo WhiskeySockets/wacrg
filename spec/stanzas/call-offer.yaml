@@ -302,7 +302,7 @@ children:
 examples:
   - title: Illustrative outgoing audio offer (synthetic)
     note: >
-      Synthetic and sanitized — not a real capture. Element/attribute shapes are a
+      Synthetic and sanitized, not a real capture. Element/attribute shapes are a
       working hypothesis. The <enc> payload is shown as a placeholder; in reality it
       is opaque Signal ciphertext. A single recipient device is shown; multi-device
       offers repeat <enc> per device.

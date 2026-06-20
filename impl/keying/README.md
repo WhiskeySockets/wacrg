@@ -1,9 +1,9 @@
 # keying - reference SRTP key schedule
 
-A clean-room, **standard-library-only** reference for WhatsApp's call SRTP key
+A clean-room, standard-library-only reference for WhatsApp's call SRTP key
 derivation, the executable companion to
-[`docs/keying/srtp-key-schedule.md`](../../docs/keying/srtp-key-schedule.md)
-(the source of truth).
+[`docs/keying/srtp-key-schedule.md`](../../docs/keying/srtp-key-schedule.md),
+which is the source of truth.
 
 Two layers:
 
@@ -19,12 +19,12 @@ Hop-by-hop SRTP skips Layer 1 (`ParseHBHKey`: the relay supplies 30 bytes of
 
 ## Validation
 
-- `TestHKDFSHA256_RFC5869` checks the HKDF layer against **RFC 5869 Appendix A**
-  (an authoritative known-answer), so WAHKDF rests on a proven primitive.
+- `TestHKDFSHA256_RFC5869` checks the HKDF layer against the RFC 5869 Appendix A
+  known-answer test, so WAHKDF rests on a proven primitive.
 - The rest assert sizes, determinism, per-participant separation (different LID ->
   different master), and that all six session keys are distinct.
 
-All inputs are **synthetic**; no key material ships here. Callers pass secrets in.
+All inputs are synthetic; no key material ships here. Callers pass secrets in.
 
 ## Provenance
 

@@ -1,4 +1,4 @@
-<!-- GENERATED FILE — do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
+<!-- GENERATED FILE. Do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
 
 # Call Reject
 
@@ -16,9 +16,9 @@ Sent by a callee device to decline an offered call before it is answered. The <c
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `from` | `jid` | yes | probable | JID of the callee device declining the call. <br/>_observed:_ `B.0:7@s.whatsapp.net` | techniques: websocket-capture; sources: — |
-| `to` | `jid` | yes | probable | JID of the caller the rejection is routed to. <br/>_observed:_ `A@s.whatsapp.net` | techniques: websocket-capture; sources: — |
-| `id` | `string` | yes | probable | Stanza id used to correlate the server <ack> for this rejection. <br/>_observed:_ `5E6F708192` | techniques: websocket-capture; sources: — |
+| `from` | `jid` | yes | probable | JID of the callee device declining the call. <br/>_observed:_ `B.0:7@s.whatsapp.net` | techniques: websocket-capture; sources: none |
+| `to` | `jid` | yes | probable | JID of the caller the rejection is routed to. <br/>_observed:_ `A@s.whatsapp.net` | techniques: websocket-capture; sources: none |
+| `id` | `string` | yes | probable | Stanza id used to correlate the server <ack> for this rejection. <br/>_observed:_ `5E6F708192` | techniques: websocket-capture; sources: none |
 
 ## Children
 
@@ -32,15 +32,15 @@ Container declining the call. Echoes the session identifiers from the offer and 
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `call-id` | `string` | yes | probable | The logical call session id being rejected, copied verbatim from the offer. <br/>_observed:_ `CALLID-0001-synthetic` | techniques: websocket-capture, baileys-instrumentation; sources: — |
-| `call-creator` | `jid` | yes | probable | JID of the call creator (the caller), copied from the offer for attribution. <br/>_observed:_ `A@s.whatsapp.net` | techniques: websocket-capture; sources: — |
-| `reason` | `enum:terminate-reasons` | no | probable | Why the call was rejected, drawn from the shared enum:terminate-reasons (most commonly declined or busy). Reusing the terminate enum keeps the reason vocabularies aligned across both stanzas. <br/>_observed:_ `declined`, `busy` | techniques: websocket-capture, baileys-instrumentation; sources: — |
+| `call-id` | `string` | yes | probable | The logical call session id being rejected, copied verbatim from the offer. <br/>_observed:_ `CALLID-0001-synthetic` | techniques: websocket-capture, baileys-instrumentation; sources: none |
+| `call-creator` | `jid` | yes | probable | JID of the call creator (the caller), copied from the offer for attribution. <br/>_observed:_ `A@s.whatsapp.net` | techniques: websocket-capture; sources: none |
+| `reason` | `enum:terminate-reasons` | no | probable | Why the call was rejected, drawn from the shared enum:terminate-reasons (most commonly declined or busy). Reusing the terminate enum keeps the reason vocabularies aligned across both stanzas. <br/>_observed:_ `declined`, `busy` | techniques: websocket-capture, baileys-instrumentation; sources: none |
 
 ## Examples
 
 ### Illustrative user declines an incoming call (synthetic)
 
-> Synthetic and sanitized — not a real capture. Shows a declined rejection routed back to the caller while the call is still ringing.
+> Synthetic and sanitized, not a real capture. Shows a declined rejection routed back to the caller while the call is still ringing.
 
 
 ```xml

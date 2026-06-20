@@ -4,15 +4,15 @@
 # SRTP key schedule
 
 [encryption-keying](../encryption-keying.md) calls the SRTP key derivation "the
-**most speculative** part of the whole spec." This page resolves the structure of
+most speculative part of the whole spec." This page resolves the structure of
 it. The call/media key delivered via Signal `<enc>` is expanded into SRTP master
-keys, then into SRTP/SRTCP session keys, in **two layers**.
+keys, then into SRTP/SRTCP session keys, in two layers.
 
 > **Confidence: `confirmed`** for the E2E SRTP derivation. It is now agreed by
-> **multiple independent paths**: static `wasm-analysis` of the binary (this
+> multiple independent paths: static `wasm-analysis` of the binary (this
 > page), a runtime WASM trace (the `meowmeow`/`dublin` Go reference), and two
 > independent reconstructions whose primitives are pinned to known-answer test
-> vectors - [zapo-caller](../../spec/tools.md) (TypeScript) and
+> vectors: [zapo-caller](../../spec/tools.md) (TypeScript) and
 > [whatsapp-rust](../../spec/tools.md) (Rust). All derive byte-identical keys.
 > The HBH two-stage schedule (below) is `probable` (recovered by the
 > reconstructions; one technique class). Rekey policy stays `speculative`.
@@ -21,7 +21,7 @@ keys, then into SRTP/SRTCP session keys, in **two layers**.
 > `zapo-caller`, `whatsapp-rust` · contributors `purpshell`, `jlucaso1`,
 > `auties`, `sheiitear`, `edgard` · sources: `wacore/src/voip/e2e_srtp.rs:55`,
 > `hbh_srtp.rs:51`, the trace-verified Go reference, commit history. **No key
-> material is in this repo** - structure only.
+> material is in this repo**: structure only.
 
 ## Layer 1: WAHKDF (call key to SRTP master)
 
@@ -38,7 +38,7 @@ masterKey(16) || masterSalt(14) || unused(16)
   the trailing 16 are unused.
 
 **Static evidence (new):** HKDF-SHA256 requires SHA-256, which is present and
-named in the binary - `sha256_transform_blocks` (#1226, identified by the inline
+named in the binary: `sha256_transform_blocks` (#1226, identified by the inline
 round constants `0x428a2f98`/`0x71374491` and the full K[0..63] table at data
 address `978512`), with `sha256_update` (#1224) and `sha256_finalize` (#1223). A
 runtime trace matched this HKDF step exactly.
@@ -70,7 +70,7 @@ The 20-byte auth keys imply **HMAC-SHA1**; the 16-byte cipher keys and AES-CM PR
 imply **AES-128-CM**. So the suite is **`AES_CM_128_HMAC_SHA1_80`** (the common
 SRTP profile).
 
-**Static evidence (new):** AES-128 counter mode is present and named -
+**Static evidence (new):** AES-128 counter mode is present and named:
 `aes_128_ctr_init` (#430), `configure_aes128_counter_mode` (#459),
 `aes_ctr_init_context` (#465), `aes_ctr_cipher_stream_copy` (#514). The
 per-participant derivation is anchored by a log string in #11407:
@@ -106,7 +106,7 @@ A frame is encrypted E2E first, then HBH on transmit; the reverse on receive.
 ## Relationship to SFrame
 
 Distinct from SRTP, the binary also carries `facebook::sframe` /
-`wa::sframe` - a per-frame media-encryption layer using **AES-128-GCM** (keyed by
+`wa::sframe`, a per-frame media-encryption layer using **AES-128-GCM** (keyed by
 a separate HKDF label `e2e sframe key`). See
 [SFrame: per-frame media E2EE](sframe-media-e2ee.md); whether SFrame and the E2E
 SRTP are one layer or two stacked layers is an open question.

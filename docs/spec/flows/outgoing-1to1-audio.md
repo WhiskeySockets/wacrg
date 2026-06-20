@@ -1,4 +1,4 @@
-<!-- GENERATED FILE — do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
+<!-- GENERATED FILE. Do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
 
 # Outgoing 1:1 audio call
 
@@ -29,7 +29,7 @@ sequenceDiagram
   Note over callee,caller: Optional early signal that the callee is ringing before the user answers.
   caller->>callee: <relaylatency> relay probe results exchanged [speculative]
   Note over caller,callee: Both sides may probe candidate relays to select the lowest-latency path.
-  callee->>caller: <accept> — callee user answers [probable]
+  callee->>caller: <accept>, callee user answers [probable]
   Note over callee,caller: Callee accepts both sides now have the shared call key to derive SRTP keys.
   caller->>callee: <transport><destination> chosen relay candidate(s) [speculative]
   Note over caller,callee: Final transport/relay selection so SRTP media can begin over UDP.
@@ -55,9 +55,9 @@ sequenceDiagram
 | 4 | callee | server | <ack class="call"> acknowledging receipt of the offer | [`call-ack`](../stanzas/call-ack.md) | speculative | Whether the callee device acks the offer to the server is not fully confirmed. |
 | 5 | callee | caller | <preaccept> (ringing / early indication) | [`call-preaccept`](../stanzas/call-preaccept.md) | speculative | Optional early signal that the callee is ringing before the user answers. |
 | 6 | caller | callee | <relaylatency> relay probe results exchanged | [`call-relaylatency`](../stanzas/call-relaylatency.md) | speculative | Both sides may probe candidate relays to select the lowest-latency path. |
-| 7 | callee | caller | <accept> — callee user answers | [`call-accept`](../stanzas/call-accept.md) | probable | Callee accepts; both sides now have the shared call key to derive SRTP keys. |
+| 7 | callee | caller | <accept>, callee user answers | [`call-accept`](../stanzas/call-accept.md) | probable | Callee accepts; both sides now have the shared call key to derive SRTP keys. |
 | 8 | caller | callee | <transport><destination> chosen relay candidate(s) | [`call-transport`](../stanzas/call-transport.md) | speculative | Final transport/relay selection so SRTP media can begin over UDP. |
-| 9 | caller | callee | SRTP audio media flows over UDP relay (off the WebSocket) | — | probable | Media is not WABinary; shown here only to mark where the call becomes active. |
+| 9 | caller | callee | SRTP audio media flows over UDP relay (off the WebSocket) | - | probable | Media is not WABinary; shown here only to mark where the call becomes active. |
 | 10 | caller | callee | <terminate> when either party hangs up | [`call-terminate`](../stanzas/call-terminate.md) | probable | Ends the call; reason typically a normal hang-up rather than timeout/busy. |
 
 ## Open questions

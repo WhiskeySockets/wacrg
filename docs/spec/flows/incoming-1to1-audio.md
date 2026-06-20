@@ -1,4 +1,4 @@
-<!-- GENERATED FILE — do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
+<!-- GENERATED FILE. Do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
 
 # Incoming 1:1 audio call
 
@@ -27,7 +27,7 @@ sequenceDiagram
   Note over callee,caller: Optional early ringing indication back toward the caller.
   callee->>caller: <relaylatency> probe results for candidate relays [speculative]
   Note over callee,caller: Local device measures relay latency to inform path selection.
-  callee->>caller: <accept> — local user answers [probable]
+  callee->>caller: <accept>, local user answers [probable]
   Note over callee,caller: On answering, the call key (already decrypted) is used to derive SRTP keys.
   server->>callee: <terminate reason='accept_elsewhere'> to this user's other devices [speculative]
   Note over server,callee: If multiple linked devices rang, the others receive an 'elsewhere' terminate so they stop ringing. Shown to illustrate multi-device behaviour.
@@ -52,9 +52,9 @@ sequenceDiagram
 | 3 | callee | server | <ack class="call"> acknowledging the offer | [`call-ack`](../stanzas/call-ack.md) | speculative | Acknowledges receipt to the server before the user has answered. |
 | 4 | callee | caller | <preaccept> (this device is ringing) | [`call-preaccept`](../stanzas/call-preaccept.md) | speculative | Optional early ringing indication back toward the caller. |
 | 5 | callee | caller | <relaylatency> probe results for candidate relays | [`call-relaylatency`](../stanzas/call-relaylatency.md) | speculative | Local device measures relay latency to inform path selection. |
-| 6 | callee | caller | <accept> — local user answers | [`call-accept`](../stanzas/call-accept.md) | probable | On answering, the call key (already decrypted) is used to derive SRTP keys. |
+| 6 | callee | caller | <accept>, local user answers | [`call-accept`](../stanzas/call-accept.md) | probable | On answering, the call key (already decrypted) is used to derive SRTP keys. |
 | 7 | server | callee | <terminate reason="accept_elsewhere"> to this user's other devices | [`call-terminate`](../stanzas/call-terminate.md) | speculative | If multiple linked devices rang, the others receive an "elsewhere" terminate so they stop ringing. Shown to illustrate multi-device behaviour. |
-| 8 | caller | callee | SRTP audio media flows over UDP relay (off the WebSocket) | — | probable | Media is not WABinary; marks where the call becomes active. |
+| 8 | caller | callee | SRTP audio media flows over UDP relay (off the WebSocket) | - | probable | Media is not WABinary; marks where the call becomes active. |
 | 9 | callee | caller | <terminate> when either party hangs up | [`call-terminate`](../stanzas/call-terminate.md) | probable | Ends the call on normal hang-up. |
 
 ## Open questions

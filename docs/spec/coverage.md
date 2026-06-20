@@ -1,11 +1,11 @@
-<!-- GENERATED FILE — do not edit by hand. Run `npm run coverage`. -->
+<!-- GENERATED FILE. Do not edit by hand. Run `npm run coverage`. -->
 # Spec coverage
 
 Coverage is a weighted measure of how confirmed the corpus is, computed over every attribute and child across all stanzas:
 
 > `coverage% = (confirmed + 0.5 × probable) / total`
 
-It is a progress signal for the research speedrun, not a quality score — a low number is expected and honest while captures are still scarce.
+It is a progress signal for the research speedrun, not a quality score. A low number is expected and honest while captures are still scarce.
 
 **Overall coverage: 25%** across 112 documented facts.
 

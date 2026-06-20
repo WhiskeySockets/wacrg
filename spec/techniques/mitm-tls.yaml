@@ -16,7 +16,7 @@ strengths:
   - Useful for mapping which servers participate in call setup and media relaying.
   - Standard, well-understood tooling.
 limitations:
-  - Cannot decrypt the Noise WebSocket or Signal payloads — the core call crypto is
+  - Cannot decrypt the Noise WebSocket or Signal payloads, the core call crypto is
     out of reach.
   - Certificate pinning blocks naive interception; needs a patched/owned client to
     bypass on your own device.

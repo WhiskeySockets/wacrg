@@ -19,8 +19,8 @@ makes others feel unwelcome or unsafe is not acceptable.
 
 ## Scope
 
-This Code of Conduct applies within all project spaces — the repository, issues,
-pull requests, discussions, and any other official channel — and when an
+This Code of Conduct applies within all project spaces (the repository, issues,
+pull requests, discussions, and any other official channel) and when an
 individual is representing the project in public spaces.
 
 ## Reporting

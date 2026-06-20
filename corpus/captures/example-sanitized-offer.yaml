@@ -27,7 +27,7 @@ raw:
       </offer>
     </call>
 decoded: |
-  Synthetic and sanitized example — not a real capture.
+  Synthetic and sanitized example, not a real capture.
 
   Top-level <call> node routed from caller device A to callee device B via the
   WhatsApp server. The call id ("CALLID0001" here, a placeholder) ties together

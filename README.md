@@ -6,7 +6,7 @@
 [![docs: CC BY 4.0](https://img.shields.io/badge/docs-CC%20BY%204.0-lightgrey)](./LICENSE-docs)
 
 > A collaborative, GitHub-native home for reverse-engineering and documenting a complete,
-> machine-readable specification of the **WhatsApp 1:1 (one-to-one) call protocol** —
+> machine-readable specification of the **WhatsApp 1:1 (one-to-one) call protocol**:
 > signaling, keying, media, and transport.
 
 The coverage badge above reads from [`docs/coverage-badge.json`](./docs/coverage-badge.json)
@@ -36,16 +36,16 @@ least once (`npm run build`).
 [WhiskeySockets](https://github.com/WhiskeySockets) maintains
 [Baileys](https://github.com/WhiskeySockets/Baileys), a TypeScript library for the WhatsApp
 Web / multi-device protocol. Several maintainers and community researchers have independently
-poked at **WhatsApp calling** using *different* reverse-engineering techniques — WebSocket
+poked at **WhatsApp calling** using different reverse-engineering techniques: WebSocket
 captures, Baileys instrumentation, Frida hooks, TLS MITM, static smali analysis, memory dumps,
 and WASM analysis of the Web client.
 Each technique reveals a different slice of the truth, and the findings have lived scattered
 across issues, gists, and private notes.
 
-**wacrg unifies those findings into ONE provenance-tracked specification.** It is a research
-scaffold — a speedrun toward a documented, machine-checkable model of how a 1:1 call is set up,
-keyed, carried, and torn down — built so that independent contributors can converge quickly
-without losing track of *who saw what, how, and how sure they are*.
+wacrg unifies those findings into one provenance-tracked specification. It is a research
+scaffold: a documented, machine-checkable model of how a 1:1 call is set up,
+keyed, carried, and torn down, built so that independent contributors can converge quickly
+without losing track of who saw what, how, and how sure they are.
 
 This project documents the protocol for **interoperability and research**. It is **not
 affiliated with or endorsed by Meta or WhatsApp**. See [DISCLAIMER.md](./DISCLAIMER.md).
@@ -58,15 +58,15 @@ affiliated with or endorsed by Meta or WhatsApp**. See [DISCLAIMER.md](./DISCLAI
 
 ## The provenance + confidence model
 
-This is the heart of the project. It is *how* independent maintainers using different
+This model is how independent maintainers using different
 techniques converge on a single spec.
 
-Every protocol fact — an attribute, a child node, an enum value, a flow step — carries two
+Every protocol fact (an attribute, a child node, an enum value, a flow step) carries two
 things:
 
-1. **Provenance** — *who* observed it (a registered contributor), *which technique(s)* and
-   *which tool(s)* produced it, and *which source(s)* (issue/PR refs) prove it. The technique
-   vocabulary is a **fixed set**:
+1. **Provenance**: who observed it (a registered contributor), which technique(s) and
+   which tool(s) produced it, and which source(s) (issue/PR refs) prove it. The technique
+   vocabulary is a fixed set:
 
    | technique id | what it is |
    | --- | --- |
@@ -78,16 +78,16 @@ things:
    | `memory-dump` | extracting state/keys from process memory |
    | `wasm-analysis` | RE of the WhatsApp **Web** calling engine, which ships as Emscripten WASM (see [warden](https://github.com/purpshell/warden)) |
 
-2. **Confidence** — one of `confirmed`, `probable`, `speculative`, `unknown`.
+2. **Confidence**: one of `confirmed`, `probable`, `speculative`, `unknown`.
 
-A finding earns higher confidence as **independent techniques corroborate it**. The
+A finding earns higher confidence as independent techniques corroborate it. The
 [GOVERNANCE.md](./GOVERNANCE.md) rule is explicit: a fact moves to `confirmed` only when at
-least **two different techniques** independently agree. Until then it stays `probable` or
+least two different techniques independently agree. Until then it stays `probable` or
 `speculative`, and disagreements are tracked as `type/discrepancy` rather than silently
 resolved.
 
-This means the spec is *auditable*: for any claim you can trace back to **who** observed it,
-the **technique** and **tool** that produced it, and the **source** that proves it.
+This means the spec is auditable: for any claim you can trace back to who observed it,
+the technique and tool that produced it, and the source that proves it.
 Contributors register in [`spec/contributors/`](./spec/contributors) and tools in
 [`spec/tools/`](./spec/tools); captures filed via the Issue Form are stamped with the
 submitter's GitHub identity automatically. See [Attribution & proof](./docs/attribution.md).
@@ -96,8 +96,8 @@ submitter's GitHub identity automatically. See [Attribution & proof](./docs/attr
 
 ## How the machine-readable spec works
 
-The **single source of truth** is a YAML corpus under [`spec/`](./spec). Humans do **not** edit
-the rendered docs — those are *generated*. The pipeline:
+The single source of truth is a YAML corpus under [`spec/`](./spec). Humans do not edit
+the rendered docs; those are generated. The pipeline:
 
 ```
 spec/*.yaml  ──▶  scripts/validate.ts   (schema + referential integrity)
@@ -106,40 +106,40 @@ spec/*.yaml  ──▶  scripts/validate.ts   (schema + referential integrity)
 ```
 
 - **Stanzas** ([`spec/stanzas/`](./spec/stanzas)) describe WABinary nodes (`<call>`, `<offer>`,
-  `<accept>`, `<terminate>`, …) as tag/attributes/children trees, each field with confidence +
+  `<accept>`, `<terminate>`, and others) as tag/attributes/children trees, each field with confidence +
   provenance.
 - **Flows** ([`spec/flows/`](./spec/flows)) describe end-to-end sequences (outgoing audio call,
-  reject, …) and render to **mermaid sequence diagrams**.
-- **Enums** ([`spec/enums/`](./spec/enums)) capture closed value sets (terminate reasons, …).
+  reject, and others) and render to mermaid sequence diagrams.
+- **Enums** ([`spec/enums/`](./spec/enums)) capture closed value sets (terminate reasons, and others).
 - **Techniques** ([`spec/techniques/`](./spec/techniques)) document each RE method.
 - **Tools** ([`spec/tools/`](./spec/tools)) and **Contributors**
-  ([`spec/contributors/`](./spec/contributors)) record *what tool* and *who* produced each
-  fact — see [attribution & proof](./docs/attribution.md).
+  ([`spec/contributors/`](./spec/contributors)) record what tool and who produced each
+  fact. See [attribution & proof](./docs/attribution.md).
 - **Glossary** ([`spec/glossary.yaml`](./spec/glossary.yaml)) defines shared terms (WABinary,
-  Noise, SRTP, …).
-- **Captures** ([`corpus/captures/`](./corpus/captures)) are intake records — raw (synthetic)
+  Noise, SRTP, and others).
+- **Captures** ([`corpus/captures/`](./corpus/captures)) are intake records: raw (synthetic)
   observations that get distilled into stanza facts.
 
 Everything is validated against JSON Schemas in `spec/schema/` and `corpus/schema/`, and
 cross-references (a `provenance.techniques` value, a flow step's `stanza`, an `enum:<id>` type)
-are checked for referential integrity. **The spec version is `0.1.0`.**
+are checked for referential integrity. The spec version is `0.1.0`.
 
 ---
 
 ## Featured tooling: warden
 
-WhatsApp Web ships its **calling engine as a WebAssembly module** — which makes the web
-client a far cleaner reverse-engineering surface than the mobile app: structured control
+WhatsApp Web ships its calling engine as a WebAssembly module, which makes the web
+client a cleaner reverse-engineering surface than the mobile app: structured control
 flow, an explicit JS↔WASM boundary, and an open-source Emscripten runtime that lets
 40–80% of the binary be auto-identified instead of read by hand.
 
-[**warden**](https://github.com/purpshell/warden) (`pip install warden-re`) is a *living*
-reverse-engineering knowledge base for Emscripten WebAssembly, built to exploit exactly
-this. It parses and fingerprints the module, auto-names library code via its Emscripten
-Oracle, lifts functions to pseudo-C, and — crucially — keeps annotations keyed to **stable
-function identity** so they **survive WhatsApp's frequent rebuilds** instead of resetting
-every release. Its knowledge base even uses a *provenance + confidence* economy that
-mirrors wacrg's own model — a natural fit for feeding curated facts back into the spec.
+[**warden**](https://github.com/purpshell/warden) (`pip install warden-re`) is a
+reverse-engineering knowledge base for Emscripten WebAssembly, built for this surface.
+It parses and fingerprints the module, auto-names library code via its Emscripten
+Oracle, lifts functions to pseudo-C, and keeps annotations keyed to stable
+function identity so they survive WhatsApp's frequent rebuilds instead of resetting
+every release. Its knowledge base uses a provenance and confidence economy that
+mirrors wacrg's own model, which fits feeding curated facts back into the spec.
 
 This surface is documented here as the
 [`wasm-analysis`](./docs/techniques/wasm-analysis.md) technique; see its how-to guide for
@@ -164,7 +164,7 @@ the workflow, and [warden's repository](https://github.com/purpshell/warden) for
 
 You can contribute **without writing any code**, or by editing the corpus directly.
 
-### Option A — File a capture via an Issue Form (no local setup)
+### Option A: File a capture via an Issue Form (no local setup)
 
 1. Open a new issue using the **"Stanza capture"** form.
 2. Fill in the stanza tag, direction, your capture technique, a confidence level, the (synthetic
@@ -175,7 +175,7 @@ You can contribute **without writing any code**, or by editing the corpus direct
 > **Never** paste real phone numbers, JIDs, keys, or media. Sanitize everything. See
 > [DISCLAIMER.md](./DISCLAIMER.md).
 
-### Option B — PR a `spec/` YAML directly
+### Option B: PR a `spec/` YAML directly
 
 ```bash
 # Requires Node >= 20
@@ -239,23 +239,23 @@ across every attribute and child in every stanza, then broken down by category a
 The badge at the top of this README reads the live number from
 [`docs/coverage-badge.json`](./docs/coverage-badge.json).
 
-Because this is an early research scaffold, **coverage is expected to be low** — that is honest
+Because this is an early research scaffold, coverage is expected to be low. That is honest
 and intentional. Raising it means independent corroboration, not guessing.
 
 ---
 
 ## Governance, conduct, security, disclaimer
 
-- [CONTRIBUTING.md](./CONTRIBUTING.md) — how to add facts, the confidence/provenance rules, dev
+- [CONTRIBUTING.md](./CONTRIBUTING.md): how to add facts, the confidence/provenance rules, dev
   loop, PR checklist.
-- [GOVERNANCE.md](./GOVERNANCE.md) — roles, how findings move `speculative → confirmed`, release
+- [GOVERNANCE.md](./GOVERNANCE.md): roles, how findings move `speculative → confirmed`, release
   cadence, area ownership.
-- [MAINTAINERS.md](./MAINTAINERS.md) — who maintains what.
-- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) — Contributor Covenant 2.1.
-- [SECURITY.md](./SECURITY.md) — responsible disclosure (report real WhatsApp vulnerabilities to
+- [MAINTAINERS.md](./MAINTAINERS.md): who maintains what.
+- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md): Contributor Covenant 2.1.
+- [SECURITY.md](./SECURITY.md): responsible disclosure (report real WhatsApp vulnerabilities to
   Meta first, not here).
-- [DISCLAIMER.md](./DISCLAIMER.md) — research purpose, trademarks, legal/ToS compliance, no PII.
-- [docs/attribution.md](./docs/attribution.md) — how who/technique/tool/source attribution is
+- [DISCLAIMER.md](./DISCLAIMER.md): research purpose, trademarks, legal/ToS compliance, no PII.
+- [docs/attribution.md](./docs/attribution.md): how who/technique/tool/source attribution is
   recorded and proven across multiple researchers.
 
 The rendered documentation site is published from [`docs/`](./docs) via GitHub Pages.
@@ -264,9 +264,9 @@ The rendered documentation site is published from [`docs/`](./docs) via GitHub P
 
 ## Licensing
 
-- **Code & tooling** (everything under `scripts/`, schemas, config) — **MIT**, see
+- **Code & tooling** (everything under `scripts/`, schemas, config): **MIT**, see
   [LICENSE](./LICENSE).
-- **Spec & documentation content** (`spec/`, `corpus/`, `docs/`, and prose) — **CC BY 4.0**, see
+- **Spec & documentation content** (`spec/`, `corpus/`, `docs/`, and prose): **CC BY 4.0**, see
   [LICENSE-docs](./LICENSE-docs).
 
 Copyright © 2026 **WhiskeySockets and the WhatsApp Calls Research Group contributors**.

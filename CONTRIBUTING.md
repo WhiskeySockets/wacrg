@@ -59,15 +59,15 @@ nested `children` (recursive, same shape), plus `examples`, `notes`, `open_quest
 Each **attribute** and **child** must carry:
 
 - `confidence` (one of the values above), and
-- `provenance` recording **how** (`techniques`, subset of the fixed set), **with what**
-  (`tools`, ids from `spec/tools/`), **who** (`contributors`, ids from
-  `spec/contributors/`), and **proof** (`sources`, issue/PR/commit refs like `"#12"`).
+- `provenance` recording how (`techniques`, subset of the fixed set), with what
+  (`tools`, ids from `spec/tools/`), who (`contributors`, ids from
+  `spec/contributors/`), and proof (`sources`, issue/PR/commit refs like `"#12"`).
   See [attribution & proof](./docs/attribution.md).
 
 Attribute `type` is one of `string|int|hex|bytes|bool|jid|timestamp|enum:<enum-id>`. When you use
-`enum:<id>`, that enum **must exist** as `spec/enums/<id>.yaml` — the validator enforces it.
+`enum:<id>`, that enum must exist as `spec/enums/<id>.yaml`. The validator enforces it.
 
-`examples` must be **synthetic and sanitized** and labelled as such (`note:` field). Never paste
+`examples` must be synthetic and sanitized and labelled as such (`note:` field). Never paste
 real data.
 
 ### Flows, enums, techniques, glossary
@@ -79,10 +79,10 @@ real data.
   `description`.
 - **Technique** (`spec/techniques/<id>.yaml`): `id` MUST be from the fixed technique set;
   document `maturity`, `targets`, `strengths`, `limitations`, `tooling`, optional `guide` path.
-- **Contributor** (`spec/contributors/<id>.yaml`): register yourself once — `id` (your
-  GitHub handle), `name`, the techniques/tools you use. Referenced by `provenance.contributors`.
-- **Tool** (`spec/tools/<id>.yaml`): a concrete tool — `id`, `version`, `url`, `techniques`
-  it supports, `maintainer`. Referenced by `provenance.tools`.
+- **Contributor** (`spec/contributors/<id>.yaml`): register yourself once with `id` (your
+  GitHub handle), `name`, and the techniques/tools you use. Referenced by `provenance.contributors`.
+- **Tool** (`spec/tools/<id>.yaml`): a concrete tool with `id`, `version`, `url`, `techniques`
+  it supports, and `maintainer`. Referenced by `provenance.tools`.
 - **Glossary** (`spec/glossary.yaml`): shared `terms`.
 
 > When in doubt about a key name, copy an existing file of the same kind and adapt it. The
@@ -100,12 +100,12 @@ These rules are what keep the spec trustworthy. Please follow them strictly.
    no matter how clean, does not reach `confirmed`. This is enforced socially in review and
    defined in [GOVERNANCE.md](./GOVERNANCE.md).
 3. **Always record provenance.** Every attribute/child needs `provenance.techniques` (which
-   methods saw it); also record `provenance.contributors` (who — your contributor id),
-   `provenance.tools` (which tools), and `provenance.sources` (where — an issue/PR/commit
+   methods saw it); also record `provenance.contributors` (who: your contributor id),
+   `provenance.tools` (which tools), and `provenance.sources` (where: an issue/PR/commit
    ref). No orphan facts. See [attribution & proof](./docs/attribution.md).
 4. **Put uncertainty in `open_questions`, not in confidence inflation.** If you're unsure what a
    field means, mark it `speculative` *and* add an open question. Do not round up.
-5. **Disagreements are first-class.** If two techniques contradict each other, do **not** silently
+5. **Disagreements are first-class.** If two techniques contradict each other, do not silently
    pick one. Open a `type/discrepancy` issue and leave both observations documented until
    resolved.
 6. **Synthetic examples only.** All `examples`/`raw` bodies must be synthetic or fully sanitized
@@ -129,8 +129,8 @@ npm test           # alias for validate
 ```
 
 The generated files (`docs/spec/**`, `COVERAGE.md`, `docs/coverage-badge.json`) are **committed**
-to the repo so the badge and Pages work. `npm run check` fails if you forgot to regenerate them —
-always run `npm run build` and commit the result.
+to the repo so the badge and Pages work. `npm run check` fails if you forgot to regenerate them.
+Always run `npm run build` and commit the result.
 
 Shared corpus-loading helpers live in [`scripts/lib/corpus.ts`](./scripts/lib/corpus.ts); the
 three pipeline scripts import from it.
@@ -165,15 +165,15 @@ confidence/provenance rules above.
 
 Before requesting review, confirm:
 
-- [ ] My change touches the **corpus** (`spec/`/`corpus/` YAML) — not hand-edited generated docs.
+- [ ] My change touches the corpus (`spec/`/`corpus/` YAML), not hand-edited generated docs.
 - [ ] `npm run build` passes locally and I committed the regenerated `docs/spec/**`,
       `COVERAGE.md`, and `docs/coverage-badge.json`.
 - [ ] `npm run check` is green (no uncommitted generated diffs).
-- [ ] Every new attribute/child/value has **confidence** and **provenance** (techniques,
+- [ ] Every new attribute/child/value has confidence and provenance (techniques,
       tools, contributors, sources).
 - [ ] Confidence is honest; `confirmed` only with ≥ 2 independent techniques. Uncertainty lives
       in `open_questions`.
-- [ ] Any `enum:<id>` type, flow `stanza`, or `provenance.techniques` value **resolves** to a
+- [ ] Any `enum:<id>` type, flow `stanza`, or `provenance.techniques` value resolves to a
       real id (validator passes).
 - [ ] No real PII, phone numbers, JIDs, keys, or media. Examples are synthetic/sanitized and
       labelled.

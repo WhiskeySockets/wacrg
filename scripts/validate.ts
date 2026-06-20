@@ -1,5 +1,5 @@
 /**
- * validate.ts — schema + referential-integrity validator for the wacrg corpus.
+ * validate.ts: schema + referential-integrity validator for the wacrg corpus.
  *
  * Steps:
  *   1. Load every YAML file under spec/ and corpus/.
@@ -101,7 +101,7 @@ function getValidator(kind: keyof typeof SCHEMAS): ValidateFunction | null {
   if (validators.has(kind)) return validators.get(kind) ?? null;
   const { schemaPath } = SCHEMAS[kind];
   if (!existsSync(fromRoot(schemaPath))) {
-    warn(schemaPath, `schema not found — skipping schema validation for ${kind}`);
+    warn(schemaPath, `schema not found, skipping schema validation for ${kind}`);
     validators.set(kind, null);
     return null;
   }
@@ -127,7 +127,7 @@ function formatAjvErrors(errors: ErrorObject[] | null | undefined): string[] {
 
 function validateFile(kind: keyof typeof SCHEMAS, file: Loaded<unknown>): void {
   const validate = getValidator(kind);
-  if (!validate) return; // schema missing — already warned once
+  if (!validate) return; // schema missing, already warned once
   const ok = validate(file.data);
   if (!ok) {
     for (const msg of formatAjvErrors(validate.errors)) {

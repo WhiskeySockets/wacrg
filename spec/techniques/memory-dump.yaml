@@ -4,7 +4,7 @@ status: draft
 maturity: experimental
 summary: >
   Recover in-memory state and key material from the WhatsApp process on a device you
-  own — for example the plaintext call/media key after it is decrypted from an <enc>
+  own, for example the plaintext call/media key after it is decrypted from an <enc>
   node, or SRTP context. The most invasive technique; powerful for keying/media but
   fragile and highly sensitive.
 targets:
@@ -16,7 +16,7 @@ strengths:
   - Provides ground-truth values to anchor speculative keying/media facts.
 limitations:
   - Extremely build- and timing-dependent; layouts change constantly.
-  - Requires a rooted/owned device and careful handling — never dump a device or
+  - Requires a rooted/owned device and careful handling, never dump a device or
     account that is not yours.
   - Recovered material is sensitive; only synthetic/own-account values may ever be
     written to this repo, and never raw keys.

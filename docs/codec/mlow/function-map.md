@@ -2,7 +2,7 @@
 
 # MLow function map
 
-This is the **identity table** for the audio codec subsystem: which WASM
+This is the identity table for the audio codec subsystem: which WASM
 functions implement which C++ class, recovered from the binary's own RTTI and
 `__FILE__` strings rather than guessed. It is the basis for the corrected names
 in the warden knowledge base.
@@ -17,7 +17,7 @@ in the warden knowledge base.
 ## Two failure modes, and why renames need the body
 
 The deep-analysis pass that first populated the KB named functions from their
-lifted pseudo-C alone. That produces **both** kinds of error, and recovering the
+lifted pseudo-C alone. That produces both kinds of error, and recovering the
 codec means guarding against each:
 
 **1. Wrong auto-names.** Some functions are confidently misnamed. The decoder
@@ -27,22 +27,22 @@ The auto-name is misleading; the typeinfo is the better anchor.
 
 **2. False-positive string-xref.** The reverse trap is just as real. warden's
 string index attributes a data string to a function by an `i32.const` whose value
-matches the string's address, which **over-matches**: large functions reference
+matches the string's address, which over-matches: large functions reference
 many constants, and some addresses collide. Worked examples found while writing
 this page:
 
-| idx | auto-name | matched an MLow needle, but the **body** is | verdict |
+| idx | auto-name | matched an MLow needle, but the body is | verdict |
 | --- | --- | --- | --- |
-| 7466 | `init_video_encoder_params` | H.264 macroblock sizing (`(w+15)>>4`), profile check `== 66` (Baseline) | genuinely **video**; auto-name correct |
-| 7952 | `parse_h264_nal_unit` | NAL header parse (`b>>7`, `b>>5`, `b&31`) + an executorch op | genuinely **video/NN**; auto-name correct |
+| 7466 | `init_video_encoder_params` | H.264 macroblock sizing (`(w+15)>>4`), profile check `== 66` (Baseline) | genuinely video; auto-name correct |
+| 7952 | `parse_h264_nal_unit` | NAL header parse (`b>>7`, `b>>5`, `b&31`) + an executorch op | genuinely video/NN; auto-name correct |
 
-So **typeinfo membership is a hint, not proof**, and a single string match is
+So typeinfo membership is a hint, not proof, and a single string match is
 weaker still. Every rename in this project is therefore made only after reading
 the function body; the table below lists *who references a class's typeinfo* (an
 upper bound that includes incidental references), not a verified method list. The
 counts are reference counts, to be narrowed by body reads, not member counts.
 
-This is exactly why wacrg keeps **provenance** separate from the claim: the
+For this reason wacrg keeps provenance separate from the claim: the
 evidence (typeinfo, source path, body shape) is recorded so a reviewer can see
 how far a name has actually been verified.
 
@@ -53,16 +53,16 @@ Function counts are the number of functions that reference each class's typeinfo
 | C++ class | role | # funcs | anchor indices |
 | --- | --- | --- | --- |
 | `facebook::rtc::AudioDecoderMLowImpl` | MLow speech decoder | 10 | 1839, 4245, 4882, 6261, 7006, 7018, 8032, 8036, 10750, 11416 |
-| `facebook::rtc::MLowFrame` | MLow audio frame/packet | 37 | 1916, 2024, 2039, 2314, 3790, 3922, 3926, 3928, 4703, 4733, 4815, 4819, 5418, 5422 … |
+| `facebook::rtc::MLowFrame` | MLow audio frame/packet | 37 | 1916, 2024, 2039, 2314, 3790, 3922, 3926, 3928, 4703, 4733, 4815, 4819, 5418, 5422 ... |
 | `concerto::MlowRedPayloadSplitter` | RED redundancy split | 7 | 2024, 3607, 4016, 10750, 11407, 11416, 11419 |
 | `facebook::rtc::ReedSolomonCode` | RS FEC core | 22 | (see impl/mlow/data/identity-map.json) |
-| `facebook::rtc::ReedSolomonFactoryImpl` | RS FEC factory | 7 | — |
-| `facebook::rtc::RSEncoderDecoder` | RS encode/decode | 2 | — |
+| `facebook::rtc::ReedSolomonFactoryImpl` | RS FEC factory | 7 | - |
+| `facebook::rtc::RSEncoderDecoder` | RS encode/decode | 2 | - |
 | `facebook::rtc::RSCodec` | RS codec wrapper | 2 | 10750, 11416 |
 
 ## Receive-engine classes (WebRTC NetEq, renamed `concerto`)
 
-The class names are **verbatim** WebRTC NetEq internals, which is what makes the
+The class names are verbatim WebRTC NetEq internals, which is what makes the
 identification near-certain.
 
 | C++ class | WebRTC role |
@@ -107,8 +107,8 @@ out; the typeinfo above is the anchor instead.
 ## Corrected names in the KB
 
 Corrections are applied to the warden knowledge base as reversible, top-authority
-renames (provenance `human`, logged so any can be undone) **only after the
-function body is read** and the role is justified, never from typeinfo or a single
+renames (provenance `human`, logged so any can be undone) only after the
+function body is read and the role is justified, never from typeinfo or a single
 string match alone (see the two failure modes above). The
 [methodology](methodology.md#applying-corrections) gives the exact procedure; the
 running list of body-verified renames is maintained there as the per-function

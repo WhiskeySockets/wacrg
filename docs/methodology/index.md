@@ -4,7 +4,7 @@
 
 wacrg exists because no single reverse-engineering technique tells the whole
 story. Each maintainer reaches the WhatsApp call protocol through a different
-lens, and each lens has blind spots. The methodology is about **combining** those
+lens, and each lens has blind spots. The methodology combines those
 views into one spec where every fact is traceable and honestly graded.
 
 ## The multi-technique approach
@@ -21,29 +21,29 @@ layers of the protocol:
 | `mitm-tls` | signaling, transport | TLS interception of auxiliary HTTPS endpoints; does not break Noise/Signal. |
 | `static-smali-analysis` | signaling, keying, media | Reads the app's logic without running it; great for *intended* behavior, not live values. |
 | `memory-dump` | keying, media | Recovers in-memory key material/state; powerful but fragile and sensitive. |
-| `wasm-analysis` | signaling, keying, media, transport | Static/iterative RE of the WhatsApp **Web** calling engine, which ships as Emscripten WASM — a cleaner, more stable surface than mobile. Powered by [warden](https://github.com/purpshell/warden). |
+| `wasm-analysis` | signaling, keying, media, transport | Static/iterative RE of the WhatsApp **Web** calling engine, which ships as Emscripten WASM, a cleaner, more stable surface than mobile. Powered by [warden](https://github.com/purpshell/warden). |
 
-The full, machine-generated catalogue — with strengths, limitations, tooling, and
-maturity — is the [techniques page](../spec/techniques.md). Practical, per-technique
+The full, machine-generated catalogue, with strengths, limitations, tooling, and
+maturity, is the [techniques page](../spec/techniques.md). Practical, per-technique
 how-to guides live under [`docs/techniques/`](../techniques/index.md).
 
-The key insight: **signaling is over-served and media/keying are under-served.**
+Signaling is over-served and media/keying are under-served.
 Cheap techniques all point at the same WebSocket, so the `<call>` stanza family
 is comparatively well-mapped, while the SRTP key schedule needs the hardest
-techniques. The newest technique — [`wasm-analysis`](../techniques/wasm-analysis.md)
-of the WhatsApp **Web** calling engine, which ships as WebAssembly — is aimed
-squarely at that under-served keying/media frontier. The
+techniques. The newest technique, [`wasm-analysis`](../techniques/wasm-analysis.md)
+of the WhatsApp Web calling engine, which ships as WebAssembly, is aimed
+at that under-served keying/media frontier. The
 [coverage report](../spec/coverage.md) breaks coverage down *by technique*
-precisely to surface this imbalance.
+to surface this imbalance.
 
-## The corroboration rule (how confidence is promoted)
+## The corroboration rule
 
-Confidence is not a vibe; it follows a rule:
+Confidence follows a rule:
 
-- A fact observed by **one** technique, once, is at most **`probable`** — and
+- A fact observed by one technique, once, is at most **`probable`**, and
   often `speculative` if the observer is unsure of the meaning.
-- A fact is promoted toward **`confirmed`** when **two or more independent
-  techniques agree** on it. "Independent" matters: two WebSocket captures of the
+- A fact is promoted toward **`confirmed`** when two or more independent
+  techniques agree on it. "Independent" matters: two WebSocket captures of the
   same client build are *not* independent corroboration; a WebSocket capture and
   a Frida hook *are*.
 - A fact stays **`speculative`** when it is inferred or assumed but not directly
@@ -58,9 +58,9 @@ that makes confidence levels meaningful rather than arbitrary.
 
 ## Why provenance and confidence are separate fields
 
-- **Provenance** answers *"who saw this and where?"* — techniques + source refs
+- **Provenance** answers *"who saw this and where?"*: techniques + source refs
   (issues/PRs/notes).
-- **Confidence** answers *"how much should you trust it?"* — the graded
+- **Confidence** answers *"how much should you trust it?"*: the graded
   conclusion drawn from that provenance.
 
 Keeping them separate lets the spec carry a defensible chain of reasoning. If a
@@ -78,7 +78,7 @@ rather than silently overwriting history.
 4. The generator renders human docs; the coverage script scores progress.
 
 The result is a spec where you can always ask of any fact: *who saw this, with
-what, and how sure are we?* — and get a real answer.
+what, and how sure are we?* and get a real answer.
 
 See [the capture pipeline](capture-pipeline.md) for the mechanics, and the
 [roadmap](../roadmap.md) for how we use coverage to prioritize the next captures.

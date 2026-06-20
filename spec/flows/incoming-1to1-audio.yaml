@@ -52,7 +52,7 @@ steps:
   - from: callee
     to: caller
     stanza: call-accept
-    label: <accept> — local user answers
+    label: <accept>, local user answers
     confidence: probable
     note: On answering, the call key (already decrypted) is used to derive SRTP keys.
   - from: server

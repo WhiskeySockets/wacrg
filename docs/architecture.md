@@ -5,17 +5,17 @@
 A WhatsApp 1:1 call runs over **two distinct planes** that are established and
 operated independently:
 
-1. **The signaling plane** — call *control* (offer, ring, accept, reject,
-   terminate, transport updates, mute/video state). This rides the **same
-   Noise-protocol-encrypted WebSocket** that WhatsApp multi-device uses for
-   messaging, carried as **WABinary** nodes under a top-level `<call>` tag.
-2. **The media plane** — the actual audio/video bytes. This is **SRTP over UDP**
+1. **The signaling plane:** call *control* (offer, ring, accept, reject,
+   terminate, transport updates, mute/video state). This rides the same
+   Noise-protocol-encrypted WebSocket that WhatsApp multi-device uses for
+   messaging, carried as WABinary nodes under a top-level `<call>` tag.
+2. **The media plane:** the actual audio/video bytes. This is SRTP over UDP
    to WhatsApp voip/relay servers, negotiated using transport endpoints that the
-   signaling plane exchanges. It does **not** travel over the WebSocket.
+   signaling plane exchanges. It does not travel over the WebSocket.
 
 Keying bridges the two: the **media key** is delivered *on the signaling plane*,
-encrypted to the peer with the existing **Signal protocol** session, and the
-**SRTP keys** for the media plane are derived from it.
+encrypted to the peer with the existing Signal protocol session, and the SRTP
+keys for the media plane are derived from it.
 
 > Confidence note: the two-plane split and the Noise-WebSocket signaling
 > transport are well-supported by how multi-device messaging works and are
@@ -35,10 +35,10 @@ encrypted to the peer with the existing **Signal protocol** session, and the
 
 ## Where keying sits
 
-Keying lives **on the signaling plane but logically between the two**. When a
+Keying lives on the signaling plane but logically between the two. When a
 device sends an offer, it includes one or more `<enc>` nodes whose payloads are
 Signal-protocol ciphertext. Each `<enc>` delivers the call/media key to one peer
-*device* (multi-device means several `<enc>` nodes per offer — see
+*device* (multi-device means several `<enc>` nodes per offer; see
 [fan-out](encryption-keying.md#multi-device-fan-out)). Because the key is wrapped
 in the recipient's Signal session, the WA server routes it but cannot read it.
 Both endpoints then derive SRTP keys from that shared secret, and the media plane
@@ -46,8 +46,8 @@ comes up encrypted end-to-end.
 
 ## Call lifecycle
 
-The diagram below sketches a typical outgoing 1:1 audio call. It is a *model* to
-orient new contributors; individual stanzas are documented (with confidence
+The diagram below sketches a typical outgoing 1:1 audio call. It is a *model*
+that orients new contributors; individual stanzas are documented (with confidence
 levels) in the generated [stanza catalog](spec/stanzas/index.md), and full
 sequences live in the [flow catalog](spec/flows/index.md).
 
@@ -59,7 +59,7 @@ sequenceDiagram
     participant Callee as Callee device
     participant Media as Media plane (SRTP/UDP)
 
-    Note over Caller,Callee: Signaling plane — Noise-encrypted WebSocket (WABinary)
+    Note over Caller,Callee: Signaling plane, Noise-encrypted WebSocket (WABinary)
     Caller->>Server: <call><offer> (audio desc, net, capability,<br/>encopt, <enc> media key per device, destination)
     Server->>Callee: routed <call><offer>
     Server-->>Caller: <ack>
@@ -81,14 +81,14 @@ sequenceDiagram
 
 ### Reading the diagram
 
-- Steps 1–3: the **offer** is server-routed; the server `<ack>`s the sender.
-- Steps 4–7: **ringing** (`<preaccept>`) and **acceptance** (`<accept>`) flow
+- Steps 1–3: the offer is server-routed; the server `<ack>`s the sender.
+- Steps 4–7: ringing (`<preaccept>`) and acceptance (`<accept>`) flow
   back through the server.
-- After acceptance both sides bring up **SRTP media** over UDP, typically through
-  WA relays selected from the offered transport endpoints — see
+- After acceptance both sides bring up SRTP media over UDP, typically through
+  WA relays selected from the offered transport endpoints. See
   [ICE & relays](ice-and-relays.md).
-- During the call, transport and state updates continue on the **signaling
-  plane**.
+- During the call, transport and state updates continue on the signaling
+  plane.
 - The call ends with a `<terminate>` carrying a `reason` (e.g. `declined`,
   `timeout`, `busy`, `connection_lost`).
 

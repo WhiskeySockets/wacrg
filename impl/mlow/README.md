@@ -1,12 +1,12 @@
-# mlow — reference implementation
+# mlow: reference implementation
 
-A clean-room, **decode-first** reference implementation of WhatsApp's **MLow**
+A clean-room, decode-first reference implementation of WhatsApp's **MLow**
 audio codec and receive pipeline, reconstructed by static analysis of the
 WhatsApp Web calling engine (WASM). It is the executable companion to the
 research in [`docs/codec/mlow/`](../../docs/codec/mlow/index.md).
 
-> **Status: in progress, and deliberately honest.** This is reverse-engineered
-> from a single static technique and has **not** been validated against the WASM
+> **Status: in progress.** This is reverse-engineered
+> from a single static technique and has not been validated against the WASM
 > output (no live decode oracle is used). Stages that are not yet recovered
 > return [`ErrNotRecovered`](mlow.go) instead of emitting plausible-but-wrong
 > samples. Treat output as a research artifact, not a drop-in WhatsApp codec,
@@ -40,8 +40,8 @@ evidence it was built from, so a reviewer can trace any line back to the binary.
 
 ## Out of scope
 
-The neural **companion** post-filter (`mlowcompanion_*`, ExecuTorch/XNNPACK) is
-excluded; intelligible audio is reachable without it. **Opus** is a separate
+The neural companion post-filter (`mlowcompanion_*`, ExecuTorch/XNNPACK) is
+excluded; intelligible audio is reachable without it. Opus is a separate
 codec present in the same binary and is not implemented here.
 
 ## Build

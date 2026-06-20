@@ -60,7 +60,7 @@ steps:
   - from: callee
     to: caller
     stanza: call-accept
-    label: <accept> — callee user answers
+    label: <accept>, callee user answers
     confidence: probable
     note: Callee accepts; both sides now have the shared call key to derive SRTP keys.
   - from: caller

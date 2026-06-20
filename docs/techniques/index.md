@@ -2,14 +2,14 @@
 
 # Technique guides
 
-wacrg converges findings from **seven** reverse-engineering techniques into one
+wacrg converges findings from seven reverse-engineering techniques into one
 provenance-tracked spec. Each technique reveals a different slice of the WhatsApp
-call protocol, and a fact earns higher confidence only when **independent**
+call protocol, and a fact earns higher confidence only when independent
 techniques corroborate it (see [methodology](../methodology/index.md) and
 [governance](../../GOVERNANCE.md)).
 
-This page links to practical how-to guides. The machine-generated catalogue — with
-each technique's maturity, target layers, strengths, limitations, and tooling — is
+This page links to practical how-to guides. The machine-generated catalogue (with
+each technique's maturity, target layers, strengths, limitations, and tooling) is
 the [techniques page](../spec/techniques.md), rendered from
 [`spec/techniques/`](../../spec/techniques).
 
@@ -41,6 +41,6 @@ the [techniques page](../spec/techniques.md), rendered from
 ## Contributing a technique guide
 
 The TLS MITM, static analysis, and memory-dump techniques have catalogue entries but
-no full how-to guide yet — these are great `good-first-capture`-adjacent
+no full how-to guide yet. These are great `good-first-capture`-adjacent
 contributions. Copy the structure of an existing guide, keep it hedged and ethical,
 and link it from the technique's `guide:` field in `spec/techniques/<id>.yaml`.

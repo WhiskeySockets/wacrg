@@ -1,7 +1,7 @@
 # Governance
 
 This document describes how wacrg is organized and how decisions get made. The goal
-is simple: let independent contributors converge quickly on **one** trustworthy,
+is to let independent contributors converge quickly on one trustworthy,
 provenance-tracked specification without losing rigor.
 
 ## Roles
@@ -27,7 +27,7 @@ Confidence is governed by a single rule, applied in review:
    same client build are **not** independent.
 3. Uncertainty is recorded in `open_questions`, never hidden by inflating confidence.
 4. When two techniques disagree, the conflict is filed as a `type/discrepancy` issue
-   and **both** observations stay documented until it is resolved — we do not
+   and **both** observations stay documented until it is resolved. We do not
    silently overwrite history.
 
 Provenance (`techniques` + `sources`) is mandatory on every attribute and child so a
@@ -57,8 +57,8 @@ reviewer can verify the rule has been met. See
 
 ## Becoming a maintainer
 
-Sustained, high-quality contribution — especially careful application of the
-confidence/provenance rules and helpful review of others' work — is the path to
+Sustained, high-quality contribution, especially careful application of the
+confidence/provenance rules and helpful review of others' work, is the path to
 becoming an area owner or maintainer. Existing maintainers extend the invitation and
 record it in [MAINTAINERS.md](./MAINTAINERS.md).
 

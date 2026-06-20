@@ -39,7 +39,7 @@ steps:
   - from: callee
     to: caller
     stanza: call-preaccept
-    label: <preaccept> (ringing) — but user never answers
+    label: <preaccept> (ringing), but user never answers
     confidence: speculative
     note: Optional ringing indication; no <accept> follows.
   - from: caller

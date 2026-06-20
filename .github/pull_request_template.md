@@ -31,7 +31,7 @@ Closes #
 ## Checklist
 
 - [ ] I ran `npm run build` locally (validate + generate + coverage) and it passed.
-- [ ] Generated docs are regenerated and committed (`docs/spec`, `COVERAGE.md`, `docs/coverage-badge.json`) — `npm run check` is clean.
+- [ ] Generated docs are regenerated and committed (`docs/spec`, `COVERAGE.md`, `docs/coverage-badge.json`), and `npm run check` is clean.
 - [ ] Every new attribute/child carries an honest `confidence` and `provenance` (techniques + sources).
 - [ ] Provenance `techniques` use only the fixed technique ids, and any `enum:<id>` types reference an existing enum.
 - [ ] No real PII or secrets: all examples/captures are synthetic and sanitized (`sanitized: true`).

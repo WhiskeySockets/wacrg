@@ -1,4 +1,4 @@
-<!-- GENERATED FILE — do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
+<!-- GENERATED FILE. Do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
 
 # Reverse-engineering techniques
 
@@ -8,9 +8,9 @@ The methods maintainers use to observe and confirm protocol facts. Each techniqu
 | --- | --- | --- | --- |
 | [Baileys instrumentation](#baileys-instrumentation) | established | signaling, keying | [guide](../techniques/baileys-instrumentation.md) |
 | [Frida dynamic hooking](#frida-dynamic-hooking) | emerging | keying, media, transport | [guide](../techniques/frida-hooking.md) |
-| [Process memory dump](#process-memory-dump) | experimental | keying, media | — |
-| [TLS man-in-the-middle](#tls-man-in-the-middle) | emerging | signaling, transport | — |
-| [Static smali / native analysis](#static-smali-native-analysis) | emerging | signaling, keying, media | — |
+| [Process memory dump](#process-memory-dump) | experimental | keying, media | - |
+| [TLS man-in-the-middle](#tls-man-in-the-middle) | emerging | signaling, transport | - |
+| [Static smali / native analysis](#static-smali-native-analysis) | emerging | signaling, keying, media | - |
 | [WhatsApp Web WASM analysis](#whatsapp-web-wasm-analysis) | emerging | signaling, keying, media, transport | [guide](../techniques/wasm-analysis.md) |
 | [WebSocket / WABinary capture](#websocket-wabinary-capture) | established | signaling, keying | [guide](../techniques/websocket-capture.md) |
 
@@ -58,7 +58,7 @@ Add logging and introspection hooks inside the Baileys client to record parsed c
 **status:** review  
 **targets:** keying, media, transport
 
-Attach Frida to the WhatsApp app on a device you own and hook native functions around call setup and cryptography to observe values the WebSocket never carries — notably derived media keys and the SRTP/RTP path. Highest effort, highest reach into the keying and media planes.
+Attach Frida to the WhatsApp app on a device you own and hook native functions around call setup and cryptography to observe values the WebSocket never carries, notably derived media keys and the SRTP/RTP path. Highest effort, highest reach into the keying and media planes.
 
 **Strengths**
 
@@ -92,7 +92,7 @@ Attach Frida to the WhatsApp app on a device you own and hook native functions a
 **status:** draft  
 **targets:** keying, media
 
-Recover in-memory state and key material from the WhatsApp process on a device you own — for example the plaintext call/media key after it is decrypted from an <enc> node, or SRTP context. The most invasive technique; powerful for keying/media but fragile and highly sensitive.
+Recover in-memory state and key material from the WhatsApp process on a device you own, for example the plaintext call/media key after it is decrypted from an <enc> node, or SRTP context. The most invasive technique; powerful for keying/media but fragile and highly sensitive.
 
 **Strengths**
 
@@ -102,7 +102,7 @@ Recover in-memory state and key material from the WhatsApp process on a device y
 **Limitations**
 
 - Extremely build- and timing-dependent; layouts change constantly.
-- Requires a rooted/owned device and careful handling — never dump a device or account that is not yours.
+- Requires a rooted/owned device and careful handling, never dump a device or account that is not yours.
 - Recovered material is sensitive; only synthetic/own-account values may ever be written to this repo, and never raw keys.
 
 **Tooling**
@@ -132,7 +132,7 @@ Intercept the auxiliary HTTPS/TLS traffic around a call (provisioning, relay all
 
 **Limitations**
 
-- Cannot decrypt the Noise WebSocket or Signal payloads — the core call crypto is out of reach.
+- Cannot decrypt the Noise WebSocket or Signal payloads, the core call crypto is out of reach.
 - Certificate pinning blocks naive interception; needs a patched/owned client to bypass on your own device.
 - Often yields context rather than direct protocol facts; corroborate before raising confidence.
 
@@ -153,7 +153,7 @@ Intercept the auxiliary HTTPS/TLS traffic around a call (provisioning, relay all
 **status:** draft  
 **targets:** signaling, keying, media
 
-Decompile the WhatsApp Android app and read the disassembled smali and native code to map how call stanzas are built, which attributes and enum values exist, and how the keying and media paths are wired — the intended behavior, without running anything.
+Decompile the WhatsApp Android app and read the disassembled smali and native code to map how call stanzas are built, which attributes and enum values exist, and how the keying and media paths are wired, the intended behavior, without running anything.
 
 **Strengths**
 
@@ -163,7 +163,7 @@ Decompile the WhatsApp Android app and read the disassembled smali and native co
 
 **Limitations**
 
-- Shows intended logic, not observed runtime values — easy to misread dead or feature-flagged code paths.
+- Shows intended logic, not observed runtime values, easy to misread dead or feature-flagged code paths.
 - Obfuscation and native code raise the effort substantially.
 - A finding here is a hypothesis; it needs a live technique to corroborate before reaching confirmed.
 
@@ -185,24 +185,24 @@ Decompile the WhatsApp Android app and read the disassembled smali and native co
 **status:** review  
 **targets:** signaling, keying, media, transport
 
-WhatsApp Web ships its calling engine as an Emscripten-compiled WebAssembly module. Statically and iteratively reverse-engineer that module — parse, fingerprint, auto-identify library code, lift to pseudo-C, and diff across releases — to recover how 1:1 calls are signaled, keyed, and carried. The web client is a cleaner, more stable surface than the mobile app, and findings can compound across WhatsApp's frequent rebuilds instead of resetting each release.
+WhatsApp Web ships its calling engine as an Emscripten-compiled WebAssembly module. Statically and iteratively reverse-engineer that module, parse, fingerprint, auto-identify library code, lift to pseudo-C, and diff across releases, to recover how 1:1 calls are signaled, keyed, and carried. The web client is a cleaner, more stable surface than the mobile app, and findings can compound across WhatsApp's frequent rebuilds instead of resetting each release.
 
 **Strengths**
 
-- WASM has explicit function boundaries, structured control flow, and typed signatures — far more legible than Android smali or native ARM.
+- WASM has explicit function boundaries, structured control flow, and typed signatures, far more legible than Android smali or native ARM.
 - The JS-to-WASM boundary (imports/exports) makes the interface to WebCrypto, WebRTC, and the socket explicit and easy to enumerate.
 - Open runtime: Emscripten/musl/libc++ are open source, so 40-80% of the module can be auto-identified, concentrating analyst effort on app-specific call logic.
 - Compounding RE: keyed to stable function identity, annotations survive vendor rebuilds, so knowledge accumulates across WhatsApp releases.
 
 **Limitations**
 
-- Static surface only: it does not observe live call packets or real-time SRTP media — pair with frida-hooking or websocket-capture for runtime values.
+- Static surface only: it does not observe live call packets or real-time SRTP media, pair with frida-hooking or websocket-capture for runtime values.
 - LTO inlining, custom allocators, and heavy obfuscation degrade automated library identification and structural matching.
 - Reveals intended logic: a finding still needs runtime corroboration from an independent technique before it can reach confirmed.
 
 **Tooling**
 
-- warden (warden-re) — living RE knowledge base for Emscripten WASM (parse, fingerprint, Emscripten Oracle identification, pseudo-C lift, cross-version diff)
+- warden (warden-re), living RE knowledge base for Emscripten WASM (parse, fingerprint, Emscripten Oracle identification, pseudo-C lift, cross-version diff)
 - Ghidra with the ghidra-wasm-plugin; WABT / wasm-tools; Emscripten / emsdk
 - Browser devtools to locate and pull the call WASM module and its JS glue
 
@@ -212,7 +212,7 @@ WhatsApp Web ships its calling engine as an Emscripten-compiled WebAssembly modu
 
 **References**
 
-- [warden — living reverse-engineering for Emscripten WebAssembly](https://github.com/purpshell/warden)
+- [warden, living reverse-engineering for Emscripten WebAssembly](https://github.com/purpshell/warden)
 - [warden-re on PyPI](https://pypi.org/project/warden-re/)
 - [Emscripten](https://emscripten.org/)
 - [WebAssembly](https://webassembly.org/)
@@ -224,7 +224,7 @@ WhatsApp Web ships its calling engine as an Emscripten-compiled WebAssembly modu
 **status:** stable  
 **targets:** signaling, keying
 
-Capture and decode the binary WABinary nodes that flow over the Noise-encrypted WhatsApp multi-device WebSocket. Because call signaling rides the same socket as messaging, the entire <call> stanza family can be observed at the framing boundary on an account you control — without touching the native media engine.
+Capture and decode the binary WABinary nodes that flow over the Noise-encrypted WhatsApp multi-device WebSocket. Because call signaling rides the same socket as messaging, the entire <call> stanza family can be observed at the framing boundary on an account you control, without touching the native media engine.
 
 **Strengths**
 
@@ -235,7 +235,7 @@ Capture and decode the binary WABinary nodes that flow over the Noise-encrypted 
 
 **Limitations**
 
-- Completely blind to the media plane (SRTP, RTP, codecs) — that traffic never crosses the WebSocket.
+- Completely blind to the media plane (SRTP, RTP, codecs), that traffic never crosses the WebSocket.
 - Sees the <enc> envelope but not the plaintext call/media key inside it.
 - Only as complete as your client's own session; multi-device fan-out beyond your devices is inferred, not observed.
 

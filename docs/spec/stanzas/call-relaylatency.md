@@ -1,4 +1,4 @@
-<!-- GENERATED FILE — do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
+<!-- GENERATED FILE. Do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
 
 # Relay Latency Probe / Report
 
@@ -16,9 +16,9 @@ A call-routed stanza used to probe and report round-trip latency to candidate Wh
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `from` | `jid` | yes | probable | Sender device JID of the latency report. | techniques: websocket-capture; sources: — |
-| `to` | `jid` | no | speculative | Destination JID. May be absent when the report is consumed by the server itself (for relay selection) rather than routed to the peer. | techniques: websocket-capture; sources: — |
-| `id` | `string` | yes | probable | Stanza id used to correlate the report with its server <ack>. | techniques: websocket-capture; sources: — |
+| `from` | `jid` | yes | probable | Sender device JID of the latency report. | techniques: websocket-capture; sources: none |
+| `to` | `jid` | no | speculative | Destination JID. May be absent when the report is consumed by the server itself (for relay selection) rather than routed to the peer. | techniques: websocket-capture; sources: none |
+| `id` | `string` | yes | probable | Stanza id used to correlate the report with its server <ack>. | techniques: websocket-capture; sources: none |
 
 ## Children
 
@@ -32,7 +32,7 @@ Wrapper carrying one or more relay latency samples. Hypothesised to be emitted p
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `call-id` | `string` | no | speculative | Call this latency report is associated with, when measured in the context of an active or ringing call. May be omitted for pre-call relay warm-up probes. | techniques: websocket-capture; sources: — |
+| `call-id` | `string` | no | speculative | Call this latency report is associated with, when measured in the context of an active or ringing call. May be omitted for pre-call relay warm-up probes. | techniques: websocket-capture; sources: none |
 
 #### `<relay>`
 
@@ -44,16 +44,16 @@ A single relay's latency sample. The element name is uncertain; <relay>, <te>, o
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `ip` | `string` | no | speculative | Address of the probed relay candidate. <br/>_observed:_ `203.0.113.10` | techniques: websocket-capture; sources: — |
-| `token` | `string` | no | speculative | Opaque server-assigned relay token/identifier the candidate was advertised under, used instead of (or alongside) a raw address. | techniques: websocket-capture; sources: — |
-| `latency` | `int` | yes | speculative | Measured round-trip latency to this relay. Units assumed to be milliseconds but not confirmed; could be a raw probe RTT in another unit. <br/>_observed:_ `28`, `64`, `150` | techniques: websocket-capture; sources: — |
-| `jitter` | `int` | no | speculative | Optional jitter estimate accompanying the latency sample. | techniques: websocket-capture; sources: — |
+| `ip` | `string` | no | speculative | Address of the probed relay candidate. <br/>_observed:_ `203.0.113.10` | techniques: websocket-capture; sources: none |
+| `token` | `string` | no | speculative | Opaque server-assigned relay token/identifier the candidate was advertised under, used instead of (or alongside) a raw address. | techniques: websocket-capture; sources: none |
+| `latency` | `int` | yes | speculative | Measured round-trip latency to this relay. Units assumed to be milliseconds but not confirmed; could be a raw probe RTT in another unit. <br/>_observed:_ `28`, `64`, `150` | techniques: websocket-capture; sources: none |
+| `jitter` | `int` | no | speculative | Optional jitter estimate accompanying the latency sample. | techniques: websocket-capture; sources: none |
 
 ## Examples
 
 ### Illustrative relay latency report for two candidates (synthetic)
 
-> Synthetic and sanitized — not a real capture. Field names are a working hypothesis.
+> Synthetic and sanitized, not a real capture. Field names are a working hypothesis.
 
 ```xml
 <call from="A.1@s.whatsapp.net" id="RL-0007">
@@ -74,11 +74,11 @@ Latency probing is a transport-layer concern that feeds relay/candidate selectio
 - What units does the latency attribute use (milliseconds assumed)?
 - Does the server or the peer device consume the report for relay selection?
 - Are relays identified by raw address, by an opaque server token, or both?
-- How often is the report emitted — once pre-call, periodically, or only on degradation?
+- How often is the report emitted, once pre-call, periodically, or only on degradation?
 
 ## References
 
-- [RFC 8489 — Session Traversal Utilities for NAT (STUN)](https://www.rfc-editor.org/rfc/rfc8489)
+- [RFC 8489, Session Traversal Utilities for NAT (STUN)](https://www.rfc-editor.org/rfc/rfc8489)
 
 ---
 

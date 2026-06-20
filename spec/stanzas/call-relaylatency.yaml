@@ -108,7 +108,7 @@ children:
               sources: []
 examples:
   - title: Illustrative relay latency report for two candidates (synthetic)
-    note: Synthetic and sanitized — not a real capture. Field names are a working hypothesis.
+    note: Synthetic and sanitized, not a real capture. Field names are a working hypothesis.
     format: xml
     body: |
       <call from="A.1@s.whatsapp.net" id="RL-0007">
@@ -128,7 +128,7 @@ open_questions:
   - What units does the latency attribute use (milliseconds assumed)?
   - Does the server or the peer device consume the report for relay selection?
   - Are relays identified by raw address, by an opaque server token, or both?
-  - How often is the report emitted — once pre-call, periodically, or only on degradation?
+  - How often is the report emitted, once pre-call, periodically, or only on degradation?
 references:
-  - title: RFC 8489 — Session Traversal Utilities for NAT (STUN)
+  - title: RFC 8489, Session Traversal Utilities for NAT (STUN)
     url: https://www.rfc-editor.org/rfc/rfc8489

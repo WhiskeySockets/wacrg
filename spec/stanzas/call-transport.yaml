@@ -175,7 +175,7 @@ children:
                   sources: []
 examples:
   - title: Illustrative in-call transport update with two relay candidates (synthetic)
-    note: Synthetic and sanitized — not a real capture. Candidate encoding is a working hypothesis.
+    note: Synthetic and sanitized, not a real capture. Candidate encoding is a working hypothesis.
     format: xml
     body: |
       <call from="A.1@s.whatsapp.net" to="B.2@s.whatsapp.net" id="TR-0001">
@@ -196,9 +196,9 @@ open_questions:
   - Are candidate IP/port encoded as string attributes or as a packed binary blob?
   - Do in-call updates reuse <transport>, or are they re-sent as a fresh <offer>/<destination>?
   - How does candidate priority relate (if at all) to standard ICE priority computation?
-  - Where is the SRTP keying material relative to transport selection — fixed at offer time or renegotiated?
+  - Where is the SRTP keying material relative to transport selection, fixed at offer time or renegotiated?
 references:
-  - title: RFC 8445 — Interactive Connectivity Establishment (ICE)
+  - title: RFC 8445, Interactive Connectivity Establishment (ICE)
     url: https://www.rfc-editor.org/rfc/rfc8445
-  - title: RFC 8656 — Traversal Using Relays around NAT (TURN)
+  - title: RFC 8656, Traversal Using Relays around NAT (TURN)
     url: https://www.rfc-editor.org/rfc/rfc8656

@@ -63,6 +63,15 @@
       "items": { "type": "string" },
       "description": "Flavor ids this one was ported or derived from. A flavor is NOT independent corroboration of any flavor it derives from; the corroboration rule uses this to avoid double-counting a port and its upstream."
     },
+    "notify_repo": {
+      "type": "string",
+      "pattern": "^[^/]+/[^/]+$",
+      "description": "owner/repo to notify (open a tracking issue) when an RFC part this flavor implements changes. Opt-in push channel; pull is always available via the feed."
+    },
+    "notify_opt_in": {
+      "type": "boolean",
+      "description": "When true (and notify_repo is set), the spec-notify workflow opens/updates a tracking issue in notify_repo on relevant RFC changes."
+    },
     "description": {
       "type": "string"
     }

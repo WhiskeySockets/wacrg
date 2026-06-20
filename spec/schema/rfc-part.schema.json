@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wacrg.whiskeysockets.io/schema/rfc-part.schema.json",
+  "title": "RFC part",
+  "description": "One normative section of the wacrg RFC. Parts are small YAML files that compile into a single ever-scrolling RFC page; each also renders as its own API-reference-style lookup page. A part's id is its permanent, citable reference.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "category", "title", "summary"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Stable, globally-unique id; matches the file name. The permanent reference for this part."
+    },
+    "category": {
+      "type": "string",
+      "enum": ["signalling", "encodings", "crypto", "relay"],
+      "description": "Top-level RFC division; matches the parent directory under spec/rfc/."
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "review", "stable", "deprecated"],
+      "description": "Spec maturity of this part."
+    },
+    "order": {
+      "type": "number",
+      "description": "Sort key within the category on the compiled RFC page (lower first)."
+    },
+    "features": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": ["audio", "video", "group", "screen-share", "raise-hand", "reactions", "presence", "recording"]
+      },
+      "description": "Calling features this part concerns."
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "One-paragraph statement of what this part specifies."
+    },
+    "normative": {
+      "type": "string",
+      "description": "The normative requirement text (RFC 2119 MUST/SHOULD/MAY), precise enough to implement. Markdown allowed."
+    },
+    "findings": {
+      "type": "string",
+      "description": "Supporting detail and what is known. Markdown allowed."
+    },
+    "requires": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string" },
+      "description": "Part ids this part depends on (each must resolve to another spec/rfc part)."
+    },
+    "implementations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/impl" },
+      "description": "Current in-the-wild implementation status across flavors (light; not a full code map)."
+    },
+    "since": {
+      "type": "string",
+      "description": "Spec version this part was introduced or last materially changed."
+    },
+    "open_questions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "references": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/reference" }
+    }
+  },
+  "$defs": {
+    "impl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["flavor", "status"],
+      "properties": {
+        "flavor": { "type": "string", "description": "A spec/flavors/<id> id." },
+        "status": { "type": "string", "enum": ["working", "partial", "planned", "unknown"] },
+        "note": { "type": "string" }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "url": { "type": "string" }
+      }
+    }
+  }
+}

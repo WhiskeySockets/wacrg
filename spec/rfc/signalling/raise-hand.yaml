@@ -1,0 +1,21 @@
+id: raise-hand
+category: signalling
+title: Raise hand
+status: draft
+order: 60
+features: [group, raise-hand]
+since: "0.1.0"
+summary: >
+  The in-call signal a participant sends to raise or lower their hand in a group
+  call.
+normative: |
+  TODO. A participant signals raise/lower-hand state to the other participants
+  in-band over the call signalling channel. The exact stanza/attribute carrying this
+  state is not yet specified.
+findings: |
+  A group-call UX feature. Not yet reverse-engineered to wire level.
+requires: [group-call]
+implementations:
+  - { flavor: whatsapp-rust, status: unknown }
+open_questions:
+  - "Which stanza/attribute carries raise-hand state, and whether it is acked."

@@ -1,0 +1,22 @@
+id: video
+category: encodings
+title: Video codec
+status: draft
+order: 30
+features: [video, screen-share]
+since: "0.1.0"
+summary: >
+  The video codec and packetization used for video calls and screen sharing.
+normative: |
+  TODO. Video tracks are carried as H.264 (and the engine contains an H.26x
+  passthrough/packetizer path). The exact profile negotiation, packetization mode,
+  and how a screen-content track is distinguished are not yet specified.
+findings: |
+  The WhatsApp Web engine contains H.264 NAL handling and an
+  `wa_h26x_passthrough` / `h26x_packetizer` path, plus screen-content and luma
+  histogram detectors.
+implementations:
+  - { flavor: whatsapp-rust, status: unknown }
+open_questions:
+  - "H.264 profile/level negotiation and packetization mode."
+  - "Whether other video codecs are supported."

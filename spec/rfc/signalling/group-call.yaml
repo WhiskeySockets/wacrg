@@ -1,0 +1,24 @@
+id: group-call
+category: signalling
+title: Group call setup
+status: draft
+order: 50
+features: [group, audio, video]
+since: "0.1.0"
+summary: >
+  How a multi-party call is created and how participants join, leave, and are
+  tracked, extending the 1:1 offer/accept flow.
+normative: |
+  TODO. A group call extends the 1:1 flow: the creator establishes a group call
+  session that additional participants join, each keyed independently (see
+  [srtp-master-key](srtp-master-key)) with per-sender media keys for SFrame (see
+  [sframe-media](sframe-media)). The participant roster, join/leave stanzas, and
+  group key distribution are not yet fully specified.
+findings: |
+  Group calls reuse the 1:1 keying and media planes with per-sender key separation.
+requires: [call-offer]
+implementations:
+  - { flavor: whatsapp-rust, status: unknown }
+open_questions:
+  - "Group session creation, the participant roster stanza, and join/leave signalling."
+  - "Per-sender SFrame key distribution and rotation on join/leave."

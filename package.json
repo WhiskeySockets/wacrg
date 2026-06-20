@@ -16,6 +16,7 @@
     "check": "npm run build && git diff --exit-code -- docs/spec COVERAGE.md docs/coverage-badge.json",
     "ingest": "tsx scripts/ingest-issue.ts",
     "ingest:flavor": "tsx scripts/ingest-flavor.ts",
+    "notify": "tsx scripts/notify.ts",
     "test": "npm run validate"
   },
   "devDependencies": {

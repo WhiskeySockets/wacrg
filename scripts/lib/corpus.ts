@@ -34,6 +34,18 @@ export type TechniqueId = (typeof TECHNIQUE_IDS)[number];
 
 export const SPEC_VERSION = '0.1.0';
 
+/** Top-level RFC divisions (distinct from the stanza `Category` area enum). */
+export const RFC_CATEGORIES = ['signalling', 'encodings', 'crypto', 'relay'] as const;
+export type RfcCategory = (typeof RFC_CATEGORIES)[number];
+
+/** Human label + order for each RFC category on the compiled page. */
+export const RFC_CATEGORY_META: Record<RfcCategory, { label: string; blurb: string }> = {
+  signalling: { label: 'Signalling', blurb: 'Call control over the WABinary/XMPP transport: the <call> stanza family and feature signalling.' },
+  encodings: { label: 'Encodings', blurb: 'Media codecs and payload formats: MLow, Opus, and video.' },
+  crypto: { label: 'Crypto', blurb: 'Keying and media protection: SRTP (hop-by-hop and end-to-end), SFrame, WARP, group-call crypto.' },
+  relay: { label: 'Relay', blurb: 'The media transport and relay stack: STUN, the relay handshake, RTP/RTCP framing, and the media loop.' },
+};
+
 // ---------------------------------------------------------------------------
 // Canonical TypeScript shapes for the YAML corpus.
 // ---------------------------------------------------------------------------
@@ -203,6 +215,10 @@ export interface Flavor {
   basis?: string[];
   /** Flavor ids this one was ported/derived from; it is not independent of these. */
   derives_from?: string[];
+  /** owner/repo to notify when an implemented RFC part changes (opt-in push). */
+  notify_repo?: string;
+  /** When true (with notify_repo), the spec-notify workflow opens issues there. */
+  notify_opt_in?: boolean;
   description?: string;
 }
 
@@ -229,6 +245,35 @@ export interface FlavorMapEntry {
 export interface FlavorMap {
   flavor: string;
   entries?: FlavorMapEntry[];
+}
+
+/** A flavor's in-the-wild implementation status for one RFC part (light, not a code map). */
+export interface RfcImplementation {
+  flavor: string;
+  status: 'working' | 'partial' | 'planned' | 'unknown';
+  note?: string;
+}
+
+/**
+ * One normative section of the RFC (spec/rfc/<category>/<id>.yaml). Parts compile
+ * into a single ever-scrolling page and each renders as its own lookup page; the
+ * id is the permanent citable reference.
+ */
+export interface RfcPart {
+  id: string;
+  category: RfcCategory;
+  title: string;
+  status?: Status;
+  order?: number;
+  features?: string[];
+  summary: string;
+  normative?: string;
+  findings?: string;
+  requires?: string[];
+  implementations?: RfcImplementation[];
+  since?: string;
+  open_questions?: string[];
+  references?: Reference[];
 }
 
 export interface GlossaryTerm {
@@ -367,6 +412,11 @@ export function loadFlavors(): Loaded<Flavor>[] {
 /** Per-flavor implementation maps (the inverse Source-of-truth). */
 export function loadFlavorMaps(): Loaded<FlavorMap>[] {
   return loadDir<FlavorMap>('spec/flavors/*.map.yaml');
+}
+
+/** RFC parts, nested one level under spec/rfc/<category>/. */
+export function loadRfcParts(): Loaded<RfcPart>[] {
+  return loadDir<RfcPart>('spec/rfc/**/*.yaml');
 }
 
 export function loadCaptures(): Loaded<Capture>[] {

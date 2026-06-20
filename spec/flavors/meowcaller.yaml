@@ -11,6 +11,8 @@ basis:
   - wasm-analysis
 derives_from:
   - whatsapp-rust
+notify_repo: purpshell/meowcaller
+notify_opt_in: true
 description: >
   A clean-room, pure-Go WhatsApp 1:1 calling library built module by module under
   human audit and verified byte-exact against shared known-answer vectors. An

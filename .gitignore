@@ -7,6 +7,9 @@ site/
 .mkdocs_cache/
 .cache/
 
+# Transient payload written by scripts/notify.ts (CI artifact, not committed)
+notify-payload.json
+
 # Logs
 *.log
 

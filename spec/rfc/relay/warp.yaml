@@ -1,0 +1,26 @@
+id: warp
+category: relay
+title: WARP relay framing
+status: draft
+order: 10
+features: [audio, video, group]
+since: "0.1.0"
+summary: >
+  The framing WhatsApp media uses across its relay, wrapping SRTP-protected RTP for
+  forwarding through the relay infrastructure.
+normative: |
+  After the STUN-based relay handshake (see [stun-relay](stun-relay)), media MUST be
+  carried in WARP frames between client and relay. A WARP frame wraps the
+  hop-by-hop-protected RTP payload with the relay's forwarding header; the relay
+  forwards frames between participants without terminating the end-to-end SFrame
+  layer (see [sframe-media](sframe-media)).
+findings: |
+  WARP sits between the SRTP layers and the relay transport. Exact header field
+  widths and the relay control sub-protocol are still being pinned.
+requires: [stun-relay, srtp-hop-by-hop]
+implementations:
+  - { flavor: whatsapp-rust, status: working }
+  - { flavor: zapo-caller, status: working }
+  - { flavor: meowcaller, status: planned }
+open_questions:
+  - "WARP header field widths, endianness, and the relay control messages."

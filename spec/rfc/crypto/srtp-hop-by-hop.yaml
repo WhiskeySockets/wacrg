@@ -1,0 +1,24 @@
+id: srtp-hop-by-hop
+category: crypto
+title: Hop-by-hop SRTP
+status: draft
+order: 20
+features: [audio, video, group]
+since: "0.1.0"
+summary: >
+  The relay-facing SRTP layer that protects media on each hop between a client and
+  the relay, distinct from the end-to-end layer.
+normative: |
+  Media between a client and the relay MUST be protected with a hop-by-hop SRTP
+  context that is independent of the end-to-end context. The relay supplies 30 bytes
+  of `masterKey || masterSalt` directly, so hop-by-hop keying MUST skip the WAHKDF
+  layer and apply only the RFC 3711 expansion (see
+  [srtp-master-key](srtp-master-key)). The suite is `AES_CM_128_HMAC_SHA1_80`.
+findings: |
+  This is the outer of two nested SRTP layers: end-to-end protects media across the
+  whole path; hop-by-hop protects each client↔relay hop and is terminated at the relay.
+requires: [srtp-master-key]
+implementations:
+  - { flavor: whatsapp-rust, status: working }
+  - { flavor: zapo-caller, status: working }
+  - { flavor: meowcaller, status: planned }

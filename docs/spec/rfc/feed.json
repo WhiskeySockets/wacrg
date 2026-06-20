@@ -1,0 +1,326 @@
+{
+  "spec": "wacrg",
+  "version": "0.1.0",
+  "note": "Pull feed. Poll this file; the parts a flavor implements are under flavors.<id>. Diff across versions to follow updates.",
+  "parts": [
+    {
+      "id": "call-offer",
+      "category": "signalling",
+      "title": "Call offer stanza",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "planned"
+        }
+      ],
+      "ref": "rfc/index.md#call-offer"
+    },
+    {
+      "id": "group-call",
+      "category": "signalling",
+      "title": "Group call setup",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "group",
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "unknown"
+        }
+      ],
+      "ref": "rfc/index.md#group-call"
+    },
+    {
+      "id": "raise-hand",
+      "category": "signalling",
+      "title": "Raise hand",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "group",
+        "raise-hand"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "unknown"
+        }
+      ],
+      "ref": "rfc/index.md#raise-hand"
+    },
+    {
+      "id": "reactions",
+      "category": "signalling",
+      "title": "In-call emoji reactions",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "reactions",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "unknown"
+        }
+      ],
+      "ref": "rfc/index.md#reactions"
+    },
+    {
+      "id": "screen-share",
+      "category": "signalling",
+      "title": "Screen sharing",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "screen-share",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "unknown"
+        }
+      ],
+      "ref": "rfc/index.md#screen-share"
+    },
+    {
+      "id": "mlow",
+      "category": "encodings",
+      "title": "MLow audio codec",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "meowmeow",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "partial"
+        }
+      ],
+      "ref": "rfc/index.md#mlow"
+    },
+    {
+      "id": "video",
+      "category": "encodings",
+      "title": "Video codec",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "video",
+        "screen-share"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "unknown"
+        }
+      ],
+      "ref": "rfc/index.md#video"
+    },
+    {
+      "id": "srtp-master-key",
+      "category": "crypto",
+      "title": "SRTP master key and salt derivation",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        },
+        {
+          "flavor": "meowmeow",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "planned"
+        }
+      ],
+      "ref": "rfc/index.md#srtp-master-key"
+    },
+    {
+      "id": "srtp-hop-by-hop",
+      "category": "crypto",
+      "title": "Hop-by-hop SRTP",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "planned"
+        }
+      ],
+      "ref": "rfc/index.md#srtp-hop-by-hop"
+    },
+    {
+      "id": "sframe-media",
+      "category": "crypto",
+      "title": "SFrame media end-to-end encryption",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "planned"
+        }
+      ],
+      "ref": "rfc/index.md#sframe-media"
+    },
+    {
+      "id": "stun-relay",
+      "category": "relay",
+      "title": "STUN relay handshake",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "planned"
+        }
+      ],
+      "ref": "rfc/index.md#stun-relay"
+    },
+    {
+      "id": "warp",
+      "category": "relay",
+      "title": "WARP relay framing",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "planned"
+        }
+      ],
+      "ref": "rfc/index.md#warp"
+    }
+  ],
+  "flavors": {
+    "meowcaller": [
+      "call-offer",
+      "mlow",
+      "srtp-master-key",
+      "srtp-hop-by-hop",
+      "sframe-media",
+      "stun-relay",
+      "warp"
+    ],
+    "meowmeow": [
+      "mlow",
+      "srtp-master-key"
+    ],
+    "whatsapp-rust": [
+      "call-offer",
+      "group-call",
+      "raise-hand",
+      "reactions",
+      "screen-share",
+      "mlow",
+      "video",
+      "srtp-master-key",
+      "srtp-hop-by-hop",
+      "sframe-media",
+      "stun-relay",
+      "warp"
+    ],
+    "zapo-caller": [
+      "call-offer",
+      "srtp-master-key",
+      "srtp-hop-by-hop",
+      "sframe-media",
+      "stun-relay",
+      "warp"
+    ]
+  }
+}

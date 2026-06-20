@@ -167,6 +167,14 @@
             "type": "string"
           }
         },
+        "flavors": {
+          "type": "array",
+          "description": "Flavor ids (independent reimplementations) that corroborate this fact; must match a spec/flavors/<id>.yaml. A flavor is a corroborating source, not a technique: it does not by itself promote confidence, and a flavor does not corroborate a flavor it derives_from.",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
         "contributors": {
           "type": "array",
           "description": "Contributor ids who observed/submitted this fact; must match a spec/contributors/<id>.yaml.",

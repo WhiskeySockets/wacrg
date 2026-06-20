@@ -43,6 +43,13 @@ export interface Provenance {
   techniques?: string[];
   /** Specific tool ids used (see spec/tools/); more granular than techniques. */
   tools?: string[];
+  /**
+   * Flavor ids (independent reimplementations, see spec/flavors/) that
+   * corroborate this fact. A flavor is a corroborating source, not a technique:
+   * it does not by itself promote confidence, and it does not corroborate a
+   * flavor it derives_from.
+   */
+  flavors?: string[];
   /** Contributor ids who observed/submitted this fact (see spec/contributors/). */
   contributors?: string[];
   /** Issue/PR/commit references that back the claim: the proof trail. */
@@ -160,6 +167,8 @@ export interface Contributor {
   affiliation?: string;
   techniques?: string[];
   tools?: string[];
+  /** Flavor ids (independent reimplementations) this contributor maintains/works on. */
+  flavors?: string[];
   links?: Reference[];
 }
 
@@ -172,6 +181,54 @@ export interface Tool {
   techniques?: string[];
   maintainer?: string;
   description?: string;
+}
+
+/**
+ * An independent reimplementation (a "flavor") of the protocol: a library or
+ * port that realizes the spec in real code. Distinct from a Tool — a tool
+ * gathers evidence, a flavor corroborates the spec by implementing it.
+ */
+export interface Flavor {
+  id: string;
+  name?: string;
+  url?: string;
+  language?: string;
+  maturity?: 'experimental' | 'partial' | 'working' | 'production';
+  license?: string;
+  maintainer?: string;
+  status?: Status;
+  /** Coarse protocol planes this flavor implements (the map gives per-bit detail). */
+  covers?: Category[];
+  /** Technique ids this flavor was reconstructed from (judges corroboration independence). */
+  basis?: string[];
+  /** Flavor ids this one was ported/derived from; it is not independent of these. */
+  derives_from?: string[];
+  description?: string;
+}
+
+/** One entry of a flavor's implementation map: a spec bit -> where it lives in code. */
+export interface FlavorMapEntry {
+  spec: {
+    area?: Category;
+    stanza?: string;
+    flow?: string;
+    enum?: string;
+    module?: string;
+    label?: string;
+  };
+  code: { url: string; symbol?: string; lines?: string };
+  validation?: { kat?: string; status?: 'scaffolded' | 'implemented' | 'verified' };
+  confidence?: Confidence;
+  notes?: string;
+}
+
+/**
+ * A flavor's implementation map (spec/flavors/<id>.map.yaml): the inverse
+ * Source-of-truth — where each bit of the spec is realized in that flavor's code.
+ */
+export interface FlavorMap {
+  flavor: string;
+  entries?: FlavorMapEntry[];
 }
 
 export interface GlossaryTerm {
@@ -295,6 +352,21 @@ export function loadContributors(): Loaded<Contributor>[] {
 
 export function loadTools(): Loaded<Tool>[] {
   return loadDir<Tool>('spec/tools/*.yaml');
+}
+
+/**
+ * Flavor identity files. The `*.map.yaml` glob overlaps `*.yaml`, so the map
+ * files are filtered out here and loaded separately by loadFlavorMaps().
+ */
+export function loadFlavors(): Loaded<Flavor>[] {
+  return loadDir<Flavor>('spec/flavors/*.yaml').filter(
+    (f) => !f.relPath.endsWith('.map.yaml'),
+  );
+}
+
+/** Per-flavor implementation maps (the inverse Source-of-truth). */
+export function loadFlavorMaps(): Loaded<FlavorMap>[] {
+  return loadDir<FlavorMap>('spec/flavors/*.map.yaml');
 }
 
 export function loadCaptures(): Loaded<Capture>[] {

@@ -38,4 +38,11 @@ Each row counts the attributes whose provenance cites that technique (an attribu
 | wasm-analysis | 0 | 0 | 0 | 0 | 0 | 0% |
 | (no technique) | 0 | 0 | 0 | 0 | 0 | 0% |
 
+## Flavor corroboration
+
+Independent reimplementations (flavors) that reproduce a fact. This is **not** part of the coverage score above — a flavor is a corroborating source, not a technique. Counts use `derives_from`, so a port and its upstream count once.
+
+- Facts citing at least one flavor: **0**
+- Facts with two or more independent flavors: **0**
+
 [Back to spec overview](./index.md)

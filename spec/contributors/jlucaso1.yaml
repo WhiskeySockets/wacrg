@@ -3,7 +3,7 @@ name: João Lucas
 github: jlucaso1
 techniques:
   - wasm-analysis
-tools:
+flavors:
   - whatsapp-rust
 links:
   - title: whatsapp-rust

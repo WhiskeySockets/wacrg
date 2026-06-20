@@ -36,6 +36,12 @@
       "items": { "type": "string" },
       "description": "Tool ids this contributor commonly uses (must match spec/tools/)."
     },
+    "flavors": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string" },
+      "description": "Flavor ids this contributor maintains or works on (must match spec/flavors/). A flavor is an independent reimplementation, distinct from an evidence-gathering tool."
+    },
     "links": {
       "type": "array",
       "items": { "$ref": "#/$defs/reference" },

@@ -2,5 +2,5 @@ id: edgard
 name: Edgard
 techniques:
   - wasm-analysis
-tools:
+flavors:
   - zapo-caller

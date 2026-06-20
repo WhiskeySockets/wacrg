@@ -1,0 +1,25 @@
+id: whatsapp-rust
+name: whatsapp-rust (VoIP)
+url: https://github.com/jlucaso1/whatsapp-rust
+language: rust
+maturity: working
+maintainer: jlucaso1
+status: stable
+covers:
+  - signaling
+  - keying
+  - media
+  - transport
+basis:
+  - wasm-analysis
+derives_from:
+  - meowmeow
+  - zapo-caller
+description: >
+  Pure-Rust reconstruction of the WhatsApp Web client with a working VoIP media
+  stack (wacore/src/voip): a from-scratch MLow/SMPL CELP codec, SFrame, E2E and
+  hop-by-hop SRTP, WARP, STUN/relay, RTP/RTCP, and call signaling. The codec is a
+  port of the byte-exact Go reference (meowmeow); the crypto and signaling are
+  ported from zapo-caller. Because it derives from those flavors it is NOT
+  independent corroboration of them. A fork at oxidezap/whatsapp-rust is the
+  reference the meowcaller flavor ports from.

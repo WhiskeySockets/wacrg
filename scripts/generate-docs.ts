@@ -18,6 +18,8 @@ import {
   fromRoot,
   loadContributors,
   loadEnums,
+  loadFlavorMaps,
+  loadFlavors,
   loadFlows,
   loadGlossary,
   loadStanzas,
@@ -25,6 +27,7 @@ import {
   loadTools,
   type Attribute,
   type Child,
+  type FlavorMapEntry,
   type Flow,
   type Stanza,
 } from './lib/corpus.ts';
@@ -65,6 +68,7 @@ function provenanceLine(attr: Attribute): string {
   const parts: string[] = [];
   parts.push(`techniques: ${prov.techniques?.length ? prov.techniques.join(', ') : 'none'}`);
   if (prov.tools?.length) parts.push(`tools: ${prov.tools.join(', ')}`);
+  if (prov.flavors?.length) parts.push(`flavors: ${prov.flavors.join(', ')}`);
   if (prov.contributors?.length) {
     parts.push(`by: ${prov.contributors.map((c) => '@' + c).join(', ')}`);
   }
@@ -514,6 +518,111 @@ function renderTools(tools: ReturnType<typeof loadTools>): string {
   return out.join('\n\n');
 }
 
+function renderFlavors(flavors: ReturnType<typeof loadFlavors>): string {
+  const out: string[] = [];
+  out.push('# Flavors');
+  out.push(
+    'Independent reimplementations of the call protocol — libraries and ports ' +
+      'that realize the spec in real code. A flavor is **not** an ' +
+      'evidence-gathering tool: a tool produces a fact, a flavor *corroborates* ' +
+      'the spec by implementing it. `provenance.flavors` cites these ids — a ' +
+      'flavor is a corroborating source, never a technique, and it does not ' +
+      'corroborate a flavor it derives from. Generated from `spec/flavors/`.',
+  );
+  if (flavors.length === 0) {
+    out.push('_No flavors registered yet._');
+    return out.join('\n\n');
+  }
+  const head =
+    '| Flavor | Language | Maturity | Covers | Derives from | Maintainer | Description |\n' +
+    '| --- | --- | --- | --- | --- | --- | --- |';
+  const rows = flavors
+    .slice()
+    .sort((a, b) => a.data.id.localeCompare(b.data.id))
+    .map(({ data }) => {
+      const name = data.url
+        ? `[${cell(data.name ?? data.id)}](${data.url})`
+        : cell(data.name ?? data.id);
+      const covers = data.covers?.length
+        ? data.covers.map((c) => `\`${c}\``).join(', ')
+        : '-';
+      const derives = data.derives_from?.length
+        ? data.derives_from.map((d) => `\`${d}\``).join(', ')
+        : '-';
+      const maint = data.maintainer ? `@${data.maintainer}` : '-';
+      return (
+        `| ${name} | ${cell(data.language ?? '-')} | ${cell(data.maturity ?? '-')} | ` +
+        `${covers} | ${derives} | ${maint} | ${cell(data.description ?? '')} |`
+      );
+    });
+  out.push([head, ...rows].join('\n'));
+  out.push(
+    'See the [implementation map](./flavor-map.md) for where each flavor realizes the spec in code.',
+  );
+  out.push('[Back to spec overview](./index.md)');
+  return out.join('\n\n');
+}
+
+/** Label a flavor-map entry's spec target, linking node refs where they exist. */
+function specBitLabel(spec: FlavorMapEntry['spec'] | undefined): string {
+  if (!spec) return '-';
+  if (spec.stanza) return `stanza [\`${spec.stanza}\`](./stanzas/${spec.stanza}.md)`;
+  if (spec.flow) return `flow [\`${spec.flow}\`](./flows/${spec.flow}.md)`;
+  if (spec.enum) return `enum \`${spec.enum}\``;
+  if (spec.module) return `${spec.area ? spec.area + ' · ' : ''}\`${spec.module}\``;
+  if (spec.label) return spec.label;
+  if (spec.area) return spec.area;
+  return '-';
+}
+
+function renderFlavorMap(
+  flavors: ReturnType<typeof loadFlavors>,
+  maps: ReturnType<typeof loadFlavorMaps>,
+): string {
+  const out: string[] = [];
+  out.push('# Implementation map');
+  out.push(
+    'The inverse of the code-to-reference `// Source of truth:` comment: for each ' +
+      'flavor, **where each bit of the spec is realized in real code**. Each row ' +
+      'pairs a spec bit with a code permalink and the vector that validates it. ' +
+      'Generated from `spec/flavors/*.map.yaml`.',
+  );
+  const byFlavor = new Map(maps.map((m) => [m.data.flavor, m.data] as const));
+  const sorted = flavors.slice().sort((a, b) => a.data.id.localeCompare(b.data.id));
+  if (sorted.length === 0) {
+    out.push('_No flavors registered yet._');
+    return out.join('\n\n');
+  }
+  for (const { data: flavor } of sorted) {
+    out.push(`## ${flavor.name ?? flavor.id}`);
+    const entries = byFlavor.get(flavor.id)?.entries ?? [];
+    if (entries.length === 0) {
+      const covers = flavor.covers?.length
+        ? flavor.covers.map((c) => `\`${c}\``).join(', ')
+        : '_none declared_';
+      out.push(
+        `No per-bit map yet. Declared coverage (plane level): ${covers}. A flavor ` +
+          `adds \`spec/flavors/${flavor.id}.map.yaml\` to record exact code permalinks.`,
+      );
+      continue;
+    }
+    const head =
+      '| Spec bit | Status | Validated by | Confidence | Code |\n' +
+      '| --- | --- | --- | --- | --- |';
+    const rows = entries.map((e) => {
+      const status = e.validation?.status ?? '-';
+      const kat = e.validation?.kat ? `\`${e.validation.kat}\`` : '-';
+      const conf = e.confidence ?? '-';
+      const codeText = e.code?.symbol ? `\`${e.code.symbol}\`` : 'source';
+      const code = e.code?.url ? `[${codeText}](${e.code.url})` : codeText;
+      return `| ${cell(specBitLabel(e.spec))} | ${cell(status)} | ${kat} | ${cell(conf)} | ${code} |`;
+    });
+    out.push([head, ...rows].join('\n'));
+  }
+  out.push('[Back to spec overview](./index.md)');
+  return out.join('\n\n');
+}
+
 function renderGlossary(): string {
   const glossary = loadGlossary();
   const out: string[] = [];
@@ -540,6 +649,7 @@ function renderOverview(counts: {
   enums: number;
   techniques: number;
   tools: number;
+  flavors: number;
   contributors: number;
 }): string {
   const out: string[] = [];
@@ -564,6 +674,8 @@ function renderOverview(counts: {
       `| [Enums](./enums.md) | ${counts.enums} |\n` +
       `| [Techniques](./techniques.md) | ${counts.techniques} |\n` +
       `| [Tools](./tools.md) | ${counts.tools} |\n` +
+      `| [Flavors](./flavors.md) | ${counts.flavors} |\n` +
+      `| [Implementation map](./flavor-map.md) | - |\n` +
       `| [Contributors](./contributors.md) | ${counts.contributors} |\n` +
       `| [Glossary](./glossary.md) | - |\n` +
       `| [Coverage](./coverage.md) | - |`,
@@ -578,6 +690,9 @@ function renderOverview(counts: {
       '- **Techniques** document the reverse-engineering methods that back ' +
       'each fact; **Tools** and **Contributors** record what produced it and ' +
       'who submitted it.\n' +
+      '- **Flavors** are independent reimplementations that corroborate the ' +
+      'spec; the **Implementation map** records where each bit of the spec is ' +
+      'realized in their code (the inverse of a code-to-reference pointer).\n' +
       '- **Coverage** quantifies how confirmed the spec currently is.',
   );
   return out.join('\n\n');
@@ -593,6 +708,8 @@ const enums = loadEnums();
 const techniques = loadTechniques();
 const contributors = loadContributors();
 const tools = loadTools();
+const flavors = loadFlavors();
+const flavorMaps = loadFlavorMaps();
 
 for (const { data } of stanzas) {
   write(`docs/spec/stanzas/${data.id}.md`, renderStanza(data));
@@ -607,6 +724,8 @@ write('docs/spec/flows/index.md', renderFlowIndex(flows.map((f) => f.data)));
 write('docs/spec/enums.md', renderEnums(enums));
 write('docs/spec/techniques.md', renderTechniques(techniques));
 write('docs/spec/tools.md', renderTools(tools));
+write('docs/spec/flavors.md', renderFlavors(flavors));
+write('docs/spec/flavor-map.md', renderFlavorMap(flavors, flavorMaps));
 write('docs/spec/contributors.md', renderContributors(contributors));
 write('docs/spec/glossary.md', renderGlossary());
 write(
@@ -617,6 +736,7 @@ write(
     enums: enums.length,
     techniques: techniques.length,
     tools: tools.length,
+    flavors: flavors.length,
     contributors: contributors.length,
   }),
 );
@@ -625,5 +745,6 @@ console.log('Generated docs/spec from corpus:');
 console.log(
   `  stanzas: ${stanzas.length}  flows: ${flows.length}  enums: ${enums.length}  ` +
     `techniques: ${techniques.length}  tools: ${tools.length}  ` +
+    `flavors: ${flavors.length}  flavor-maps: ${flavorMaps.length}  ` +
     `contributors: ${contributors.length}`,
 );

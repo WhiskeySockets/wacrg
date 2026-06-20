@@ -2,5 +2,5 @@ id: sheiitear
 name: Sheiitear
 techniques:
   - wasm-analysis
-tools:
+flavors:
   - zapo-caller

@@ -15,6 +15,7 @@ import { dirname } from 'node:path';
 import {
   TECHNIQUE_IDS,
   fromRoot,
+  loadFlavors,
   loadStanzas,
   walkAttributes,
   walkChildren,
@@ -107,6 +108,44 @@ for (const { data: stanza } of stanzas) {
 const overallPct = coveragePct(overall);
 
 // ---------------------------------------------------------------------------
+// Flavor corroboration (non-scoring). A flavor is a corroborating source, not a
+// technique, so it never enters the coverage% formula above; this only surfaces
+// how many facts an independent reimplementation has reproduced. Independence
+// uses derives_from: a flavor does not corroborate one it derives from, so a
+// port and its upstream count once.
+// ---------------------------------------------------------------------------
+
+const flavors = loadFlavors();
+const derivesFrom = new Map<string, Set<string>>(
+  flavors.map((f) => [f.data.id, new Set(f.data.derives_from ?? [])]),
+);
+
+/** Count a cited flavor set after dropping any flavor a cited one derives from. */
+function independentCount(cited: string[]): number {
+  const ancestors = new Set<string>();
+  const visit = (id: string): void => {
+    for (const dep of derivesFrom.get(id) ?? []) {
+      if (ancestors.has(dep)) continue;
+      ancestors.add(dep);
+      visit(dep);
+    }
+  };
+  for (const id of cited) visit(id);
+  return cited.filter((id) => !ancestors.has(id)).length;
+}
+
+let factsWithFlavor = 0;
+let factsMultiIndependent = 0;
+for (const { data: stanza } of stanzas) {
+  for (const { attribute } of walkAttributes(stanza)) {
+    const cited = attribute.provenance?.flavors ?? [];
+    if (cited.length === 0) continue;
+    factsWithFlavor += 1;
+    if (independentCount(cited) >= 2) factsMultiIndependent += 1;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Render the report (shared by COVERAGE.md and docs/spec/coverage.md).
 // ---------------------------------------------------------------------------
 
@@ -180,6 +219,19 @@ function buildReport(forDocs: boolean): string {
     lines.push(tallyRow(tech, t));
   }
   lines.push(tallyRow(NO_TECHNIQUE, byTechnique.get(NO_TECHNIQUE)!));
+  lines.push('');
+
+  lines.push('## Flavor corroboration');
+  lines.push('');
+  lines.push(
+    'Independent reimplementations (flavors) that reproduce a fact. This is ' +
+      '**not** part of the coverage score above — a flavor is a corroborating ' +
+      'source, not a technique. Counts use `derives_from`, so a port and its ' +
+      'upstream count once.',
+  );
+  lines.push('');
+  lines.push(`- Facts citing at least one flavor: **${factsWithFlavor}**`);
+  lines.push(`- Facts with two or more independent flavors: **${factsMultiIndependent}**`);
   lines.push('');
 
   if (forDocs) {

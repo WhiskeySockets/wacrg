@@ -9,6 +9,9 @@ techniques:
 tools:
   - baileys
   - warden
+flavors:
+  - meowmeow
+  - meowcaller
 links:
   - title: GitHub
     url: https://github.com/purpshell

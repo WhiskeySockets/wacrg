@@ -1,0 +1,144 @@
+flavor: meowcaller
+# The inverse Source-of-truth: where each bit of the spec is realized in
+# meowcaller's Go code. Permalinks are pinned to commit
+# 8cb06a9cd58dd764fac1ca5c7af07d4738718040. Each Go function also carries the
+# code-to-reference // Source of truth: comment; this file is the spec-to-code
+# direction. status mirrors meowcaller's own KAT state.
+entries:
+  - spec:
+      area: media
+      module: mlow/rangecoder
+    code:
+      url: https://github.com/purpshell/meowcaller/blob/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/rangecoder.go#L34
+      symbol: RangeDecoder
+    validation:
+      kat: rc_vectors.json
+      status: verified
+    confidence: confirmed
+    notes: Opus/CELT range entropy decoder + matched encoder; byte-exact round-trip.
+
+  - spec:
+      area: media
+      module: mlow/mem
+    code:
+      url: https://github.com/purpshell/meowcaller/blob/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/mem.go#L46
+      symbol: LoadSmplMem
+    validation:
+      kat: smpl_tables.json
+      status: verified
+    confidence: confirmed
+    notes: Heap-ROM table loader (SMPL constant tables).
+
+  - spec:
+      area: media
+      module: mlow/toc
+    code:
+      url: https://github.com/purpshell/meowcaller/blob/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/toc.go#L42
+      symbol: ParseSmplTOC
+    validation:
+      kat: toc_vectors.json
+      status: verified
+    confidence: confirmed
+    notes: SMPL table-of-contents / frame-mode byte parse.
+
+  - spec:
+      area: media
+      module: mlow/lpc
+    code:
+      url: https://github.com/purpshell/meowcaller/blob/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/lpc.go#L571
+      symbol: smplA2NLSF16
+    validation:
+      kat: lsf_quant_io.json
+      status: verified
+    confidence: confirmed
+    notes: Forward LPC->NLSF (A2NLSF) + analysis front end, KAT against C ground truth.
+
+  - spec:
+      area: media
+      module: mlow/lsf
+    code:
+      url: https://github.com/purpshell/meowcaller/blob/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/lsf.go#L177
+      symbol: DecodeSmplLsf
+    validation:
+      kat: lsf_vectors.json
+      status: verified
+    confidence: confirmed
+
+  - spec:
+      area: media
+      module: mlow/lsf_quant
+    code:
+      url: https://github.com/purpshell/meowcaller/blob/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/lsf_quant.go#L563
+      symbol: LsfQuantCond
+    validation:
+      kat: lsf_quant_io.json
+      status: verified
+    confidence: confirmed
+
+  - spec:
+      area: media
+      module: mlow/pulse
+    code:
+      url: https://github.com/purpshell/meowcaller/blob/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/pulse.go#L30
+      symbol: DecodeSmplPulses
+    validation:
+      kat: pulse_vectors.json
+      status: verified
+    confidence: confirmed
+
+  - spec:
+      area: media
+      module: mlow/gains
+    code:
+      url: https://github.com/purpshell/meowcaller/blob/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/gains.go#L14
+      symbol: DecodeSmplGains
+    validation:
+      kat: gains_vectors.json
+      status: verified
+    confidence: confirmed
+
+  - spec:
+      area: media
+      module: mlow/pitch
+    code:
+      url: https://github.com/purpshell/meowcaller/blob/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/pitch.go#L31
+      symbol: DecodeSmplPitch
+    validation:
+      kat: pitch_vectors.json
+      status: verified
+    confidence: confirmed
+    notes: Pitch-lag decode verified; the encoder-side estimator is scaffolded (known ~0.03 soft divergence in the reference).
+
+  - spec:
+      area: media
+      module: mlow/noise
+    code:
+      url: https://github.com/purpshell/meowcaller/blob/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/noise.go#L359
+      symbol: SmplCelpGenNoise
+    validation:
+      kat: gennoise_vectors.json
+      status: verified
+    confidence: confirmed
+    notes: CELP noise-generator core (voiced/unvoiced); perc/bitrate front end deferred to the encoder.
+
+  - spec:
+      area: media
+      module: mlow/synth
+    code:
+      url: https://github.com/purpshell/meowcaller/blob/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/synth.go#L230
+      symbol: SmplReconstructNLSF
+    validation:
+      status: verified
+    confidence: confirmed
+    notes: NLSF reconstruction verified; the full-frame CELP SynthFrame is scaffolded pending postfilter + noise wiring (validated end-to-end via the decoder).
+
+  - spec:
+      area: media
+      module: mlow/postfilter
+    code:
+      url: https://github.com/purpshell/meowcaller/blob/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/postfilter.go#L22
+      symbol: SmplCombPostfilter
+    validation:
+      status: scaffolded
+    confidence: speculative
+    notes: Envelope scaffolded (TODO stubs); enabled once the postfilter vectors land.

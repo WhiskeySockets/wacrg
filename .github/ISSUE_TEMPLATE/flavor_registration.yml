@@ -1,0 +1,138 @@
+name: Flavor registration
+description: Register an independent reimplementation (a "flavor") of the call protocol, and optionally map where it realizes the spec in code.
+title: "[flavor]: <id>"
+labels: ["type/flavor-registration", "status/needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Register a **flavor**: an independent reimplementation (library/port) of the
+        WhatsApp call protocol that corroborates the spec by realizing it in code.
+        This is **not** an evidence-gathering tool (those live in `spec/tools/`).
+
+        On submit, automation writes `spec/flavors/<id>.yaml` (and, if you fill in the
+        coverage map, `spec/flavors/<id>.map.yaml`) and opens a PR for review. Your
+        GitHub identity is recorded as the flavor's `maintainer` automatically.
+
+  - type: input
+    id: flavor-id
+    attributes:
+      label: Flavor id
+      description: Stable id, lowercase, matches the file name. Letters/digits/hyphens only (e.g. `whatsapp-rust`).
+      placeholder: my-call-lib
+    validations:
+      required: true
+
+  - type: input
+    id: display-name
+    attributes:
+      label: Display name
+      placeholder: My Call Library
+    validations:
+      required: false
+
+  - type: input
+    id: repository-url
+    attributes:
+      label: Repository URL
+      placeholder: https://github.com/you/my-call-lib
+    validations:
+      required: false
+
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      description: Primary implementation language.
+      options:
+        - go
+        - rust
+        - typescript
+        - javascript
+        - python
+        - c
+        - cpp
+        - java
+        - kotlin
+        - swift
+        - other
+    validations:
+      required: false
+
+  - type: dropdown
+    id: maturity
+    attributes:
+      label: Maturity
+      description: How complete and usable the implementation is.
+      options:
+        - experimental
+        - partial
+        - working
+        - production
+    validations:
+      required: false
+
+  - type: input
+    id: license
+    attributes:
+      label: License (SPDX)
+      placeholder: MIT
+    validations:
+      required: false
+
+  - type: input
+    id: planes-covered
+    attributes:
+      label: Planes covered
+      description: Comma-separated protocol planes you implement. Allowed values, choose any of `signaling`, `keying`, `media`, `transport`.
+      placeholder: signaling, keying
+    validations:
+      required: false
+
+  - type: input
+    id: basis-techniques
+    attributes:
+      label: Reconstructed from (techniques)
+      description: >-
+        Comma-separated technique ids your implementation was reconstructed from
+        (fixed set, judges corroboration independence): websocket-capture,
+        baileys-instrumentation, frida-hooking, mitm-tls, static-smali-analysis,
+        memory-dump, wasm-analysis.
+      placeholder: wasm-analysis
+    validations:
+      required: false
+
+  - type: input
+    id: derives-from
+    attributes:
+      label: Derives from (flavors)
+      description: >-
+        Comma-separated flavor ids your implementation is a port/derivative of, if any.
+        A port is NOT independent corroboration of its upstream, so list them honestly.
+      placeholder: meowmeow, zapo-caller
+    validations:
+      required: false
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What the implementation is, what it does, and how it is validated (e.g. known-answer vectors).
+      placeholder: A pure-Rust reconstruction of the call media stack, primitives pinned to KAT vectors.
+    validations:
+      required: false
+
+  - type: textarea
+    id: coverage-map
+    attributes:
+      label: Coverage map
+      description: >-
+        Optional inverse Source-of-truth: one row per spec bit you realize, pipe-delimited as
+        `area | module | code-url | symbol | kat | status`. `area` is one of
+        signaling/keying/media/transport; `code-url` is a GitHub permalink (pin a commit SHA);
+        `status` is scaffolded/implemented/verified. area and code-url are required per row.
+      placeholder: |
+        media | mlow/rangecoder | https://github.com/you/lib/blob/<sha>/src/range.rs#L10-L40 | RangeDecoder | rc_vectors.json | verified
+        keying | srtp/e2e | https://github.com/you/lib/blob/<sha>/src/srtp.rs#L5-L80 | derive_srtp | | implemented
+    validations:
+      required: false

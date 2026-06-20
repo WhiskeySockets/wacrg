@@ -204,7 +204,8 @@ Useful scripts:
 | `npm run coverage` | recompute `COVERAGE.md` + the coverage badge JSON |
 | `npm run build` | validate, generate, coverage (run before every PR) |
 | `npm run check` | build, then fail if generated output isn't committed |
-| `npm run ingest` | (CI) turn an Issue Form into a capture YAML |
+| `npm run ingest` | (CI) turn a stanza-capture Issue Form into a capture YAML |
+| `npm run ingest:flavor` | (CI) turn a flavor-registration Issue Form into a flavor (+ map) |
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full PR checklist, confidence rules, and commit
 conventions.
@@ -219,6 +220,11 @@ wacrg leans on GitHub as the collaboration substrate:
   `status/needs-review`) is parsed by `scripts/ingest-issue.ts` in the `issue-to-corpus`
   workflow, which writes a capture YAML and opens a `ingest/issue-<n>` pull request. Maintainers
   review, refine confidence/provenance, and merge.
+- **Flavor self-attachment.** The *Flavor registration* Issue Form (labelled
+  `type/flavor-registration`) lets a library vendor attach its independent reimplementation
+  to the spec: `scripts/ingest-flavor.ts` in the `flavor-to-corpus` workflow writes
+  `spec/flavors/<id>.yaml` (and an `<id>.map.yaml` linking spec bits to code permalinks),
+  stamps the submitter as `maintainer`, and opens an `attach/flavor-issue-<n>` PR.
 - **Actions** validate every push/PR (`npm run check`), regenerate docs, and publish.
 - **Pages** renders the generated docs site (mkdocs + mermaid) from `docs/`.
 - **Discussions** are for open questions, technique deep-dives, and proposing model changes

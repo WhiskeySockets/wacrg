@@ -33,6 +33,10 @@
   color: "7c3aed"
   description: "A captured/observed stanza submitted for intake into the corpus."
 
+- name: "type/flavor-registration"
+  color: "7e22ce"
+  description: "An independent reimplementation (flavor) registering itself with the spec."
+
 - name: "type/finding"
   color: "8b5cf6"
   description: "A behavioral finding about how the call protocol works."

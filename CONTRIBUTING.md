@@ -30,6 +30,10 @@ By participating you agree to the [Code of Conduct](./CODE_OF_CONDUCT.md), the
    [the capture flow](#how-captures-flow-from-issue-forms-to-corpus-prs).
 2. **Edit the corpus directly.** Add or modify a YAML under [`spec/`](./spec) (a stanza, flow,
    enum, technique, glossary entry) or [`corpus/`](./corpus), run the tooling, and open a PR.
+3. **Register a flavor (attach your reimplementation).** If you maintain an independent
+   reimplementation of the protocol, open the **Flavor registration** Issue Form. On submit,
+   automation writes `spec/flavors/<id>.yaml` (and an `<id>.map.yaml` mapping spec bits to your
+   code) and opens a PR with you recorded as `maintainer`. You can also PR the YAML directly.
 
 ---
 

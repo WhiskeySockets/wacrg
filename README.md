@@ -1,20 +1,9 @@
 # WhatsApp Calls Research Group (wacrg)
-
 [![spec coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/WhiskeySockets/wacrg/main/docs/coverage-badge.json)](./COVERAGE.md)
 [![spec version](https://img.shields.io/badge/spec-0.1.0-blue)](./spec)
 [![license: MIT](https://img.shields.io/badge/code-MIT-green)](./LICENSE)
-[![docs: CC BY 4.0](https://img.shields.io/badge/docs-CC%20BY%204.0-lightgrey)](./LICENSE-docs)
 
-> A collaborative, GitHub-native home for reverse-engineering and documenting a complete,
-> machine-readable specification of the **WhatsApp 1:1 (one-to-one) call protocol**:
-> signaling, keying, media, and transport.
-
-The coverage badge above reads from [`docs/coverage-badge.json`](./docs/coverage-badge.json)
-via the [shields.io endpoint pattern](https://shields.io/badges/endpoint-badge). The URL
-resolves once the repository has been pushed to GitHub and the docs have been generated at
-least once (`npm run build`).
-
----
+A collaborative home for reverse-engineering and documenting a complete, maintainer-approved spec of the WhatsApp VoIP/RTC stack to achieve 1:1 WhatsApp calling capabilities and to keep it maintained.
 
 ## Table of contents
 
@@ -29,7 +18,6 @@ least once (`npm run build`).
 - [Governance, conduct, security, disclaimer](#governance-conduct-security-disclaimer)
 - [Licensing](#licensing)
 
----
 
 ## What is wacrg?
 
@@ -54,7 +42,6 @@ affiliated with or endorsed by Meta or WhatsApp**. See [DISCLAIMER.md](./DISCLAI
 > is **synthetic and clearly labeled**. Most facts are marked `probable` or `speculative` and
 > carry open questions. We never fabricate false certainty.
 
----
 
 ## The provenance + confidence model
 
@@ -94,7 +81,6 @@ Contributors register in [`spec/contributors/`](./spec/contributors), tools in
 [`spec/flavors/`](./spec/flavors); captures filed via the Issue Form are stamped with the
 submitter's GitHub identity automatically. See [Attribution & proof](./docs/attribution.md).
 
----
 
 ## How the machine-readable spec works
 
@@ -131,7 +117,6 @@ Everything is validated against JSON Schemas in `spec/schema/` and `corpus/schem
 cross-references (a `provenance.techniques` value, a flow step's `stanza`, an `enum:<id>` type)
 are checked for referential integrity. The spec version is `0.1.0`.
 
----
 
 ## Featured tooling: warden
 
@@ -152,7 +137,6 @@ This surface is documented here as the
 [`wasm-analysis`](./docs/techniques/wasm-analysis.md) technique; see its how-to guide for
 the workflow, and [warden's repository](https://github.com/purpshell/warden) for the tool.
 
----
 
 ## Repository map
 
@@ -165,7 +149,6 @@ the workflow, and [warden's repository](https://github.com/purpshell/warden) for
 | [`.github/`](./.github) | GitHub-native plumbing: Issue Forms, Actions workflows, `labels.yml`, `CODEOWNERS`. |
 | repo root | Governance + meta docs: this README, [CONTRIBUTING](./CONTRIBUTING.md), [GOVERNANCE](./GOVERNANCE.md), [MAINTAINERS](./MAINTAINERS.md), [SECURITY](./SECURITY.md), [DISCLAIMER](./DISCLAIMER.md), [CODE_OF_CONDUCT](./CODE_OF_CONDUCT.md), licenses, `CITATION.cff`. |
 
----
 
 ## Quickstart for contributors
 
@@ -210,7 +193,6 @@ Useful scripts:
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full PR checklist, confidence rules, and commit
 conventions.
 
----
 
 ## The GitHub-native workflow
 
@@ -237,7 +219,6 @@ wacrg leans on GitHub as the collaboration substrate:
   PR-title check, path-based auto-labeling, a dependency-review gate, a gentle stale
   bot, thread-locking on long-closed issues, and Dependabot for tooling updates.
 
----
 
 ## Coverage
 
@@ -255,7 +236,6 @@ The badge at the top of this README reads the live number from
 Because this is an early research scaffold, coverage is expected to be low. That is honest
 and intentional. Raising it means independent corroboration, not guessing.
 
----
 
 ## Governance, conduct, security, disclaimer
 
@@ -273,7 +253,6 @@ and intentional. Raising it means independent corroboration, not guessing.
 
 The rendered documentation site is published from [`docs/`](./docs) via GitHub Pages.
 
----
 
 ## Licensing
 

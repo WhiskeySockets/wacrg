@@ -1,0 +1,81 @@
+id: call-terminate
+category: signalling
+title: Call terminate stanza
+status: draft
+order: 80
+features: [audio, video, group]
+since: "0.1.0"
+summary: >
+  The <terminate> action stanza that ends a call: its wire shape, the optional
+  reason attribute, the destination fan-out used to hang up a peer's other
+  devices, and the duration counters carried on inbound terminates.
+normative: |
+  A call is ended by sending a `<terminate>` action inside the standard `<call>`
+  wrapper. The wrapper and action MUST be shaped as follows:
+
+      <call to="{peer-jid}">
+        <terminate call-id="{call-id}" call-creator="{call-creator-jid}"
+                   [reason="{reason}"]>
+          [<destination>
+             <to jid="{device-jid}"/>...
+           </destination>]
+        </terminate>
+      </call>
+
+  The `<call>` wrapper MUST carry a `to` attribute addressing the peer. Unlike
+  `<preaccept>` and `<heartbeat>`, the terminate wrapper does not carry an `id`
+  attribute supplied by the builder.
+
+  The `<terminate>` action element:
+
+  - MUST carry `call-id`, identifying the call being torn down. This is the
+    call identifier established in the offer (see [call-offer](call-offer)), not
+    the stanza id.
+  - MUST carry `call-creator`, the JID of the participant that created the call.
+  - MAY carry `reason`, a string naming why the call ended. When the reason is
+    not specified the attribute MUST be omitted entirely (no empty `reason=""`).
+  - MAY contain a single `<destination>` child enumerating other devices to hang
+    up. When present, `<destination>` MUST contain one `<to jid="..."/>` child
+    per target device. When there are no additional target devices the
+    `<destination>` element MUST be omitted.
+
+  **Reason codes.** The `reason` attribute is a free-form string. The reason
+  `accepted_elsewhere` is sent to a peer's other devices when the call has been
+  accepted on one device, so the remaining devices stop ringing; this is the
+  case that pairs `reason="accepted_elsewhere"` with a `<destination>` list of
+  the devices to hang up. A terminate MAY also be sent with no `reason` at all
+  to signal an ordinary hang-up.
+
+  **Inbound terminates.** A received `<terminate>` MUST be parsed for its
+  `call-id` and `call-creator` (both required). It MAY additionally carry:
+
+  - `duration` — total call duration in seconds, a non-negative integer that
+    MUST fit in an unsigned 32-bit value.
+  - `audio_duration` — the audio-only duration in seconds, with the same
+    encoding and range as `duration`.
+
+  Both duration counters are optional; a parser MUST treat their absence as
+  "not reported" rather than zero.
+
+  A `<terminate>` is one of the recognized `<call>` action children. A receiver
+  that does not recognize an action child MUST ignore the stanza rather than
+  error, so that future action additions do not break the handler.
+findings: |
+  Outbound terminate construction sets `reason` only when supplied and attaches
+  the `<destination>` device list only when at least one target device is given;
+  the `accepted_elsewhere` reason is the observed pairing with that list. The
+  inbound parser reads `duration` and `audio_duration` as optional u32 seconds
+  but does not currently consume the `reason` attribute, so a peer-sent reason is
+  carried on the wire but not surfaced by the inbound model.
+requires: [call-offer]
+implementations:
+  - { flavor: whatsapp-rust, status: working, note: "build_terminate emits the action; the inbound parser decodes duration/audio_duration." }
+  - { flavor: zapo-caller, status: working, note: "signalling builder ported from this flavor's signaling.ts." }
+  - { flavor: meowcaller, status: planned, note: "signalling is a planned module." }
+open_questions:
+  - "Full enumeration of reason values the server and clients emit; only accepted_elsewhere is confirmed from source."
+  - "Whether duration/audio_duration are ever sent on outbound terminates or only received."
+  - "Whether reason is expected (or validated) on inbound terminates, given the parser ignores it today."
+references:
+  - { title: "wacore voip signaling builders (build_terminate)", url: "" }
+  - { title: "wacore call stanza parser (terminate action)", url: "" }

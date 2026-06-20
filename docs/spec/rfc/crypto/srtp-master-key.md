@@ -42,10 +42,8 @@ applied.
 
 **Findings**
 
-HKDF here rests on a proven primitive — the Layer-1 derivation is verified against
-the RFC 5869 Appendix A known-answer test in at least one implementation. All
-derived keys are distinct per participant LID, so each peer's media is keyed
-independently.
+HKDF here rests on a proven primitive. All derived keys are distinct per
+participant LID, so each peer's media is keyed independently.
 
 **Requires:** [`call-offer`](../signalling/call-offer.md)
 

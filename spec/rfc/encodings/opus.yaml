@@ -1,0 +1,60 @@
+id: opus
+category: encodings
+title: "Opus codec"
+status: draft
+order: 20
+features: [audio]
+since: "0.1.0"
+summary: >
+  When standard Opus (rather than MLow) carries call audio, how an Opus payload is
+  distinguished from an MLow payload on the same RTP stream by its first byte, and
+  how a receiver routes each frame to the correct decoder.
+normative: |
+  Call audio is carried as one of two interchangeable codecs on the same RTP audio
+  stream: WhatsApp's MLow speech codec (see [mlow](mlow)) and standard Opus
+  (RFC 6716). MLow is the default for 1:1 calls; standard Opus frames MAY appear on
+  the same stream, and a receiver MUST be able to decode both.
+
+  **Per-frame codec selection.** The codec of each payload is determined by the
+  first payload byte, NOT by a per-call negotiation. A receiver MUST inspect the top
+  two bits of the first byte:
+
+      (firstByte & 0xC0) == 0xC0   →  standard Opus / CELT TOC  (RFC 6716 §3.1)
+      (firstByte & 0xC0) != 0xC0   →  MLow "smpl" TOC           (see [mlow](mlow))
+
+  When the top two bits are both set the payload is a standard Opus packet and MUST
+  be decoded with an RFC 6716 Opus decoder. Otherwise the payload is an MLow frame
+  and MUST be routed to the MLow decoder. A receiver MUST perform this routing on
+  every frame; the two codecs may be interleaved within one stream.
+
+  **Standard Opus frame parameters.** For a standard Opus packet the frame duration
+  MUST be read from the TOC configuration field `config = firstByte >> 3` per
+  RFC 6716 Table 2. The decoded output sample rate for call audio is 16 kHz; the
+  decoded length in samples is `16 * frameMs` (16 samples per millisecond).
+
+      config <  12   →  SILK NB/MB/WB,  frameMs ∈ {10, 20, 40, 60} = [config & 3]
+      config == 12,13,14,15 → Hybrid,    frameMs ∈ {10, 20}        = [(config-12) & 1]
+      config >= 16   →  CELT,            frameMs ∈ {2.5, 5, 10, 20} = [config & 3]
+
+  **Carriage.** Opus and MLow payloads share the same SRTP-protected RTP audio
+  stream and the same SSRC; codec selection adds no RTP header, payload-type split,
+  or signalling field. The first payload byte is the only discriminator.
+findings: |
+  In the receive path the inbound router branches on the first payload
+  byte: frames whose top two bits are `0b11` are handed to a stock RFC 6716 Opus
+  decoder, and all other frames are handed to the MLow decoder. The same predicate
+  is also applied inside the MLow TOC parser, which marks a frame `std_opus` when
+  `(b & 0xC0) == 0xC0` and otherwise decodes the byte as an MLow "smpl" TOC. This
+  makes the two codecs co-exist on one continuous stream with the MLow path as the
+  default carrier and standard Opus as the alternate.
+requires: [mlow, call-offer]
+implementations:
+  - { flavor: whatsapp-rust, status: working }
+  - { flavor: meowmeow, status: partial, note: "MLow path complete; standard-Opus frames are routed out to a stock RFC 6716 decoder rather than decoded in-codec" }
+  - { flavor: meowcaller, status: partial, note: "codec modules partial; first-byte routing present, Opus decode delegated to a stock libopus binding" }
+references:
+  - { title: "RFC 6716 — Definition of the Opus Audio Codec", url: "https://www.rfc-editor.org/rfc/rfc6716" }
+open_questions:
+  - "Conditions under which a sender emits standard-Opus frames instead of MLow on a live 1:1 call (e.g. interop, fallback, or capability gating) are unspecified."
+  - "Whether group calls or any specific transport mode default to standard Opus rather than MLow is unspecified."
+  - "Whether standard-Opus payloads use a wider band (full 48 kHz Opus) than the 16 kHz call-audio output, or are always decoded down to 16 kHz, is unspecified."

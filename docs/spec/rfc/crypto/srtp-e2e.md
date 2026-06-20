@@ -1,0 +1,122 @@
+<!-- GENERATED FILE. Do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
+
+# End-to-end SRTP
+
+**Category:** [Crypto](../index.md#crypto)  
+**Part id:** `srtp-e2e`
+
+**`srtp-e2e`** · status: review · features: audio, video · since: 0.1.0
+
+The end-to-end SRTP context for 1:1 calls: an inner AES-128-CTR payload cipher whose keys are derived per participant from the call key and that travels unchanged through the relay, distinct from the hop-by-hop SRTP applied on each leg between a device and the relay.
+
+**Normative**
+
+A 1:1 call protects RTP payloads with **two independent SRTP contexts** that nest:
+an **end-to-end (E2E)** context that only the two participant devices can key, and
+a **hop-by-hop (HBH)** context (see [srtp-hop-by-hop](../crypto/srtp-hop-by-hop.md)) applied
+separately on each leg between a device and the relay. A sender MUST apply the E2E
+transform to the media payload first; the resulting bytes are then carried inside the
+RTP packet that the HBH transform encrypts on the wire. The relay decrypts the HBH
+layer but cannot decrypt the E2E layer, so the E2E ciphertext transits the relay
+unchanged. This section specifies the E2E context only.
+
+**Key derivation (per participant, two layers).**
+
+*Layer 1 — master secret.* The 30-byte E2E master secret MUST be derived with
+HKDF-SHA256 (see [srtp-master-key](../crypto/srtp-master-key.md)):
+
+    IKM  = callKey[0..32]             ; the 32-byte call key
+    salt = 32 zero bytes
+    info = participantLID             ; a participant's LID bytes, UTF-8
+    L    = 46
+    OKM  = masterKey(16) || masterSalt(14) || unused(16)
+
+The trailing 16 bytes MUST be discarded. The `info` is the participant whose keys
+are being derived: a device derives its **send** keys from its own LID and its
+**receive** keys from the peer LID.
+
+*Layer 2 — session keys.* Three session values MUST be expanded from
+`masterKey`/`masterSalt` with the AES-CM key-derivation function (libsrtp /
+RFC 3711 §4.3). For each label the IV is the 14-byte master salt zero-padded to 16
+bytes with the label XORed into byte 7, and the output is the AES-128-CTR keystream
+over `L` zero bytes under `masterKey`:
+
+    cipherKey(16) = AES-128-CM(masterKey, IV = pad16(masterSalt), iv[7] ^= 0x00)
+    authKey(20)   = AES-128-CM(masterKey, IV = pad16(masterSalt), iv[7] ^= 0x01)
+    salt(14)      = AES-128-CM(masterKey, IV = pad16(masterSalt), iv[7] ^= 0x02)
+
+**Per-packet IV.** For each RTP packet the 16-byte IV MUST be built by right-aligning
+the 14-byte `salt` into a 16-byte buffer (zero in bytes 0–1), then XORing in the SSRC
+and the 48-bit packet index:
+
+    iv[0..2]  = 0
+    iv[2..16] = salt                          ; salt right-aligned (offset = 14 - len)
+    iv[4..8]  ^= ssrc                          ; 32-bit, big-endian
+    packetIndex = ROC * 2^16 + seq             ; 48-bit
+    iv[8..14] ^= packetIndex                    ; 48-bit, big-endian
+
+`seq` is the 16-bit RTP sequence number and `ROC` is the 32-bit rollover counter. The
+packet index occupies the low 48 bits; its top 16 bits land in `iv[8..10]` and its low
+32 bits in `iv[10..14]`. A sender MUST track `ROC` by incrementing it whenever the
+16-bit sequence number wraps (detected as `(seq - lastSeq)` interpreted as a signed
+16-bit delta being `< -32768`).
+
+**Payload transform.** The transform MUST be AES-128-CTR (full 128-bit counter) over
+the RTP payload, under `cipherKey` and the per-packet IV. The cipher is symmetric:
+decryption applies the identical keystream. The transform covers the payload only; the
+RTP header is not encrypted.
+
+**Authentication tag.** A 4-byte WARP MESSAGE-INTEGRITY tag (HMAC-SHA1 truncated to 4
+bytes, keyed by the WARP auth key — see [warp-crypto](../crypto/warp-crypto.md)) MAY be appended to
+the protected payload. A receiver is not required to verify this tag.
+
+An implementation MUST NOT use the HBH session keys, salt, or IV construction for the
+E2E context: the two contexts use different KDFs, different IV layouts (E2E XORs a
+48-bit packet index into `iv[8..14]`; HBH places `packetIndex << 16` into `iv[8..16]`),
+and different counter modes (E2E full 128-bit CTR; HBH libsrtp 2-byte-carry AES-ICM).
+
+**Findings**
+
+The E2E context is the primary working media path for 1:1 calls. Because the inner
+ciphertext is opaque to the relay, payloads are end-to-end confidential between the two
+devices even though the relay terminates the hop-by-hop SRTP on each leg.
+
+The Layer-2 expansion and the per-packet IV are the same shape as the RFC 3711 SRTP
+key derivation and IV used hop-by-hop, but applied with a full 128-bit CTR rather than
+the libsrtp 2-byte-carry AES-ICM; the two only diverge past ~1 MiB of keystream per
+packet, which does not occur for audio or video frames.
+
+A `callKey`-keyed AES-128-GCM **SFrame** transform exists as a separate end-to-end
+media-protection scheme (see [sframe-media](../crypto/sframe-media.md)); it is distinct from this
+AES-128-CTR E2E SRTP context. On the observed 1:1 receive path the peer ships plain
+(un-SFramed) media inside the E2E SRTP layer.
+
+A keygen-v2 variant replaces `callKey` as the HKDF IKM with a raw end-to-end secret
+delivered in the offer (`<raw_e2e>`); the derivation is otherwise identical and requires
+at least 32 bytes of input keying material.
+
+**Requires:** [`call-key`](../crypto/call-key.md), [`srtp-master-key`](../crypto/srtp-master-key.md), [`srtp-hop-by-hop`](../crypto/srtp-hop-by-hop.md)
+
+**Implemented by**
+
+| Flavor | Status | Note |
+| --- | --- | --- |
+| [`whatsapp-rust`](../../flavors.md) | working |  |
+| [`zapo-caller`](../../flavors.md) | working | ported from src/media/e2e-srtp.ts |
+| [`meowmeow`](../../flavors.md) | working | crypto keying path only; no signalling/relay |
+| [`meowcaller`](../../flavors.md) | planned |  |
+
+**Open questions**
+
+- Exact byte layout of participantLID used as HKDF info across client versions (shared with srtp-master-key).
+- Whether the 4-byte WARP MESSAGE-INTEGRITY tag is verified by the production receiver, or only emitted on send.
+- Conditions under which keygen-v2 (<raw_e2e>) is selected over the callKey-derived IKM.
+
+**References**
+
+- [RFC 3711 — SRTP](https://www.rfc-editor.org/rfc/rfc3711)
+- [RFC 5869 — HKDF](https://www.rfc-editor.org/rfc/rfc5869)
+
+---
+
+[in the full RFC →](../index.md#srtp-e2e) · [RFC contents](../index.md#contents)

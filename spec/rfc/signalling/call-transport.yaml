@@ -1,0 +1,75 @@
+id: "call-transport"
+category: signalling
+title: "Transport stanza"
+status: review
+order: 30
+features: [audio, video]
+since: "0.1.0"
+summary: >
+  The <transport> action of the <call> stanza, exchanged after the offer to
+  negotiate ICE/relay candidates: it carries the relay token, advertises the
+  network medium, and is typed by a transport-message-type that distinguishes
+  relay candidates, peer ICE candidates, and keepalive replies.
+normative: |
+  After the offer, each side exchanges transport (candidate) information by sending
+  a top-level `<call>` stanza whose action child is `<transport>`. The action node
+  MUST carry the call identity:
+
+      <transport call-id="<call-id>" call-creator="<creator-jid>"
+                 [p2p-cand-round="<n>"]
+                 [transport-message-type="<t>"]>
+        [ <te priority="1">…relay-token-bytes…</te> ]
+        <net medium="2" [protocol="0"]/>
+      </transport>
+
+  The `<transport>` node MUST appear inside a `<call to="<peer>">` wrapper. The
+  `call-id` MUST equal the `call-id` established in the offer, and `call-creator`
+  MUST identify the call creator; both are echoed unchanged from the offer.
+
+  **Children and their order.** The transport action MUST contain a `<net>` child.
+  When a relay token is being conveyed, the action MUST place a `<te priority="1">`
+  child, whose binary body is the relay token blob, **before** the `<net>` child.
+  When no relay token is conveyed, the `<te>` child is omitted and `<net>` is the
+  sole child.
+
+  **`<net>` attributes.** `<net>` MUST carry `medium="2"`. It MUST additionally
+  carry `protocol="0"` unless `transport-message-type` is `"9"`; when
+  `transport-message-type` is `"9"`, the `protocol` attribute MUST be omitted.
+
+  **`transport-message-type`.** When present this attribute selects the role of the
+  exchange:
+
+      "1"  relay candidate
+      "3"  peer (ICE) candidate    ; the callee replies with type "9"
+      "9"  keepalive / reply      ; <net> omits protocol
+
+  **`p2p-cand-round`.** When peer-to-peer candidates are exchanged in rounds, the
+  sender MAY include `p2p-cand-round` carrying the round number as a decimal string.
+
+  **Receiver behaviour.** A receiver MUST treat `<transport>` as a known call
+  action: it MUST read `call-id` and `call-creator` (both required) and MAY read the
+  optional `p2p-cand-round` and `transport-message-type` attributes. A receiver that
+  does not recognise the action MUST ignore the stanza rather than fail the call, so
+  that future transport-message-type values remain forward-compatible.
+findings: |
+  The transport exchange reuses the same `<call>` wrapper and `call-id` /
+  `call-creator` identity as the offer, so it correlates to the in-progress call
+  without a separate handshake. The `<te>` (transport-endpoint) child carries the
+  opaque relay token as its binary body; the same `<te>` element, with a different
+  `priority`, appears in the accept (`priority="2"`) and relaylatency exchanges,
+  indicating a shared relay-token carrier across call actions. The `protocol="0"`
+  vs. omitted distinction is keyed entirely on `transport-message-type == "9"`,
+  tying the network descriptor's shape to the message role.
+requires: [call-offer, stun-relay]
+implementations:
+  - { flavor: whatsapp-rust, status: working }
+  - { flavor: zapo-caller, status: working }
+  - { flavor: meowcaller, status: planned }
+open_questions:
+  - "Exact internal structure of the <te> relay-token blob (token bytes vs. framed structure)."
+  - "Full enumeration of transport-message-type values beyond 1 (relay candidate), 3 (peer ICE), and 9 (keepalive/reply)."
+  - "Whether <net medium> takes values other than 2 in the transport exchange, and the meaning of the medium scale."
+  - "Semantics of p2p-cand-round rounds and the termination condition for candidate-exchange rounds."
+references:
+  - { title: "RFC 8445 — Interactive Connectivity Establishment (ICE)", url: "https://www.rfc-editor.org/rfc/rfc8445" }
+  - { title: "RFC 7675 — STUN Usage for Consent Freshness", url: "https://www.rfc-editor.org/rfc/rfc7675" }

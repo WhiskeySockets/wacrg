@@ -1,0 +1,164 @@
+<!-- GENERATED FILE. Do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
+
+# MLow CELP excitation
+
+**Category:** [Encodings](../index.md#encodings)  
+**Part id:** `mlow-excitation`
+
+**`mlow-excitation`** · status: draft · features: audio · since: 0.1.0
+
+How the range-coded CELP excitation of one MLow internal (20 ms) frame is decoded: the per-subframe pulse counts and pulse positions/signs (the algebraic codebook), the quantized log-gains and energy residuals for unvoiced frames, and the pitch lag / LTP gains-and-filter for voiced frames.
+
+**Normative**
+
+The excitation of one MLow internal frame (320 samples at 16 kHz, split into
+`p3 = 4` subframes) MUST be decoded from the range coder immediately after the
+LSF/LPC parameters (see [mlow-lsf-lpc](../encodings/mlow-lsf-lpc.md)) and before CELP synthesis
+(see [mlow-synthesis](../encodings/mlow-synthesis.md)). All reads use the Opus/CELT range coder
+(see [mlow-rangecoder](../encodings/mlow-rangecoder.md)): CDF symbols are read from the front of
+the buffer, raw uniform bits from the back.
+
+The LSF stage-1 selector (`s1`) decoded with the LSF/LPC parameters selects the
+excitation mode of the frame: a voiced frame (`s1 == 1`) MUST decode a
+pitch/LTP block; an unvoiced frame (`s1 == 0`) MUST decode a gains block. The
+two blocks are mutually exclusive within a frame.
+
+## Pulses (algebraic codebook)
+
+The decoder MUST first establish a frame pulse budget. Let `config` be the
+band/config flag (`p6`; `0` for narrowband) and `idx = p4 + s1` where `p4` is
+the regular-frame flag. A per-frame budget byte is looked up from the static
+table
+
+    SMPL_PULSE_COUNT_BYTE = [80, 160, 160, 16, 32, 32, 0, 0]   ; index = config*3 + idx
+
+and scaled to the frame: `frame_budget = budget_byte * p2 / 320`,
+`subfr_budget = frame_budget / p3`.
+
+**Total pulse count.** For `config != 0` the total pulse count MUST be read with
+a config-indexed CDF. For `config == 0` (narrowband) the total MUST be drawn
+from a triangular prior over `[0, frame_budget]`: with `L = frame_budget`, the
+cumulative function is
+
+    T(k) = ( (k+2)*(L+1) - ((k-1)*(k+131070) >> 1) ) & 0xffff
+
+The total range frequency is `ft = max(T(L), 1)`. The decoder reads a value
+`val = range_decode(ft)`, then scans `k = 0,1,2,...` up to `frame_budget`,
+selecting the first `k` with `T(k-1) <= val < T(k)` and finalising the symbol
+over that interval. The result is the total pulse count.
+
+**Split.** With `p3 == 4`, the total MUST be split into four per-subframe pulse
+counts by two levels of binary split. The top-level split first reads a
+bias-corrected CDF (when the constrained interval is non-empty) to obtain the
+first-half sum, then each half is split again with the per-half split CDF
+(`smpl_split`): for a half carrying `count` pulses over `granularity`
+positions, `min_split = max(count - granularity, 0)`,
+`lo = min(count, granularity)`; when `min_split < lo` a CDF symbol over
+`lo - min_split + 2` entries is read and added to `min_split`, otherwise the
+count is `min_split`. The four results are the per-subframe pulse counts
+(`subfr[0..4]`).
+
+**Positions and magnitudes.** For each subframe with `cnt > 0` pulses the
+decoder MUST read run-length pulse positions over the `p2/p3` positions of that
+subframe. Pulses are placed by repeatedly reading a position-delta CDF whose
+length is `pos + 1` (the remaining positions). A non-zero delta (or the first
+read of the subframe) starts a new pulse of magnitude 1 at the advanced
+position; a zero delta on a subsequent read increments the magnitude of the
+current pulse (stacked pulses at the same position).
+
+**Signs.** After all positions are decoded, one sign bit per pulse position
+MUST be read as raw uniform bits, batched at most 15 bits per read. For each
+position the sign is `+1` when the bit is set and `-1` otherwise, and is applied
+to that position's magnitude. The signed magnitudes are scattered into the
+excitation vector at their absolute sample positions; all other positions are 0.
+
+## Gains (unvoiced frames)
+
+For an unvoiced frame the decoder MUST read a main log-gain (CDF, 85 entries)
+and a delta log-gain (CDF, 99 entries), then reconstruct a per-subframe
+quantized log-gain `gain_q[sf]`:
+
+    base = gain_main * gain_scale[cfg] - 0x154000
+    gain_q[sf] = base + (gain_cb[sf + p3*gain_delta] << 4)
+
+where `gain_scale` and the gain codebook `gain_cb` are config-selected tables.
+For each subframe that carries pulses (`cnt > 0`) the decoder MUST then read an
+energy-residual symbol from a bucketed CDF (92 entries): the bucket is
+`min(cnt/10, 3)` (i.e. `3` for `cnt >= 30`), and the CDF base is shifted by a
+gain-derived offset `g = clamp((gain_q[sf] + 8192) >> 14, >= -85)` applied as
+`-2 * min(g, 0)`. Subframes with no pulses produce no energy-residual read and
+a residual of 0.
+
+## Pitch / LTP (voiced frames)
+
+For a voiced frame the decoder MUST decode, in order, the LTP gains-and-filters
+and then the pitch lag.
+
+**LTP gains and filters.** For each of the `p3` subframes a gain index MUST be
+read from a 17-entry CDF whose row is selected by the previous subframe's gain
+index (carried in decoder state). A gain-weight table is config-selected; the
+running gain accumulator adds `w0 + 2*w2` from that table per subframe and the
+frame average `avg_gain = gain_accum / p3` is retained for fractional-lag
+selection. For each subframe that carries pulses a 35-entry filter index MUST
+additionally be read: from the base CDF when no previous filter index exists
+(state `== -1`), otherwise from a CDF row offset by the previous filter index.
+Both the gain index and filter index update decoder state for the next frame.
+
+**Lag.** A pitch-configuration block supplies the contour count, the lag CDF,
+the contour map, the fractional-lag table and the delta CDF. The primary lag
+MUST be read absolutely (CDF over `num_contours + 1`) when no previous lag
+exists, otherwise as a delta: a 10-entry delta CDF selects an interval
+`[lo, hi]`, and the lag is `lo + symbol` read from the lag CDF over
+`hi - lo + 2` entries. The decoder then searches the contour map for the index
+`i` where `contour_map[i] == lag + 1`; if no such index exists or it is out of
+range the pitch block ends.
+
+From the selected contour the decoder reads a contour base lag. Unless a
+previous lag exists with `-1 <= (base_lag - prev_lag) < 3`, a 64-symbol fine
+lag MUST be read and combined as `cur_lag = (base_lag << 6) + fine`, giving the
+Q6 (1/64-sample) lag for the first contour segment. For each remaining contour
+segment a 65-entry fractional CDF (from a segment selected by `avg_gain`:
+`0` for `avg_gain < 10007`, `1` for `< 14085`, else `2`) MUST be read and
+accumulated into the running Q6 lag. Each segment's Q6 lag is replicated across
+the contour-defined number of 40-sample blocks to produce the per-block pitch
+lags consumed by LTP synthesis (`lag = block_lag * 0.5 + SMPL_MIN_PITCH_LAG`).
+The decoder state MUST retain the previous gain index, filter index, integer
+lag and fractional lag for the next frame.
+
+**Findings**
+
+The active narrowband captures decode as voiced frames (`s1 == 1`), so the
+pitch/LTP block is the live path and the gains block runs only on unvoiced
+frames; synthesis uses `gain_q = 0` for voiced frames. Each block is consumed
+bit-for-bit from the shared range coder, so any deviation desynchronises every
+subsequent field of the frame.
+
+Pulse magnitudes greater than 1 arise from repeated reads at the same position
+(stacked pulses). Sign bits are read as raw uniform symbols from the back of the
+range-coder buffer in batches of up to 15. The pitch lag is carried internally
+in Q6 (1/64-sample) units; one 80-sample subframe spans two 40-sample blocks
+that may carry different fractional lags.
+
+**Requires:** [`mlow`](../encodings/mlow.md), [`mlow-rangecoder`](../encodings/mlow-rangecoder.md), [`mlow-lsf-lpc`](../encodings/mlow-lsf-lpc.md), [`mlow-synthesis`](../encodings/mlow-synthesis.md)
+
+**Implemented by**
+
+| Flavor | Status | Note |
+| --- | --- | --- |
+| [`whatsapp-rust`](../../flavors.md) | working |  |
+| [`meowmeow`](../../flavors.md) | working |  |
+| [`meowcaller`](../../flavors.md) | partial | excitation decode KAT-verified against the Go reference; CELP synthesis wiring in progress |
+
+**Open questions**
+
+- Wideband (config != 0) total-pulse-count CDF table location is referenced but the active captures are all narrowband, so the WB path is not exercised by vectors.
+- Exact contents and addressing of the config-selected gain-scale and gain-codebook tables beyond the heap window reproduced for the active config.
+- Whether the gains block is reached on any real (unvoiced) capture frame; current vectors force-run it on voiced decoder state to validate the arithmetic.
+
+**References**
+
+- [RFC 6716 — Opus (range coder)](https://www.rfc-editor.org/rfc/rfc6716)
+
+---
+
+[in the full RFC →](../index.md#mlow-excitation) · [RFC contents](../index.md#contents)

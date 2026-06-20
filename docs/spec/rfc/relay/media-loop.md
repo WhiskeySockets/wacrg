@@ -1,0 +1,132 @@
+<!-- GENERATED FILE. Do not edit by hand. Source: spec/ corpus. Run `npm run generate` to regenerate. -->
+
+# Media loop and session
+
+**Category:** [Relay](../index.md#relay)  
+**Part id:** `media-loop`
+
+**`media-loop`** · status: draft · features: audio, video · since: 0.1.0
+
+The runtime media send/receive loop and the per-call session state machine: how a call session advances through its lifecycle phases, and how each outbound audio frame is sequenced, RTP-framed, end-to-end SRTP encrypted and WARP-tagged before it leaves the relay channel — and the reverse for inbound frames.
+
+**Normative**
+
+## Session state
+
+A call MUST be tracked as a session holding, at minimum, the call id, the peer JID,
+the call-creator JID, the direction (outgoing or incoming), and the current
+lifecycle **phase**. The phase MUST be one of:
+
+    Idle | Calling | Ringing | Connecting | Active | Ended
+
+An outgoing session MUST start in `Idle`; an incoming session MUST start in
+`Ringing`. Phase transitions MUST be validated; an out-of-order or illegal
+transition MUST be rejected (a no-op) so a stray server message cannot advance a
+torn-down call. The following transitions are legal, and all others (other than the
+idempotent self-transition `x → x`, which MUST be accepted) MUST be rejected:
+
+    Idle       → Calling      ; outgoing direction only
+    Calling    → Ringing
+    Ringing    → Connecting
+    Connecting → Active
+    <any phase except Ended> → Ended
+
+`Ended` MUST be terminal: no transition out of `Ended` is legal. An incoming
+session MUST NOT transition to `Calling`. Media MAY flow only while the session is
+in `Active`.
+
+## Media pipeline keying
+
+The pipeline MUST derive two independent E2E-SRTP key sets from the call key (see
+[srtp-master-key](../crypto/srtp-master-key.md)): the **send** keys, keyed by the sender's own
+participant id, and the **recv** keys, keyed by the peer's participant id. The HKDF
+`info` for the send direction MUST be the sender's own participant id so that the
+peer — which derives *its* receive keys from the sender's id — can decrypt. Both
+JIDs MUST be normalized with the E2E-SRTP participant-id rule (see [ssrc](../relay/ssrc.md))
+before key derivation. Inverting these two directions MUST NOT happen: it re-keys
+the body and breaks interoperability.
+
+## Outbound loop (protect)
+
+For each audio frame to send, the implementation MUST, in order:
+
+1. Obtain the next RTP header from the send sequencer. The RTP sequence number MUST
+   start at 1 for the first packet and increment by 1 per packet; the RTP timestamp
+   MUST advance by the per-packet sample count (`samples_per_packet`, e.g. 960 for a
+   60 ms frame at 16 kHz); the payload type MUST be `120` for Opus media.
+2. Advance the rollover counter (ROC) for the new sequence number.
+3. Encode the RTP header bytes.
+4. E2E-SRTP encrypt the Opus payload under the **send** keys, using the header's
+   SSRC, the sequence number and the ROC as the keystream inputs (see
+   [srtp-e2e](../crypto/srtp-e2e.md)).
+5. Concatenate `rtp_header || encrypted_payload`.
+6. Append the WARP message-integrity tag, computed over that concatenation under the
+   send auth key with the ROC, to produce the final relay packet (see
+   [warp](../relay/warp.md)). The WARP MI tag is 4 bytes.
+
+The resulting packet MUST be sent as one binary message on the relay media channel
+(see [stun-relay](../relay/stun-relay.md), [call-transport](../signalling/call-transport.md)).
+
+## Inbound loop (unprotect)
+
+For each relay packet classified as RTP (see [rtp-framing](../relay/rtp-framing.md)), the
+implementation MUST:
+
+1. Reject the packet if it is shorter than `12 + 4` bytes (minimum RTP header plus
+   WARP MI tag).
+2. Strip the trailing 4-byte WARP MI tag.
+3. Parse the RTP header and compute its byte length; reject the packet if there is
+   no payload after the header.
+4. E2E-SRTP decrypt the remaining payload under the **recv** keys, using the parsed
+   SSRC, sequence number and the ROC.
+
+The decrypted result is the Opus payload, to be handed to the decoder (see
+[opus](../encodings/opus.md)).
+
+## Codec parameters
+
+Audio media MUST be Opus, mono, at 16 kHz, in 60 ms frames (`960` samples per
+packet), encoded in VoIP application mode. Priming frames are fixed constant
+payloads and MUST bypass the encoder (see [rtp-framing](../relay/rtp-framing.md)).
+
+**Findings**
+
+The send sequencer initializes the RTP sequence number to 1 (not 0) and advances
+the timestamp by `samples_per_packet` each packet. The Opus payload type is 120;
+payload type 121 is also recognized as WhatsApp Opus media on the inbound path.
+
+The ROC is tracked independently on the send side; on the inbound path a ROC of 0
+is correct for in-order packets at the start of a stream, and a full ROC search is
+part of the live receive path. The inbound path strips but does NOT verify the WARP
+MI tag in the reference composition.
+
+The reference Opus configuration is 25 kbps bitrate at complexity 9; the proprietary
+"mlow" encode (see [mlow](../encodings/mlow.md)) is the on-wire WhatsApp codec, while standard
+libopus at these parameters is accepted by the peer.
+
+**Requires:** [`srtp-master-key`](../crypto/srtp-master-key.md), [`srtp-e2e`](../crypto/srtp-e2e.md), [`warp`](../relay/warp.md), [`rtp-framing`](../relay/rtp-framing.md), [`ssrc`](../relay/ssrc.md), [`opus`](../encodings/opus.md), [`call-transport`](../signalling/call-transport.md), [`stun-relay`](../relay/stun-relay.md)
+
+**Implemented by**
+
+| Flavor | Status | Note |
+| --- | --- | --- |
+| [`whatsapp-rust`](../../flavors.md) | working | session state machine and protect/unprotect pipeline composition; live relay flow over the channel is deferred |
+| [`zapo-caller`](../../flavors.md) | working | signalling + crypto + relay loop |
+| [`meowcaller`](../../flavors.md) | planned |  |
+
+**Open questions**
+
+- Full inbound ROC-recovery (rollover) algorithm for out-of-order and wrapped sequence numbers.
+- Whether the WARP MI tag is verified on receive in the production client, and the failure policy if it is.
+- Send-side pacing / DTX and comfort-noise behavior during the Active phase.
+- Exact retransmission/jitter-buffer handling on the receive path.
+
+**References**
+
+- [RFC 3711 — SRTP](https://www.rfc-editor.org/rfc/rfc3711)
+- [RFC 3550 — RTP](https://www.rfc-editor.org/rfc/rfc3550)
+- [RFC 6716 — Opus](https://www.rfc-editor.org/rfc/rfc6716)
+
+---
+
+[in the full RFC →](../index.md#media-loop) · [RFC contents](../index.md#contents)

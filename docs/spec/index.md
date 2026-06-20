@@ -11,7 +11,7 @@ This is the generated, human-readable view of the wacrg corpus, a machine-readab
 
 | Section | Count |
 | --- | --- |
-| [**The RFC**](./rfc/index.md) — normative call-stack spec | 12 parts |
+| [**The RFC**](./rfc/index.md) — normative call-stack spec | 47 parts |
 | [Stanzas](./stanzas/index.md) | 9 |
 | [Flows](./flows/index.md) | 4 |
 | [Enums](./enums.md) | 3 |

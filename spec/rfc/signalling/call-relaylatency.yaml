@@ -1,0 +1,81 @@
+id: "call-relaylatency"
+category: signalling
+title: "Relay latency reporting"
+status: draft
+order: 90
+features: [audio, video, group]
+since: "0.1.0"
+summary: >
+  How a client reports a measured round-trip latency to a relay server using the
+  `<relaylatency>` call action, including the offset encoding of the latency value
+  and the `<te>` element that names the relay and carries its address.
+normative: |
+  A client reports a measured relay round-trip time (RTT) by sending a `<call>`
+  stanza carrying a `<relaylatency>` action child. The action element MUST carry
+  the same `call-id` and `call-creator` attributes used by the rest of the call's
+  signalling (see [call-offer](call-offer)):
+
+      <call to="{peer-jid}">
+        <relaylatency call-id="{call-id}" call-creator="{call-creator-jid}">
+          <te latency="{encoded}" relay_name="{relay}">{address-bytes}</te>
+          <destination>
+            <to jid="{peer-device-jid}"/>
+            ...
+          </destination>
+        </relaylatency>
+      </call>
+
+  The outbound `<call>` wrapper MUST set `to` to the peer JID. It MUST NOT carry an
+  `id` attribute on this action.
+
+  **The `<te>` element.** A `<relaylatency>` action MUST contain exactly one `<te>`
+  child describing the relay that was probed. The `<te>` element:
+
+  - MUST carry a `latency` attribute encoding the measured RTT (see below).
+  - MUST carry a `relay_name` attribute naming the relay (e.g. `gru1c02`).
+  - MUST carry the relay's binary address as the element's raw byte content.
+
+  **Latency encoding.** The `latency` attribute value MUST be the decimal string of
+  the RTT in milliseconds added to the fixed 32-bit offset `0x02000000`
+  (33554432):
+
+      latency = decimal_string( 0x02000000 + rtt_ms )
+
+  For example, an RTT of 45 ms MUST be encoded as `"33554477"`. The addition is
+  performed in unsigned 32-bit arithmetic.
+
+  **Destination.** When the report targets specific peer devices, the action SHOULD
+  include a `<destination>` child containing one `<to jid="..."/>` element per
+  target device. The `<destination>` element MUST be omitted when there are no
+  target devices (for example, an inbound callee reporting to the call creator).
+
+  **Receiving.** A client receiving a `<call>` whose action child tag is
+  `relaylatency` MUST treat it as a relay-latency report keyed by its `call-id` and
+  `call-creator`. A receiver MUST NOT reject the call signalling when the action
+  carries no `<te>` or `<destination>` children.
+findings: |
+  The `<relaylatency>` action shares the `offer`-style envelope used by other call
+  actions: a `<call>` wrapper around an action element that carries `call-id` and
+  `call-creator`. It is one of the recognised call actions alongside `offer`,
+  `offer_notice`, `preaccept`, `accept`, `reject`, `terminate`, and `transport`;
+  parsers that omit it from their known-action set silently drop the stanza.
+
+  The 32-bit offset `0x02000000` keeps the encoded value in a distinct numeric band
+  well above plausible raw millisecond RTTs, which lets a receiver recover the RTT
+  by subtracting the offset.
+
+  The `<te>` element carries the relay's address as raw element bytes rather than as
+  an attribute, mirroring how relay candidate addresses are carried elsewhere in the
+  call protocol.
+requires: [call-offer, stun-relay]
+implementations:
+  - { flavor: whatsapp-rust, status: working, note: "build_relay_latency + encode_latency in wacore voip::stanza; parsed as CallAction::RelayLatency" }
+  - { flavor: zapo-caller, status: working, note: "ported from src/signaling.ts; relay path covered" }
+  - { flavor: meowcaller, status: planned }
+open_questions:
+  - "Exact byte layout of the relay address carried as <te> content, and whether it matches the relay-candidate address format."
+  - "The set of valid relay_name values and how a client selects which relay(s) to report."
+  - "Whether the receiver (server or peer) sends any acknowledgement specific to relaylatency, and the cadence/trigger for emitting reports."
+  - "Whether group calls report latency per relay for multiple relays in a single action or one action per relay."
+references:
+  - { title: "RFC 5245 — ICE (relay/RTT context)", url: "https://www.rfc-editor.org/rfc/rfc5245" }

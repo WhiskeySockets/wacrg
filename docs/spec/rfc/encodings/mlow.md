@@ -24,8 +24,7 @@ and not required for intelligible audio.
 
 **Findings**
 
-Reconstructed op-by-op from the WhatsApp Web WASM and pinned byte-exact against
-captured decode vectors. The receive (decode) path is the priority for a working
+The receive (decode) path is the priority for a working
 call; the encoder mirrors it plus rate control, DTX, and RED strength.
 
 **Implemented by**

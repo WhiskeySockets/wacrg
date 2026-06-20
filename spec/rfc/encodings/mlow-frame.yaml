@@ -1,0 +1,93 @@
+id: mlow-frame
+category: encodings
+title: MLow frame and TOC
+status: review
+order: 15
+features: [audio]
+since: "0.1.0"
+summary: >
+  The first byte of a bare MLow payload — the "smpl" table-of-contents (TOC) — and
+  how it routes the frame (standard Opus vs. MLow), carries the DTX/VAD flags,
+  internal sample rate, and frame duration, and how an active 60 ms MLow frame is
+  laid out as three chained 20 ms internal subframes.
+normative: |
+  An MLow RTP payload begins with a single TOC byte `b`, followed by the
+  range-coded body. The TOC MUST be parsed before anything else; it selects the
+  decode path and supplies the output length even when no body is decoded.
+
+  **Routing bit.** A decoder MUST inspect the top two bits first:
+
+      (b & 0xC0) == 0xC0   →  standard Opus/CELT TOC (decode with stock Opus)
+      (b & 0xC0) != 0xC0   →  smpl MLow TOC (decode with the MLow path)
+
+  When `(b & 0xC0) == 0xC0`, the remaining bits MUST be interpreted as a standard
+  Opus TOC per RFC 6716 §3.1; the frame is NOT an MLow frame. The MLow internal
+  sample rate in this case is fixed at 16 kHz, and the frame duration is taken from
+  the Opus config field `b >> 5` / `b >> 3` (see findings).
+
+  **smpl TOC bit layout.** When `(b & 0xC0) != 0xC0`, the byte MUST be decoded with
+  this layout (bit 0 = LSB):
+
+      bit 7  SID        comfort-noise / DTX (silence-insertion descriptor)
+      bit 6  VAD        voice-activity flag
+      bit 5  rate       internal sample rate: 0 → 16000 Hz, 1 → 32000 Hz
+      bits 4:3  size    frame-duration index into {10, 20, 60, 120} ms
+      bit 2  flag2      low-rate / config flag (selects the active-frame config)
+      bit 1  enable     voiced-enable bit
+      bit 0  flag0      reserved flag
+
+  The decoder MUST compute the derived fields as:
+
+      sample_rate = (b & 0x20) ? 32000 : 16000
+      frame_ms    = {10, 20, 60, 120}[(b >> 3) & 3]
+      sid         = (b >> 7) & 1
+      vad         = (b >> 6) & 1
+      voiced      = vad AND ((b >> 1) & 1)
+      active      = vad OR  ((b >> 1) & 1)
+
+  **Output length.** The number of PCM samples a frame yields MUST be
+  `sample_rate / 1000 * frame_ms` for an MLow frame, and `16000 / 1000 * frame_ms`
+  for a standard-Opus-routed frame.
+
+  **Inactive frames.** If `sid` is set, or `active` is false, the frame carries no
+  excitation: the decoder MUST emit `output_length` samples of silence (or
+  comfort noise) and MUST NOT attempt to decode an active body. A standard-Opus
+  TOC MUST likewise be routed away from the MLow active-frame decoder.
+
+  **Active-frame layout.** An active MLow frame (typically 60 ms) MUST be decoded
+  as three chained 20 ms internal frames over a single range-coded body that begins
+  at byte offset 1 (the byte after the TOC). For each of the three internal frames,
+  the body MUST be read in order: LSF/LPC indices, excitation pulses, then either
+  the pitch/LTP block (when the frame is voiced, i.e. LSF stage-1 index == 1) or the
+  unvoiced gains block. Each internal frame is further divided into 4 subframes;
+  the voiced pitch block carries one lag per 40-sample block (8 per internal frame,
+  24 per packet). The `flag2` bit (`(b >> 2) & 1`) selects the active-frame config
+  (0 or 1) used uniformly across all three internal frames. Cross-frame predictor
+  and synthesis history MUST persist across packets because the stream is
+  continuous; a decoder MUST reset this state only at a stream discontinuity.
+findings: |
+  The routing test `(b & 0xC0) == 0xC0` is what distinguishes an MLow frame from a
+  standard Opus/CELT packet that has been multiplexed onto the same payload type.
+
+  For the standard-Opus-routed case the frame duration is recovered from the Opus
+  config `config = b >> 3` (RFC 6716 Table 2): configs < 12 are SILK at
+  {10, 20, 40, 60} ms, configs 12–15 are Hybrid at {10, 20} ms, and configs ≥ 16
+  are CELT at {2.5, 5, 10, 20} ms (2.5 ms is rounded up to 3 ms, as the MLow path
+  only needs an output length for these frames).
+
+  In captured traffic the internal rate bit is 0 (16 kHz) and `flag2` (low-rate) is
+  0. The active-frame body for a 60 ms frame produces 3 × 320 = 960 samples at
+  16 kHz before the per-packet harmonic post-filter, which is then resized to the
+  TOC-derived output length if they differ. A range-coder desync after the
+  active-frame decode indicates a TOC/body mismatch.
+requires: [mlow, mlow-rangecoder, opus]
+implementations:
+  - { flavor: whatsapp-rust, status: working }
+  - { flavor: meowmeow, status: working }
+  - { flavor: meowcaller, status: partial, note: "TOC parse + routing present; active-frame orchestration in progress" }
+references:
+  - { title: "RFC 6716 — Opus (TOC, §3.1, Table 2)", url: "https://www.rfc-editor.org/rfc/rfc6716#section-3.1" }
+open_questions:
+  - "Semantics of flag0 (bit 0) — present in the TOC but not consumed by the decode path."
+  - "Whether the 32 kHz internal rate (bit 5 = 1) and the 10/20/120 ms frame sizes occur in live calls, or are reserved; only 16 kHz / 60 ms active frames are seen in capture."
+  - "Exact role of flag2 beyond selecting config 0 vs 1 for the active-frame decode."

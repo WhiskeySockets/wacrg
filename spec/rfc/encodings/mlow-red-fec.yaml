@@ -1,0 +1,142 @@
+id: mlow-red-fec
+category: encodings
+title: "MLow RED and Reed-Solomon FEC"
+status: draft
+order: 11
+features: [audio]
+since: "0.1.0"
+summary: >
+  The optional "SplitRed" redundancy envelope that wraps an MLow RTP audio
+  payload, carrying one main frame plus zero or more time-shifted redundant
+  copies of earlier frames so a single lost packet can be recovered without
+  retransmission. Specifies the on-wire layout, the header-run terminator, and
+  the parse procedure; the Reed-Solomon forward-error-correction tier is named
+  but not yet wire-specified.
+normative: |
+  ## Applicability
+
+  The SplitRed RED envelope is the OUTERMOST layer of an MLow RTP audio payload.
+  It is OPTIONAL and MUST be applied only when the call negotiated a redundancy
+  level greater than zero (`mlow_red_redundancy_level > 0`). When redundancy is
+  not negotiated, the RTP payload is a single bare MLow frame (see
+  [mlow-frame](mlow-frame)) with no wrapper, and the SplitRed parse MUST NOT be
+  applied.
+
+  A bare MLow frame begins with a TOC byte whose high bit is set. A SplitRed
+  envelope is self-distinguishing from a single-bare-frame stream only by
+  negotiation: a decoder MUST decide between the two based on the negotiated
+  redundancy level, NOT by sniffing the first byte. Feeding a bare frame to the
+  SplitRed parser is malformed and MUST be rejected (its high-bit-set first byte
+  is otherwise misread as a redundant block header).
+
+  ## Wire layout
+
+  With `N` = the number of redundant blocks present in a given packet, the
+  payload is laid out as:
+
+  ```
+  [ red_hdr[0] (2B) ] ... [ red_hdr[N-1] (2B) ]   ; N redundant-block headers
+  [ main_marker     (1B) ]                         ; terminates the header run
+  [ red_payload[0] ] ... [ red_payload[N-1] ]      ; redundant frame bodies, in header order
+  [ main_payload ]                                 ; the main frame body, last
+  ```
+
+  ### Redundant block header (`red_hdr[i]`, 2 bytes)
+
+  ```
+  byte 0:  1 t t t t t t t      ; high bit MUST be 1; low 7 bits = time_code
+  byte 1:  s s s s s s s s      ; size = length in bytes of red_payload[i]
+  ```
+
+  - `byte0` MUST have its high bit (`0x80`) set. The low 7 bits
+    (`byte0 & 0x7f`) are the block's `time_code` (the frame's time offset).
+  - `byte1` is the unsigned byte length of the corresponding redundant payload
+    body. A redundant payload is therefore at most 255 bytes.
+
+  ### Main marker (`main_marker`, 1 byte)
+
+  ```
+  byte 0:  0 t t t t t t t      ; high bit MUST be 0; low 7 bits = main time_code
+  ```
+
+  The main marker terminates the run of redundant-block headers. Its high bit
+  (`0x80`) MUST be clear; the parser detects the end of the header run by
+  encountering a byte with the high bit clear. The low 7 bits
+  (`byte & 0x7f`) are the main frame's `time_code`. The length of the main
+  payload is NOT carried in the header; it is whatever bytes remain after the
+  header run and all redundant payloads.
+
+  ## Parse procedure
+
+  Let `p` be the payload and `n = len(p)`. A decoder MUST parse as follows and
+  MUST reject the packet on each error condition below:
+
+  1. If `n == 0`, reject (`PktSizeZero`).
+  2. Walk the header run from offset `cur = 0`, tracking `rem` = bytes remaining
+     from `cur` to end (`rem` starts at `n`):
+     - If `rem == 0` before a main marker is seen, reject (`HeaderTooShort`).
+     - Read `b0 = p[cur]`.
+     - If `b0 < 0x80` (high bit clear), this is the main marker: if `rem <= 1`,
+       reject (`MainTooShort`); otherwise stop the header walk.
+     - Otherwise it is a redundant header: if `rem <= 2`, reject
+       (`RedundantTooShort`). Read `size = p[cur+1]`. If
+       `size + 2 >= rem`, reject (`RedundantTooShort`). Record
+       `{ code: b0 & 0x7f, size }`. Advance `cur += 2` and decrease
+       `rem -= size + 2`.
+  3. Read the main marker: `main_code = p[cur] & 0x7f`, then advance
+     `cur += 1`.
+  4. For each recorded redundant block `r`, in header order, the next `r.size`
+     bytes at `cur` are its frame body (`is_main = false`, `time_code = r.code`);
+     advance `cur += r.size`.
+  5. The remaining `main_size = rem - 1` bytes are the main frame body
+     (`is_main = true`, `time_code = main_code`).
+
+  The redundant frames are yielded first, in header order, and the main frame
+  last. Each yielded body is a complete MLow frame (TOC plus body) to be decoded
+  per [mlow-frame](mlow-frame). A decoder SHOULD use a redundant copy only when
+  the corresponding original (main) frame for that `time_code` was lost.
+
+  ## Reed-Solomon FEC
+
+  The MLow stack also defines a Reed-Solomon forward-error-correction tier
+  alongside the RED envelope. Its on-wire encoding, generator polynomial,
+  symbol size, and the negotiation that enables it are not specified here.
+findings: |
+  The SplitRed `time_code` is a 7-bit value (`byte & 0x7f`) on both the
+  redundant-block header byte0 and the main marker, representing the frame's
+  time offset; redundant blocks carry copies of earlier frames so that the loss
+  of one main packet can be repaired from a redundant copy in a later packet.
+
+  The header-run terminator is structural rather than counted: there is no count
+  field for `N`. The parser distinguishes a redundant header from the main
+  marker purely by the high bit of the leading byte (set = redundant, clear =
+  main), and the size validation `size + 2 >= rem` guarantees that at least the
+  one-byte main marker and a non-empty main payload remain after every redundant
+  block.
+
+  Worked example (one redundant block + main):
+
+  ```
+  p = 85 03 00  AA BB CC  50 11 22 33
+      |  |  |   \______/  \_________/
+      |  |  |   red body  main body (4B)
+      |  |  main_marker (time_code 0)
+      |  size = 3
+      red hdr byte0 = 0x85 -> high bit set, time_code = 5
+  ```
+
+  yields a redundant frame `AA BB CC` (time_code 5) followed by the main frame
+  `50 11 22 33` (time_code 0). A header that is just a main marker (e.g.
+  `00 50 11 22`) yields a single main frame with no redundancy.
+requires: [mlow, mlow-frame]
+implementations:
+  - { flavor: whatsapp-rust, status: working, note: "depack_split_red parses the RED envelope; bare-frame streams bypass it" }
+  - { flavor: meowmeow, status: partial, note: "encodings codec; RED envelope coverage not confirmed" }
+  - { flavor: meowcaller, status: partial, note: "codec modules partial" }
+open_questions:
+  - "On-wire encoding of the Reed-Solomon FEC tier: generator polynomial, symbol/block size, and parity layout."
+  - "Negotiation signalling that sets mlow_red_redundancy_level and enables Reed-Solomon FEC."
+  - "Semantics of time_code relative to RTP timestamp / frame sequence, and the receiver's repair (jitter-buffer) policy for selecting a redundant copy."
+  - "Encoder side: how many redundant copies are emitted per level and which past frames are chosen."
+references:
+  - { title: "RFC 2198 — RTP Payload for Redundant Audio Data", url: "https://www.rfc-editor.org/rfc/rfc2198" }

@@ -23,8 +23,10 @@ implementations:
 open_questions:
   - "H.264 profile/level negotiation and packetization mode."
   - "Whether other video codecs are supported."
-discovered_by: purpshell
 code: ENC-06
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

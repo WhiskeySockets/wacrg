@@ -108,7 +108,9 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-encoder`](../e
 
 **Annotation** `wacrg:ENC-08` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-lsf-lpc.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-lsf-lpc.yaml)
+**Contributors** [![Rajeh Taher](https://github.com/purpshell.png?size=20) Rajeh Taher](../contributors.md#purpshell) (wrote initial spec)
+
+[:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-lsf-lpc.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-lsf-lpc.yaml)
 
 **Open questions**
 - The selector/grid/stage-2 CDF tables and the stage-1/stage-2 codebooks (cbhalf, we, wie, qstep, min_qi/max_qi, min_dist, means, reg_cond) are carried as opaque table blobs; their generating procedure inside the codec is not specified here.

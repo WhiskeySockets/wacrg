@@ -63,8 +63,10 @@ open_questions:
     how raw_e2e is framed alongside it under keygen=2."
   - "Whether the call key is regenerated per offer or reused across re-offers /
     call legs."
-discovered_by: vinikjkkj
 code: CRY-01
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

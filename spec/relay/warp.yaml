@@ -27,8 +27,10 @@ implementations:
 open_questions:
   - "WARP header field widths, endianness, and the relay control messages."
 parent: stun-relay
-discovered_by: vinikjkkj
 code: REL-03
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

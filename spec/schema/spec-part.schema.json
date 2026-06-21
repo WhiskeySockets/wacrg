@@ -64,9 +64,10 @@
       "items": { "type": "string" },
       "description": "Part ids this part depends on (each must resolve to another spec part)."
     },
-    "discovered_by": {
-      "type": "string",
-      "description": "Contributor id credited with first reverse-engineering this part (must match spec/contributors/)."
+    "contributors": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/partContributor" },
+      "description": "Who contributed to this part; each contributor must match spec/contributors/."
     },
     "implementations": {
       "type": "array",
@@ -109,6 +110,15 @@
           "items": { "type": "string" },
           "description": "Commit SHAs in the flavor's repo that implement/changed this part. Each renders as its own commit link."
         }
+      }
+    },
+    "partContributor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contributor"],
+      "properties": {
+        "contributor": { "type": "string", "description": "A spec/contributors/<id> id." },
+        "note": { "type": "string", "description": "What they contributed to this part (e.g. \"wrote initial spec\")." }
       }
     },
     "change": {

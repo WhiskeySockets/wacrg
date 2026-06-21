@@ -258,6 +258,12 @@ export interface SpecImplementation {
   commits?: string[];
 }
 
+/** A contributor credited on a spec part. */
+export interface PartContributor {
+  contributor: string;
+  note?: string;
+}
+
 /** A dated changelog entry for a spec part. */
 export interface SpecChange {
   date: string;
@@ -287,8 +293,8 @@ export interface SpecPart {
   parent?: string;
   requires?: string[];
   implementations?: SpecImplementation[];
-  /** Contributor id credited with first reverse-engineering this part. */
-  discovered_by?: string;
+  /** Who contributed to this part. */
+  contributors?: PartContributor[];
   since?: string;
   open_questions?: string[];
   references?: Reference[];

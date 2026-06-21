@@ -131,8 +131,10 @@ references:
       url: "https://www.rfc-editor.org/rfc/rfc2198"
     }
 parent: mlow
-discovered_by: purpshell
 code: ENC-02
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

@@ -46,7 +46,9 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`group-call`](../signall
 
 **Annotation** `wacrg:SIG-02` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/video-call.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/video-call.yaml)
+**Contributors** [![Rajeh Taher](https://github.com/purpshell.png?size=20) Rajeh Taher](../contributors.md#purpshell) (wrote initial spec)
+
+[:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/video-call.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/video-call.yaml)
 
 **Open questions**
 - Attributes (if any) carried on the <video> child of <offer> — e.g. codec, resolution, or orientation hints — and whether the server enforces them.

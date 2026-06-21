@@ -60,8 +60,10 @@ references:
       title: "WhatsApp call signalling — mute_v2 builder",
       url: "https://github.com/WhiskeySockets"
     }
-discovered_by: vinikjkkj
 code: SIG-13
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

@@ -130,8 +130,10 @@ references:
       url: "https://www.rfc-editor.org/rfc/rfc6120"
     }
   - { title: "RFC 8445 — ICE", url: "https://www.rfc-editor.org/rfc/rfc8445" }
-discovered_by: vinikjkkj
 code: SIG-17
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

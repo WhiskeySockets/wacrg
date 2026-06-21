@@ -104,7 +104,9 @@ Requires: [`srtp-hop-by-hop`](../crypto/srtp-hop-by-hop.md), [`ssrc`](../relay/s
 
 **Annotation** `wacrg:REL-04` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/rtcp.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/rtcp.yaml)
+**Contributors** [![Rajeh Taher](https://github.com/purpshell.png?size=20) Rajeh Taher](../contributors.md#purpshell) (wrote initial spec)
+
+[:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/rtcp.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/rtcp.yaml)
 
 **Open questions**
 - Trigger conditions and cadence for emitting PT 208 vs PT 209, and how often Sender Reports are sent.

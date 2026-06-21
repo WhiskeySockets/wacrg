@@ -80,7 +80,9 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-encoder`](../e
 
 **Annotation** `wacrg:ENC-03` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-frame.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-frame.yaml)
+**Contributors** [![Rajeh Taher](https://github.com/purpshell.png?size=20) Rajeh Taher](../contributors.md#purpshell) (wrote initial spec)
+
+[:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-frame.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-frame.yaml)
 
 **Open questions**
 - Semantics of flag0 (bit 0) — present in the TOC but not consumed by the decode path.

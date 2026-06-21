@@ -23,8 +23,10 @@ open_questions:
   - "Group session creation, the participant roster stanza, and join/leave
     signalling."
   - "Per-sender SFrame key distribution and rotation on join/leave."
-discovered_by: vinikjkkj
 code: SIG-06
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

@@ -70,8 +70,10 @@ open_questions:
     is pinned)."
   - "Whether the empty-extension-then-piggyback start offset (index >= 2) is
     fixed on the wire or negotiable."
-discovered_by: vinikjkkj
 code: CRY-07
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

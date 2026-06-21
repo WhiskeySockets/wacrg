@@ -71,8 +71,10 @@ references:
       title: "RFC 2119 — Key words for use in RFCs",
       url: "https://www.rfc-editor.org/rfc/rfc2119"
     }
-discovered_by: vinikjkkj
 code: SIG-08
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

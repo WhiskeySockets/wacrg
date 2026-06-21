@@ -97,8 +97,10 @@ open_questions:
     accepted on receive."
   - "The full set of warp-piggyback extension words and the packet index at
     which piggybacking begins."
-discovered_by: vinikjkkj
 code: REL-05
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

@@ -93,8 +93,10 @@ references:
   - { title: "RFC 3711 — SRTP", url: "https://www.rfc-editor.org/rfc/rfc3711" }
   - { title: "RFC 5869 — HKDF", url: "https://www.rfc-editor.org/rfc/rfc5869" }
 parent: srtp-master-key
-discovered_by: vinikjkkj
 code: CRY-05
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

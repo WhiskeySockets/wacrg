@@ -23,8 +23,10 @@ implementations:
       path: wacore/src/voip/stun.rs
     }
   - { flavor: zapo-caller, status: working }
-discovered_by: vinikjkkj
 code: REL-02
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

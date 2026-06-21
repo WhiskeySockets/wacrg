@@ -61,8 +61,10 @@ open_questions:
     of the <video> element relative to the <audio> nodes."
 references:
   - { title: "RFC 3711 — SRTP", url: "https://www.rfc-editor.org/rfc/rfc3711" }
-discovered_by: vinikjkkj
 code: SIG-02
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

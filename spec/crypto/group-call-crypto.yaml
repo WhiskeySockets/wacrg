@@ -62,8 +62,10 @@ open_questions:
 references:
   - { title: "RFC 5869 — HKDF", url: "https://www.rfc-editor.org/rfc/rfc5869" }
   - { title: "RFC 9605 — SFrame", url: "https://www.rfc-editor.org/rfc/rfc9605" }
-discovered_by: vinikjkkj
 code: CRY-06
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

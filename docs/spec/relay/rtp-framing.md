@@ -84,7 +84,9 @@ Breakdown: [`video-packetization`](../encodings/video-packetization.md), [`media
 
 **Annotation** `wacrg:REL-05` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/rtp-framing.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/rtp-framing.yaml)
+**Contributors** [![Rajeh Taher](https://github.com/purpshell.png?size=20) Rajeh Taher](../contributors.md#purpshell) (wrote initial spec)
+
+[:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/rtp-framing.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/rtp-framing.yaml)
 
 **Open questions**
 - Whether payload type 121 is used for a distinct media variant or is only accepted on receive.

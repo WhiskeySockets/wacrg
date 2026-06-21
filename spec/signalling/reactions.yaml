@@ -16,8 +16,10 @@ open_questions:
   - "Stanza/attribute and emoji encoding for an in-call reaction; TTL/debounce
     behaviour."
 parent: group-call
-discovered_by: vinikjkkj
 code: SIG-10
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

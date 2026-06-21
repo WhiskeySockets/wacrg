@@ -65,7 +65,9 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`call-accept`](../signal
 
 **Annotation** `wacrg:SIG-12` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/flow-call-missed.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/flow-call-missed.yaml)
+**Contributors** [![Rajeh Taher](https://github.com/purpshell.png?size=20) Rajeh Taher](../contributors.md#purpshell) (wrote initial spec)
+
+[:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/flow-call-missed.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/flow-call-missed.yaml)
 
 **Open questions**
 - The ring/offer timeout duration and which side (caller, callee, or server) drives the terminate when a call goes unanswered.

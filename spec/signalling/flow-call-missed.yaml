@@ -96,8 +96,10 @@ references:
       url: ""
     }
   - { title: "wacore call stanza parser and build_offer_ack_receipt", url: "" }
-discovered_by: vinikjkkj
 code: SIG-12
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

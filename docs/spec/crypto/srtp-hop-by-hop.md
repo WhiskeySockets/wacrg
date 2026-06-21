@@ -27,7 +27,9 @@ Breakdown: [`srtp-e2e`](../crypto/srtp-e2e.md), [`video-packetization`](../encod
 
 **Annotation** `wacrg:CRY-03` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/crypto/srtp-hop-by-hop.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/crypto/srtp-hop-by-hop.yaml)
+**Contributors** [![Rajeh Taher](https://github.com/purpshell.png?size=20) Rajeh Taher](../contributors.md#purpshell) (wrote initial spec)
+
+[:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/crypto/srtp-hop-by-hop.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/crypto/srtp-hop-by-hop.yaml)
 
 ## Changelog
 - **2026-06-21** — Initial spec entry.

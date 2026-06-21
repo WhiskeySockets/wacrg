@@ -66,8 +66,10 @@ references:
       title: "RFC 6120 — XMPP Core (stanza acknowledgement model)",
       url: "https://www.rfc-editor.org/rfc/rfc6120"
     }
-discovered_by: vinikjkkj
 code: SIG-07
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

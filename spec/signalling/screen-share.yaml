@@ -21,8 +21,10 @@ open_questions:
   - "How a screen-share track is flagged in signalling and in the RTP/encoding
     plane."
 parent: group-call
-discovered_by: vinikjkkj
 code: SIG-11
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

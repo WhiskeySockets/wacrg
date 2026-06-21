@@ -78,8 +78,10 @@ open_questions:
 references:
   - { title: "wacore voip signaling builders (build_terminate)", url: "" }
   - { title: "wacore call stanza parser (terminate action)", url: "" }
-discovered_by: vinikjkkj
 code: SIG-14
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

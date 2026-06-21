@@ -114,8 +114,10 @@ references:
   - { title: "RFC 3711 — SRTP", url: "https://www.rfc-editor.org/rfc/rfc3711" }
   - { title: "RFC 3550 — RTP", url: "https://www.rfc-editor.org/rfc/rfc3550" }
   - { title: "RFC 6716 — Opus", url: "https://www.rfc-editor.org/rfc/rfc6716" }
-discovered_by: vinikjkkj
 code: REL-07
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

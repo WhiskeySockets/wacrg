@@ -159,7 +159,9 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-excitation`](.
 
 **Annotation** `wacrg:ENC-14` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-synthesis.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-synthesis.yaml)
+**Contributors** [![Rajeh Taher](https://github.com/purpshell.png?size=20) Rajeh Taher](../contributors.md#purpshell) (wrote initial spec)
+
+[:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-synthesis.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-synthesis.yaml)
 
 **Open questions**
 - Whether the low-rate ACB gain codebook (vs high-rate) is exercised on production streams.

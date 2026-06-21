@@ -58,7 +58,9 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`group-call`](../signall
 
 **Annotation** `wacrg:CRY-06` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/crypto/group-call-crypto.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/crypto/group-call-crypto.yaml)
+**Contributors** [![Rajeh Taher](https://github.com/purpshell.png?size=20) Rajeh Taher](../contributors.md#purpshell) (wrote initial spec)
+
+[:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/crypto/group-call-crypto.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/crypto/group-call-crypto.yaml)
 
 **Open questions**
 - How a new participant joining mid-call obtains the existing callKey, and whether the callKey is rotated on membership change (join/leave).

@@ -28,8 +28,10 @@ implementations:
 open_questions:
   - "Exact AEAD suite, nonce construction, and header varint layout."
   - "Group-call key distribution and rotation."
-discovered_by: vinikjkkj
 code: CRY-04
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

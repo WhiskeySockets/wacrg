@@ -52,7 +52,9 @@ Breakdown: [`srtp-e2e`](../crypto/srtp-e2e.md)
 
 **Annotation** `wacrg:CRY-01` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/crypto/call-key.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/crypto/call-key.yaml)
+**Contributors** [![Rajeh Taher](https://github.com/purpshell.png?size=20) Rajeh Taher](../contributors.md#purpshell) (wrote initial spec)
+
+[:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/crypto/call-key.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/crypto/call-key.yaml)
 
 **Open questions**
 - How the caller generates the 32-byte call key (CSPRNG source / any structure) is not revealed by the keying code, which only consumes it.

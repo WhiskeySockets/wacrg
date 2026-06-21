@@ -79,8 +79,10 @@ references:
       title: "RFC 7675 — STUN Usage for Consent Freshness",
       url: "https://www.rfc-editor.org/rfc/rfc7675"
     }
-discovered_by: vinikjkkj
 code: SIG-05
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

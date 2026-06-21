@@ -106,7 +106,9 @@ Breakdown: [`mlow-encoder`](../encodings/mlow-encoder.md), [`mlow-noise`](../enc
 
 **Annotation** `wacrg:ENC-15` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-vad.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-vad.yaml)
+**Contributors** [![Rajeh Taher](https://github.com/purpshell.png?size=20) Rajeh Taher](../contributors.md#purpshell) (wrote initial spec)
+
+[:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-vad.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-vad.yaml)
 
 **Open questions**
 - Whether non-default VAD tuning (noise_lvl_update_speed, non_binariness, highpass_sharpness) is ever negotiated on the wire, or always left at 0.

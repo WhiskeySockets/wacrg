@@ -79,8 +79,10 @@ references:
       title: "RFC 5245 — ICE (relay/RTT context)",
       url: "https://www.rfc-editor.org/rfc/rfc5245"
     }
-discovered_by: vinikjkkj
 code: SIG-15
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

@@ -422,8 +422,10 @@ for (const { relPath, data } of specParts as Loaded<SpecPart>[]) {
       fail(relPath, `spec part "${data.id}": parent cannot be itself`);
     }
   }
-  if (data.discovered_by && contributorsPresent && !contributorIds.has(data.discovered_by)) {
-    fail(relPath, `spec part "${data.id}": discovered_by "${data.discovered_by}" has no matching spec/contributors/${data.discovered_by}.yaml`);
+  for (const c of data.contributors ?? []) {
+    if (contributorsPresent && c.contributor && !contributorIds.has(c.contributor)) {
+      fail(relPath, `spec part "${data.id}": contributor "${c.contributor}" has no matching spec/contributors/${c.contributor}.yaml`);
+    }
   }
   for (const impl of data.implementations ?? []) {
     if (flavorsPresent && impl.flavor && !flavorIds.has(impl.flavor)) {

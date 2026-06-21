@@ -93,7 +93,9 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`call-ack`](../signallin
 
 **Annotation** `wacrg:SIG-17` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/flow-outgoing-1to1.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/flow-outgoing-1to1.yaml)
+**Contributors** [![Rajeh Taher](https://github.com/purpshell.png?size=20) Rajeh Taher](../contributors.md#purpshell) (wrote initial spec)
+
+[:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/flow-outgoing-1to1.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/flow-outgoing-1to1.yaml)
 
 **Open questions**
 - Exact caller-side transport-message-type handshake sequence (which <transport> rounds the caller initiates vs. answers) to converge the media path.

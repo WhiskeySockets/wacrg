@@ -463,38 +463,44 @@ function guideLink(guidePath: string): string {
   return `../${stripped}`;
 }
 
-function renderContributors(contributors: ReturnType<typeof loadContributors>): string {
+function renderContributors(
+  contributors: ReturnType<typeof loadContributors>,
+  flavors: ReturnType<typeof loadFlavors>,
+): string {
+  const flavorUrlById = new Map(flavors.map((f) => [f.data.id, f.data.url]));
   const out: string[] = [];
   out.push('# Contributors');
   out.push(
-    'Researchers who contribute to the spec. Provenance entries reference these ' +
-      'ids to record **who** contributed each fact. Generated from ' +
-      '`spec/contributors/`.',
+    'The people who build the spec — their affiliation and the projects they ' +
+      'built. Generated from `spec/contributors/`.',
   );
   if (contributors.length === 0) {
     out.push('_No contributors registered yet._');
     return out.join('\n\n');
   }
   const head =
-    '| Contributor | GitHub | Affiliation | Techniques | Flavors |\n' +
-    '| --- | --- | --- | --- | --- |';
+    '| Contributor | Affiliation | Projects |\n| --- | --- | --- |';
   const rows = contributors
     .slice()
     .sort((a, b) => a.data.id.localeCompare(b.data.id))
     .map(({ data }) => {
-      const gh = data.github
-        ? `[@${data.github}](https://github.com/${data.github})`
-        : '-';
-      const techniques = data.techniques?.length
-        ? data.techniques.map((t) => `\`${t}\``).join(', ')
-        : '-';
-      const flavors = data.flavors?.length
-        ? data.flavors.map((t) => `\`${t}\``).join(', ')
-        : '-';
-      return (
-        `| ${cell(data.name ?? data.id)} | ${gh} | ${cell(data.affiliation ?? '-')} | ` +
-        `${techniques} | ${flavors} |`
-      );
+      const name = cell(data.name ?? data.id);
+      const pfp = data.github
+        ? `![${name}](https://github.com/${data.github}.png?size=24) `
+        : '';
+      // Anchor on the id so spec parts can deep-link to this contributor.
+      const who = data.github
+        ? `<a id="${data.id}"></a>[${pfp}${name}](https://github.com/${data.github})`
+        : `<a id="${data.id}"></a>${name}`;
+      const projects = data.flavors?.length
+        ? data.flavors
+            .map((f) => {
+              const url = flavorUrlById.get(f);
+              return url ? `[${f}](${url})` : `\`${f}\``;
+            })
+            .join(', ')
+        : '—';
+      return `| ${who} | ${cell(data.affiliation ?? '—')} | ${projects} |`;
     });
   out.push([head, ...rows].join('\n'));
   out.push('[Back to spec overview](./index.md)');
@@ -719,7 +725,7 @@ function specDetails(
     partIds: Set<string>;
     breakdown?: string[];
     flavorUrl: (id: string) => string | undefined;
-    contributorName: (id: string) => string;
+    contributor: (id: string) => { name?: string; github?: string } | undefined;
   },
 ): string {
   const ref = (md: string) => specResolveRefs(md, ctx.partIds, ctx.linkRequire);
@@ -756,12 +762,23 @@ function specDetails(
       `source with this comment; a script clones the source, finds it, and attaches the ` +
       `commit blame/permalink.`,
   );
+  if (part.contributors?.length) {
+    const items = part.contributors.map((c) => {
+      const info = ctx.contributor(c.contributor);
+      const name = info?.name ?? c.contributor;
+      const pfp = info?.github
+        ? `![${cell(name)}](https://github.com/${info.github}.png?size=20) `
+        : '';
+      const note = c.note ? ` (${cell(c.note)})` : '';
+      return `[${pfp}${cell(name)}](../contributors.md#${c.contributor})${note}`;
+    });
+    out.push('**Contributors** ' + items.join(' - '));
+  }
   const file = `spec/${part.category}/${part.id}.yaml`;
-  const history: string[] = [];
-  if (part.discovered_by) history.push(`Discovered by ${ctx.contributorName(part.discovered_by)}`);
-  history.push(`[:material-github: protocol history / diff](${WACRG_REPO}/commits/main/${file})`);
-  history.push(`[:material-github: blame](${WACRG_REPO}/blame/main/${file})`);
-  out.push(history.join(' - '));
+  out.push(
+    `[:material-github: protocol history / diff](${WACRG_REPO}/commits/main/${file}) - ` +
+      `[:material-github: blame](${WACRG_REPO}/blame/main/${file})`,
+  );
   if (part.open_questions?.length) out.push('**Open questions**\n' + list(part.open_questions));
   if (part.references?.length) {
     out.push(
@@ -871,7 +888,10 @@ function renderSpecPartPage(
   part: SpecPart,
   partById: Map<string, SpecPart>,
   breakdown: Map<string, string[]>,
-  ctx: { flavorUrl: (id: string) => string | undefined; contributorName: (id: string) => string },
+  ctx: {
+    flavorUrl: (id: string) => string | undefined;
+    contributor: (id: string) => { name?: string; github?: string } | undefined;
+  },
 ): string {
   const out: string[] = [];
   out.push(`# ${part.title}`);
@@ -881,7 +901,7 @@ function renderSpecPartPage(
       partIds: new Set(partById.keys()),
       breakdown: breakdown.get(part.id),
       flavorUrl: ctx.flavorUrl,
-      contributorName: ctx.contributorName,
+      contributor: ctx.contributor,
       linkRequire: (id) => {
         const d = partById.get(id);
         return d ? `../${d.category}/${d.id}.md` : `../../index.md#${id}`;
@@ -1068,8 +1088,10 @@ write('docs/spec/flavors.md', renderFlavors(flavors));
 const specPartById = new Map(specParts.map((p) => [p.data.id, p.data]));
 const specBreakdown = specBreakdownMap(specParts.map((p) => p.data));
 const flavorUrl = (id: string) => flavors.find((f) => f.data.id === id)?.data.url;
-const contributorName = (id: string) =>
-  contributors.find((c) => c.data.id === id)?.data.name ?? id;
+const contributor = (id: string) => {
+  const c = contributors.find((x) => x.data.id === id)?.data;
+  return c ? { name: c.name, github: c.github } : undefined;
+};
 write(
   'docs/index.md',
   renderSpecIndex(specParts, {
@@ -1086,13 +1108,13 @@ write(
 for (const { data } of specParts) {
   write(
     `docs/spec/${data.category}/${data.id}.md`,
-    renderSpecPartPage(data, specPartById, specBreakdown, { flavorUrl, contributorName }),
+    renderSpecPartPage(data, specPartById, specBreakdown, { flavorUrl, contributor }),
   );
 }
 write('docs/spec/updates.md', renderSpecUpdates(specParts));
 writeRaw('docs/spec/feed.json', renderSpecFeed(specParts, flavors.map((f) => f.data.id)));
 
-write('docs/spec/contributors.md', renderContributors(contributors));
+write('docs/spec/contributors.md', renderContributors(contributors, flavors));
 write('docs/spec/glossary.md', renderGlossary());
 write(
   'docs/spec/index.md',

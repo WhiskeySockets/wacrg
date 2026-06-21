@@ -43,8 +43,10 @@ implementations:
     }
 references:
   - { title: "RFC 6716 — Opus", url: "https://www.rfc-editor.org/rfc/rfc6716" }
-discovered_by: purpshell
 code: ENC-01
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

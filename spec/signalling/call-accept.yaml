@@ -52,8 +52,10 @@ open_questions:
     rejection as it does for <offer>."
 references:
   - { title: "RFC 3711 — SRTP", url: "https://www.rfc-editor.org/rfc/rfc3711" }
-discovered_by: vinikjkkj
 code: SIG-03
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

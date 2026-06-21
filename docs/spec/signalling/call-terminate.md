@@ -65,7 +65,9 @@ Breakdown: [`flow-call-missed`](../signalling/flow-call-missed.md), [`flow-call-
 
 **Annotation** `wacrg:SIG-14` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/call-terminate.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/call-terminate.yaml)
+**Contributors** [![Rajeh Taher](https://github.com/purpshell.png?size=20) Rajeh Taher](../contributors.md#purpshell) (wrote initial spec)
+
+[:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/call-terminate.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/call-terminate.yaml)
 
 **Open questions**
 - Full enumeration of reason values the server and clients emit; only accepted_elsewhere is confirmed from source.

@@ -57,8 +57,10 @@ open_questions:
     video calls, as its <audio>-only shape is observed for audio calls."
   - "Full meaning of the packed <capability> bitfield and the significance of
     the differing final byte."
-discovered_by: vinikjkkj
 code: SIG-04
 changelog:
   - date: 2026-06-21
     note: Initial spec entry.
+contributors:
+  - contributor: purpshell
+    note: wrote initial spec

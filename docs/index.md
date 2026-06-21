@@ -2996,4 +2996,4 @@ fixed constant payloads and MUST bypass the encoder (see [rtp-framing](#rtp-fram
 
 This spec exists because of the people who reverse-engineered, implemented, and documented the WhatsApp call stack. Thank you:
 
-[Auties](https://github.com/Auties00) · [Edgard](https://github.com/edgardmessias) · [João Lucas](https://github.com/jlucaso1) · [Rajeh Taher](https://github.com/purpshell) · [Shelltear](https://github.com/sheiitear) · [Vini](https://github.com/vinikjkkj)
+[Auties](https://github.com/Auties00) · [Denis](https://github.com/denchik28) · [Edgard](https://github.com/edgardmessias) · [João Lucas](https://github.com/jlucaso1) · [Rajeh Taher](https://github.com/purpshell) · [Shelltear](https://github.com/sheiitear) · [Vini](https://github.com/vinikjkkj)

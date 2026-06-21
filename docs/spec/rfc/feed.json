@@ -1063,6 +1063,7 @@
       "group-call-crypto",
       "warp-crypto"
     ],
+    "wa-call": [],
     "whatsapp-rust": [
       "call-offer",
       "video-call",

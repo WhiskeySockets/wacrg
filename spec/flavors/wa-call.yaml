@@ -1,0 +1,20 @@
+id: wa-call
+name: wa-call (MLow decoder)
+language: typescript
+maturity: partial
+maintainer: denis
+status: draft
+covers:
+  - media
+basis:
+  - frida-hooking
+description: >
+  Independent TypeScript reconstruction of the MLow decoder from the NATIVE
+  (macOS, ARM64) WhatsApp client, validated sample-by-sample against a
+  frida-captured decode oracle (input MLow packet -> ground-truth PCM). Front-end
+  (range coder, NLSF->LPC order 16, gains, pitch lag, SILK shell excitation) is
+  byte-exact vs the oracle (80/80 packets); the float synthesis (LTP ring ->
+  additive postfilter -> order-16 LPC-AR) reaches ~0.85 waveform correlation with
+  phase exact (top frames near sample-identical). Not derived from another flavor:
+  an independent, runtime-anchored second technique corroborating the
+  wasm-analysis reconstructions. See docs/codec/mlow/native-reconstruction.md.

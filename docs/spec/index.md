@@ -16,8 +16,8 @@ This is the generated, human-readable view of the wacrg corpus, a machine-readab
 | [Flows](./flows/index.md) | 4 |
 | [Enums](./enums.md) | 3 |
 | [Techniques](./techniques.md) | 7 |
-| [Flavors](./flavors.md) | 3 |
-| [Contributors](./contributors.md) | 6 |
+| [Flavors](./flavors.md) | 4 |
+| [Contributors](./contributors.md) | 7 |
 | [Glossary](./glossary.md) | - |
 | [Coverage](./coverage.md) | - |
 

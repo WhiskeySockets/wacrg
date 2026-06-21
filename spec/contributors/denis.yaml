@@ -6,6 +6,8 @@ techniques:
 tools:
   - frida
   - ghidra
+flavors:
+  - wa-call
 links:
   - title: GitHub
     url: https://github.com/denchik28

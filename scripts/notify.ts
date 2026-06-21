@@ -52,7 +52,7 @@ for (const flavor of flavors) {
       id: p.id,
       title: p.title,
       category: p.category,
-      ref: `https://whiskeysockets.github.io/wacrg/#${p.id}`,
+      ref: `https://wacrg.org/#${p.id}`,
     })),
   });
 }

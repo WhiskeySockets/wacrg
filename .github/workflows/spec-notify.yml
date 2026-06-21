@@ -90,6 +90,6 @@ jobs:
             body=$(jq -r ".[$i].parts | map(\"- [\(.id)](\(.ref)) — \(.title)\") | join(\"\n\")" notify-payload.json)
             gh issue create --repo "$repo" \
               --title "[wacrg] spec update affecting ${flavor}: ${ids}" \
-              --body "$(printf 'The wacrg spec changed in parts your implementation maps to:\n\n%s\n\nFollow the feed: https://whiskeysockets.github.io/wacrg/spec/feed.json' "$body")" \
+              --body "$(printf 'The wacrg spec changed in parts your implementation maps to:\n\n%s\n\nFollow the feed: https://wacrg.org/spec/feed.json' "$body")" \
               || echo "Could not open an issue in ${repo} (token scope?)."
           done

@@ -1,0 +1,16 @@
+{#-
+  Custom 404 served by GitHub Pages (site/404.html). mkdocs-material renders this
+  from the theme, not from a docs/ Markdown page, so the content lives here.
+  Links are absolute (apex domain), valid no matter what path 404'd.
+-#}
+{% extends "main.html" %}
+{% block content %}
+  <h1>Page not found</h1>
+  <p>This page doesn't exist — the link may be stale, or a spec part was renamed.</p>
+  <p><a href="/"><strong>&#8617; Back to the spec</strong></a></p>
+  <p>
+    Every spec part has a stable id and its own page under
+    <code>spec/&lt;category&gt;/</code>; browse from the section tables on the
+    home page.
+  </p>
+{% endblock %}

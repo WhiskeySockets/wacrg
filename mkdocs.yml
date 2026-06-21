@@ -2,15 +2,17 @@ site_name: WhatsApp Calls Research Group
 site_description: >-
   A collaborative, GitHub-native, machine-readable specification of the
   WhatsApp 1:1 call protocol — signaling, keying, media, and transport.
-# Canonical site URL. Required so asset/link paths (and the 404 page's home
-# button) resolve under the /wacrg/ project subpath rather than the domain root.
-site_url: https://whiskeysockets.github.io/wacrg/
+# Canonical site URL. The site is served at the apex of the custom domain
+# (see docs/CNAME), so links resolve from the domain root, not a /wacrg/ subpath.
+site_url: https://wacrg.org/
 repo_url: https://github.com/WhiskeySockets/wacrg
 repo_name: WhiskeySockets/wacrg
 docs_dir: docs
 
 theme:
   name: material
+  # Serves overrides/404.html as site/404.html (GitHub Pages' not-found page).
+  custom_dir: overrides
   features:
     - navigation.instant
     - navigation.tracking

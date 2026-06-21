@@ -1,0 +1,11 @@
+id: denis
+name: Denis
+github: denchik28
+techniques:
+  - frida-hooking
+tools:
+  - frida
+  - ghidra
+links:
+  - title: GitHub
+    url: https://github.com/denchik28

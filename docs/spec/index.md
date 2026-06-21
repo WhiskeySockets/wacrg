@@ -16,7 +16,7 @@ This is the generated, human-readable view of the wacrg corpus, a machine-readab
 | [Enums](./enums.md) | 3 |
 | [Techniques](./techniques.md) | 7 |
 | [Tools](./tools.md) | 8 |
-| [Contributors](./contributors.md) | 5 |
+| [Contributors](./contributors.md) | 6 |
 | [Glossary](./glossary.md) | - |
 | [Coverage](./coverage.md) | - |
 

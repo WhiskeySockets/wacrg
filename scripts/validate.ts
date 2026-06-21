@@ -385,6 +385,7 @@ for (const { relPath, data } of flavorMaps as Loaded<FlavorMap>[]) {
 // RFC parts: id matches file name, category matches parent dir, ids are unique,
 // requires resolve to other parts, and implementation flavors are registered.
 const rfcSeen = new Map<string, string>();
+const rfcCodeSeen = new Map<string, string>();
 for (const { relPath, data } of rfcParts as Loaded<RfcPart>[]) {
   const segments = relPath.split('/'); // spec/rfc/<category>/<id>.yaml
   const stem = (segments.at(-1) ?? '').replace(/\.yaml$/, '');
@@ -401,6 +402,11 @@ for (const { relPath, data } of rfcParts as Loaded<RfcPart>[]) {
   const prior = rfcSeen.get(data.id);
   if (prior) fail(relPath, `duplicate rfc part id "${data.id}" (also in ${prior})`);
   else rfcSeen.set(data.id, relPath);
+  if (data.code) {
+    const cprior = rfcCodeSeen.get(data.code);
+    if (cprior) fail(relPath, `duplicate annotation code "${data.code}" (also in ${cprior})`);
+    else rfcCodeSeen.set(data.code, relPath);
+  }
   for (const dep of data.requires ?? []) {
     if (!rfcPartIds.has(dep)) {
       fail(relPath, `rfc part "${data.id}": requires "${dep}" has no matching spec/rfc part`);

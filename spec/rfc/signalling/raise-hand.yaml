@@ -21,3 +21,4 @@ open_questions:
   - "Which stanza/attribute carries raise-hand state, and whether it is acked."
 parent: group-call
 discovered_by: vinikjkkj
+code: SIG-09

@@ -4,7 +4,7 @@
 
 _Signalling · `call-accept`_
 
-_status: review · audio, video_
+`SIG-03` · _status: review · audio, video_
 
 The callee answers an offer with a <call> stanza whose <accept> child selects the media format and commits the call to the v2 SRTP key path.
 
@@ -43,6 +43,8 @@ Breakdown: [`call-preaccept`](../signalling/call-preaccept.md), [`flow-call-miss
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | — |
+
+**Annotation** `wacrg:SIG-03` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/call-accept.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/call-accept.yaml)
 

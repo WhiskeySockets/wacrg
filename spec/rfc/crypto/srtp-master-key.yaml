@@ -54,3 +54,4 @@ open_questions:
   - "Exact byte layout of participantLID used as HKDF info across all client
     versions."
 discovered_by: vinikjkkj
+code: CRY-02

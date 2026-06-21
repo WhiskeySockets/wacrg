@@ -4,7 +4,7 @@
 
 _Relay · `rtcp`_
 
-_status: review · audio, video_
+`REL-04` · _status: review · audio, video_
 
 RTCP feedback/control packets on the call media path: a standard Sender Report (PT 200) plus two WhatsApp compact reports (PT 208, PT 209), and the rule for classifying a received packet as RTP or RTCP on a shared port.
 
@@ -101,6 +101,8 @@ Requires: [`srtp-hop-by-hop`](../crypto/srtp-hop-by-hop.md), [`ssrc`](../relay/s
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | origin of the rtcp.ts implementation this is ported from |
+
+**Annotation** `wacrg:REL-04` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/relay/rtcp.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/relay/rtcp.yaml)
 

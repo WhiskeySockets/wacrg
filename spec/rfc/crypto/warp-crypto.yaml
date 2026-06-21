@@ -70,3 +70,4 @@ open_questions:
   - "Whether the empty-extension-then-piggyback start offset (index >= 2) is
     fixed on the wire or negotiable."
 discovered_by: vinikjkkj
+code: CRY-07

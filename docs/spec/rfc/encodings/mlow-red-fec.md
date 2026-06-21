@@ -4,7 +4,7 @@
 
 _Encodings · `mlow-red-fec`_
 
-_status: draft · audio_
+`ENC-02` · _status: draft · audio_
 
 The optional "SplitRed" redundancy envelope wrapping an MLow RTP audio payload: one main frame plus zero or more time-shifted redundant copies of earlier frames, recoverable without retransmission.
 
@@ -115,6 +115,8 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md)
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | depack_split_red parses the RED envelope; bare-frame streams bypass it |
 | `meowcaller` | partial | — | codec modules partial |
+
+**Annotation** `wacrg:ENC-02` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-red-fec.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-red-fec.yaml)
 

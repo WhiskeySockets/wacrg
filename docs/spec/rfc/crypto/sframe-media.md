@@ -4,7 +4,7 @@
 
 _Crypto · `sframe-media`_
 
-_status: draft · audio, video, group_
+`CRY-04` · _status: draft · audio, video, group_
 
 Per-frame end-to-end AEAD sealing of media payloads, applied above SRTP so the relay only forwards ciphertext.
 
@@ -25,6 +25,8 @@ Breakdown: [`call-key`](../crypto/call-key.md), [`group-call-crypto`](../crypto/
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | — |
+
+**Annotation** `wacrg:CRY-04` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/crypto/sframe-media.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/crypto/sframe-media.yaml)
 

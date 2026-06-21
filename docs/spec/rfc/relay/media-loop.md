@@ -4,7 +4,7 @@
 
 _Relay · `media-loop`_
 
-_status: draft · audio, video_
+`REL-07` · _status: draft · audio, video_
 
 Per-call session state machine plus the outbound (protect) and inbound (unprotect) audio frame pipelines: RTP framing, E2E-SRTP, and WARP tagging.
 
@@ -88,6 +88,8 @@ Requires: [`srtp-master-key`](../crypto/srtp-master-key.md), [`srtp-e2e`](../cry
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | session state machine and protect/unprotect pipeline composition; live relay flow over the channel is deferred |
 | `zapo-caller` | working | — | signalling + crypto + relay loop |
+
+**Annotation** `wacrg:REL-07` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/relay/media-loop.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/relay/media-loop.yaml)
 

@@ -4,7 +4,7 @@
 
 _Relay · `relay-candidates`_
 
-_status: draft · audio, video, group_
+`REL-01` · _status: draft · audio, video, group_
 
 Parse the `<relay>` block of a call ack into relay endpoints (`<te2>` packed addresses), keying material, and indexed token tables, then select which endpoint to probe for latency versus connect media to.
 
@@ -100,6 +100,8 @@ Requires: [`call-relaylatency`](../signalling/call-relaylatency.md), [`srtp-hop-
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | origin of the parser (src/relay/parse.ts) |
+
+**Annotation** `wacrg:REL-01` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/relay/relay-candidates.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/relay/relay-candidates.yaml)
 

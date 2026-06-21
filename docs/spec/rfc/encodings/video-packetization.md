@@ -4,7 +4,7 @@
 
 _Encodings · `video-packetization`_
 
-_status: draft · video, screen-share_
+`ENC-07` · _status: draft · video, screen-share_
 
 Signals, keys, and carries an H.264 video track over the call's RTP transport, mapping each access unit onto RFC 6184 NAL-unit RTP payloads.
 
@@ -59,6 +59,8 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`video`](../encodings/vi
 | --- | --- | --- | --- |
 | `whatsapp-rust` | unknown | — | Audio media path is implemented; the H.264 video packetizer is not yet present. |
 | `meowcaller` | planned | — | Encodings modules are partial; video packetization is a planned module. |
+
+**Annotation** `wacrg:ENC-07` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/video-packetization.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/video-packetization.yaml)
 

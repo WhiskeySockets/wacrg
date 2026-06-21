@@ -4,7 +4,7 @@
 
 _Signalling · `screen-share`_
 
-_status: draft · screen-share, video, group_
+`SIG-11` · _status: draft · screen-share, video, group_
 
 Start and stop a screen-share track within a call.
 
@@ -23,6 +23,8 @@ Requires: [`group-call`](../signalling/group-call.md)
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
 | `whatsapp-rust` | unknown | — | — |
+
+**Annotation** `wacrg:SIG-11` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/screen-share.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/screen-share.yaml)
 

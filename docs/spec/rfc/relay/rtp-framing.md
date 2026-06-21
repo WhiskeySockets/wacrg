@@ -4,7 +4,7 @@
 
 _Relay · `rtp-framing`_
 
-_status: review · audio, video_
+`REL-05` · _status: review · audio, video_
 
 RTP framing for SRTP-protected Opus media: the 16-byte speech and 20-byte DTX/piggyback headers (ext profile 0xdebe), payload classification, and send-side sequencing.
 
@@ -81,6 +81,8 @@ Breakdown: [`video-packetization`](../encodings/video-packetization.md), [`media
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | ported to whatsapp-rust from the zapo-caller src/media/rtp.ts framing |
+
+**Annotation** `wacrg:REL-05` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/relay/rtp-framing.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/relay/rtp-framing.yaml)
 

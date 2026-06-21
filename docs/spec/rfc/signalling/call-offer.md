@@ -4,7 +4,7 @@
 
 _Signalling · `call-offer`_
 
-_status: review · audio, video_
+`SIG-01` · _status: review · audio, video_
 
 A caller opens a 1:1 call with a <call> stanza whose <offer> child proposes the session, carries per-device media keys, and seeds transport negotiation.
 
@@ -34,6 +34,8 @@ Breakdown: [`call-key`](../crypto/call-key.md), [`group-call-crypto`](../crypto/
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | — |
+
+**Annotation** `wacrg:SIG-01` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/call-offer.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/call-offer.yaml)
 

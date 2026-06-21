@@ -93,3 +93,4 @@ references:
   - { title: "RFC 5869 — HKDF", url: "https://www.rfc-editor.org/rfc/rfc5869" }
 parent: srtp-master-key
 discovered_by: vinikjkkj
+code: CRY-05

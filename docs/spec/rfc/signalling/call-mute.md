@@ -4,7 +4,7 @@
 
 _Signalling · `call-mute`_
 
-_status: draft · audio, video_
+`SIG-13` · _status: draft · audio, video_
 
 A participant signals an in-call mute state change by sending a `<call>` stanza wrapping a `<mute_v2>` action.
 
@@ -40,6 +40,8 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`call-transport`](../sig
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | build_mute_v2 in wacore/src/voip/stanza.rs constructs the outbound stanza; no inbound parser yet (mute_v2 is not in the <call> action allow-list). |
 | `zapo-caller` | planned | — | — |
+
+**Annotation** `wacrg:SIG-13` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/call-mute.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/call-mute.yaml)
 

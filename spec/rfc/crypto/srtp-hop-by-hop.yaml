@@ -24,3 +24,4 @@ implementations:
   - { flavor: zapo-caller, status: working }
 parent: srtp-master-key
 discovered_by: vinikjkkj
+code: CRY-03

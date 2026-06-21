@@ -28,3 +28,4 @@ open_questions:
   - "Exact AEAD suite, nonce construction, and header varint layout."
   - "Group-call key distribution and rotation."
 discovered_by: vinikjkkj
+code: CRY-04

@@ -52,3 +52,4 @@ open_questions:
 references:
   - { title: "RFC 3711 — SRTP", url: "https://www.rfc-editor.org/rfc/rfc3711" }
 discovered_by: vinikjkkj
+code: SIG-03

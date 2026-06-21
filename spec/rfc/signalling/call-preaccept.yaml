@@ -57,3 +57,4 @@ open_questions:
   - "Full meaning of the packed <capability> bitfield and the significance of
     the differing final byte."
 discovered_by: vinikjkkj
+code: SIG-04

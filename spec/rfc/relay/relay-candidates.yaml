@@ -115,3 +115,4 @@ open_questions:
 references:
   - { title: "RFC 5389 — STUN", url: "https://www.rfc-editor.org/rfc/rfc5389" }
 discovered_by: vinikjkkj
+code: REL-01

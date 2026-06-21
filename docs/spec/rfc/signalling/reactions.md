@@ -4,7 +4,7 @@
 
 _Signalling · `reactions`_
 
-_status: draft · reactions, group_
+`SIG-10` · _status: draft · reactions, group_
 
 A participant broadcasts a transient emoji reaction during a call.
 
@@ -19,6 +19,8 @@ Requires: [`group-call`](../signalling/group-call.md)
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
 | `whatsapp-rust` | unknown | — | — |
+
+**Annotation** `wacrg:SIG-10` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/reactions.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/reactions.yaml)
 

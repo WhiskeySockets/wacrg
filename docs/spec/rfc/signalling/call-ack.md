@@ -4,7 +4,7 @@
 
 _Signalling · `call-ack`_
 
-_status: review · audio, video, group_
+`SIG-07` · _status: review · audio, video, group_
 
 Acknowledging an inbound `<call>` stanza: a generic `<ack>` for every `<call>`, plus an `<offer>`-only `<receipt><offer/></receipt>`.
 
@@ -52,6 +52,8 @@ Breakdown: [`flow-call-rejected`](../signalling/flow-call-rejected.md), [`flow-i
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | signalling layer consumes/produces the offer receipt |
+
+**Annotation** `wacrg:SIG-07` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/call-ack.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/call-ack.yaml)
 

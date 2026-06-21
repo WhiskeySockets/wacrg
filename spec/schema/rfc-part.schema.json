@@ -5,12 +5,17 @@
   "description": "One normative section of the wacrg RFC. Parts are small YAML files that compile into a single ever-scrolling RFC page; each also renders as its own API-reference-style lookup page. A part's id is its permanent, citable reference.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "category", "title", "summary"],
+  "required": ["id", "code", "category", "title", "summary"],
   "properties": {
     "id": {
       "type": "string",
       "pattern": "^[a-z0-9][a-z0-9-]*$",
       "description": "Stable, globally-unique id; matches the file name. The permanent reference for this part."
+    },
+    "code": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}-[0-9]{2,}$",
+      "description": "Small stable annotation id (e.g. ENC-04). A flavor marks its implementation site in source with a `wacrg:<code>` comment; a script clones the source, finds the comment, and attaches a commit blame/permalink."
     },
     "category": {
       "type": "string",

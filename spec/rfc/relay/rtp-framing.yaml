@@ -97,3 +97,4 @@ open_questions:
   - "The full set of warp-piggyback extension words and the packet index at
     which piggybacking begins."
 discovered_by: vinikjkkj
+code: REL-05

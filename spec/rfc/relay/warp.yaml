@@ -27,3 +27,4 @@ open_questions:
   - "WARP header field widths, endianness, and the relay control messages."
 parent: stun-relay
 discovered_by: vinikjkkj
+code: REL-03

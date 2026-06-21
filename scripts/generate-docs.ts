@@ -698,7 +698,7 @@ function rfcLogic(
   const out: string[] = [];
   const meta = [`status: ${part.status ?? 'draft'}`];
   if (part.features?.length) meta.push(part.features.join(', '));
-  out.push('_' + meta.join(' · ') + '_');
+  out.push(`\`${part.code}\` · _${meta.join(' · ')}_`);
   out.push(fold(ref(part.summary.trim())));
   if (part.normative?.trim()) out.push(fold(ref(part.normative.trimEnd())));
   return out.join('\n\n');
@@ -736,6 +736,11 @@ function rfcDetails(
     });
     out.push('**Implemented by**\n\n' + [head, ...rows].join('\n'));
   }
+  out.push(
+    `**Annotation** \`wacrg:${part.code}\` — a flavor marks its implementation site in ` +
+      `source with this comment; a script clones the source, finds it, and attaches the ` +
+      `commit blame/permalink.`,
+  );
   const file = `spec/rfc/${part.category}/${part.id}.yaml`;
   const history: string[] = [];
   if (part.discovered_by) history.push(`Discovered by ${ctx.contributorName(part.discovered_by)}`);

@@ -4,7 +4,7 @@
 
 _Encodings · `video`_
 
-_status: draft · video, screen-share_
+`ENC-06` · _status: draft · video, screen-share_
 
 Video and screen-share tracks are carried as H.264; profile/level negotiation and packetization mode are not yet specified.
 
@@ -25,6 +25,8 @@ Breakdown: [`video-packetization`](../encodings/video-packetization.md)
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
 | `whatsapp-rust` | unknown | — | — |
+
+**Annotation** `wacrg:ENC-06` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/video.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/video.yaml)
 

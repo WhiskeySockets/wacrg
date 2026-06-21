@@ -4,7 +4,7 @@
 
 _Signalling · `flow-call-missed`_
 
-_status: draft · audio, video_
+`SIG-12` · _status: draft · audio, video_
 
 Stanza sequence for a 1:1 call offered but never answered: offer, per-device offer-receipt, no preaccept/accept, then a timeout-driven terminate.
 
@@ -62,6 +62,8 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`call-accept`](../signal
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`d68af6c`](https://github.com/oxidezap/whatsapp-rust-private/commit/d68af6c608297c864669850b9bc05d4a54410d15) | Parses inbound <call>/<offer>, auto-emits the <receipt><offer/></receipt> ack, and builds <terminate>; example bot rejects/accepts rather than ringing out, so the timeout-driven terminate is not exercised end-to-end. |
 | `zapo-caller` | working | — | Signalling builders (offer/accept/terminate) ported from this flavor's signaling.ts. |
+
+**Annotation** `wacrg:SIG-12` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/flow-call-missed.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/flow-call-missed.yaml)
 

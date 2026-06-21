@@ -4,7 +4,7 @@
 
 _Crypto · `call-key`_
 
-_status: draft · audio, video, group_
+`CRY-01` · _status: draft · audio, video, group_
 
 The 32-byte call key is the root secret for all per-call media keying, delivered to each recipient device inside the offer's per-device Signal-encrypted <enc> payload.
 
@@ -49,6 +49,8 @@ Breakdown: [`srtp-e2e`](../crypto/srtp-e2e.md)
 | `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | — |
 | `meowcaller` | planned | — | — |
+
+**Annotation** `wacrg:CRY-01` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/crypto/call-key.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/crypto/call-key.yaml)
 

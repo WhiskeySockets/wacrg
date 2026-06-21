@@ -4,7 +4,7 @@
 
 _Signalling · `video-call`_
 
-_status: draft · audio, video_
+`SIG-02` · _status: draft · audio, video_
 
 A call is video-capable iff its `<offer>` carries a `<video>` child; the group fan-out notice signals video via `media="video"`.
 
@@ -43,6 +43,8 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`group-call`](../signall
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | Parses the <video> child (is_video) on <offer> and media="video" on <offer_notice>; inbound recognition. |
 | `zapo-caller` | partial | — | Signalling/relay stack present; video-offer construction not covered. |
+
+**Annotation** `wacrg:SIG-02` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/video-call.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/video-call.yaml)
 

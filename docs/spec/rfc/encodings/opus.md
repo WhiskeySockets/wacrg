@@ -4,7 +4,7 @@
 
 _Encodings · `opus`_
 
-_status: draft · audio_
+`ENC-05` · _status: draft · audio_
 
 Standard Opus and MLow payloads share one RTP audio stream; the receiver routes each frame to a decoder by the top two bits of its first payload byte.
 
@@ -37,6 +37,8 @@ Breakdown: [`mlow-frame`](../encodings/mlow-frame.md), [`media-loop`](../relay/m
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | — | — |
 | `meowcaller` | partial | — | codec modules partial; first-byte routing present, Opus decode delegated to a stock libopus binding |
+
+**Annotation** `wacrg:ENC-05` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/opus.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/opus.yaml)
 

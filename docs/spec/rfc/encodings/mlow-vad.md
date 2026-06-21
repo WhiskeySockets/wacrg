@@ -4,7 +4,7 @@
 
 _Encodings · `mlow-vad`_
 
-_status: draft · audio_
+`ENC-15` · _status: draft · audio_
 
 Fixed-point SILK VAD over a four-band allpass filterbank that produces a per-internal-frame speech-activity probability and a packet-level coded_as_active_voice flag.
 
@@ -103,6 +103,8 @@ Breakdown: [`mlow-encoder`](../encodings/mlow-encoder.md), [`mlow-noise`](../enc
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `meowcaller` | partial | — | encoding codec modules are partial |
+
+**Annotation** `wacrg:ENC-15` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-vad.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-vad.yaml)
 

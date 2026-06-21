@@ -4,7 +4,7 @@
 
 _Signalling · `flow-call-rejected`_
 
-_status: draft · audio, video_
+`SIG-18` · _status: draft · audio, video_
 
 Callee-decline flow: acknowledge the `<offer>`, then emit a single `<reject>` without entering preaccept, accept, media-keying, relay, or transport.
 
@@ -56,6 +56,8 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`call-ack`](../signallin
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`d68af6c`](https://github.com/oxidezap/whatsapp-rust-private/commit/d68af6c608297c864669850b9bc05d4a54410d15) | listen mode default-rejects: acks the offer, then sends <reject> with no media work |
 | `zapo-caller` | working | — | reject builder ported from zapo-caller signaling.ts |
+
+**Annotation** `wacrg:SIG-18` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/flow-call-rejected.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/flow-call-rejected.yaml)
 

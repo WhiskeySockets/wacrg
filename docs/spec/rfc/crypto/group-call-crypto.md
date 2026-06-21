@@ -4,7 +4,7 @@
 
 _Crypto · `group-call-crypto`_
 
-_status: draft · audio, video, group, screen-share_
+`CRY-06` · _status: draft · audio, video, group, screen-share_
 
 A single 32-byte call key is shared with every group-call participant, and each participant derives one SFrame key per sender keyed by that sender's participant id.
 
@@ -55,6 +55,8 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`group-call`](../signall
 | `whatsapp-rust` | working | — | — |
 | `zapo-caller` | working | — | — |
 | `meowcaller` | planned | — | — |
+
+**Annotation** `wacrg:CRY-06` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/crypto/group-call-crypto.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/crypto/group-call-crypto.yaml)
 

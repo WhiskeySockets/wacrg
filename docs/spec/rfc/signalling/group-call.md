@@ -4,7 +4,7 @@
 
 _Signalling · `group-call`_
 
-_status: draft · group, audio, video_
+`SIG-06` · _status: draft · group, audio, video_
 
 A multi-party call extends the 1:1 offer/accept flow with a joinable group session, a participant roster, and per-sender media keying.
 
@@ -24,6 +24,8 @@ Breakdown: [`group-call-crypto`](../crypto/group-call-crypto.md), [`raise-hand`]
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
 | `whatsapp-rust` | unknown | — | — |
+
+**Annotation** `wacrg:SIG-06` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/group-call.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/group-call.yaml)
 

@@ -114,3 +114,4 @@ references:
   - { title: "RFC 3550 — RTP", url: "https://www.rfc-editor.org/rfc/rfc3550" }
   - { title: "RFC 6716 — Opus", url: "https://www.rfc-editor.org/rfc/rfc6716" }
 discovered_by: vinikjkkj
+code: REL-07

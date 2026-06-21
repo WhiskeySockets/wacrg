@@ -4,7 +4,7 @@
 
 _Encodings · `mlow-encoder`_
 
-_status: draft · audio_
+`ENC-09` · _status: draft · audio_
 
 Encode one 60 ms PCM frame into a wire MLow frame: LPC analysis, bit-exact LSF VQ, voicing classification, CELP excitation, per-subframe rate control, DTX, and range-coder serialization in the inverse of the decoder read order.
 
@@ -142,6 +142,8 @@ Requires: [`mlow`](../encodings/mlow.md), [`mlow-frame`](../encodings/mlow-frame
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `meowcaller` | partial | — | encode-path codec modules partial |
+
+**Annotation** `wacrg:ENC-09` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-encoder.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-encoder.yaml)
 

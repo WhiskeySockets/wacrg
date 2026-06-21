@@ -4,7 +4,7 @@
 
 _Encodings · `mlow-synthesis`_
 
-_status: draft · audio_
+`ENC-14` · _status: draft · audio_
 
 Synthesize one MLow 20 ms internal frame from its decoded parameters into excitation and run the order-16 CELP synthesis filter to produce 16 kHz PCM.
 
@@ -156,6 +156,8 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-excitation`](.
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`ed12f35`](https://github.com/oxidezap/whatsapp-rust-private/commit/ed12f359a086b28e807ba236f0977af1000859fe) [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `meowcaller` | partial | [`2d0e5dc`](https://github.com/purpshell/meowcaller/commit/2d0e5dcdb3bd886d3193df1fad2d8d1a3b5bb787) [`12fcdab`](https://github.com/purpshell/meowcaller/commit/12fcdab43dd80296f4d60bd2b69af628f02c9da9) [`aa20f14`](https://github.com/purpshell/meowcaller/commit/aa20f1435cea434de5d0c2ca6374bf312f6fc99f) [`e341ca8`](https://github.com/purpshell/meowcaller/commit/e341ca85462633a46b60954a0aad1d92cc3d7fb3) [`011af47`](https://github.com/purpshell/meowcaller/commit/011af47d049bb023c6692282176a13079787eff7) [`7136551`](https://github.com/purpshell/meowcaller/commit/713655129150b0b42ca9e2c15686aa894687127b) | CELP synth in progress; excitation/LPC modules partially wired |
+
+**Annotation** `wacrg:ENC-14` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-synthesis.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-synthesis.yaml)
 

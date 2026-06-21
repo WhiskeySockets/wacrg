@@ -24,3 +24,4 @@ open_questions:
     signalling."
   - "Per-sender SFrame key distribution and rotation on join/leave."
 discovered_by: vinikjkkj
+code: SIG-06

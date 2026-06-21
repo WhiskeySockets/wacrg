@@ -4,7 +4,7 @@
 
 _Signalling · `flow-incoming-1to1`_
 
-_status: review · audio, video_
+`SIG-16` · _status: review · audio, video_
 
 Receiver-side stanza sequence for an incoming 1:1 call: parse `<call><offer>`, send an offer receipt, then either ring-and-accept (`<preaccept>` then `<accept>`) or `<reject>`, all addressed to the caller.
 
@@ -124,6 +124,8 @@ Breakdown: [`flow-call-missed`](../signalling/flow-call-missed.md), [`flow-call-
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) [`d68af6c`](https://github.com/oxidezap/whatsapp-rust-private/commit/d68af6c608297c864669850b9bc05d4a54410d15) | parses <call><offer>, sends the <receipt><offer/></receipt> ack, and drives preaccept→accept / reject |
 | `zapo-caller` | working | — | signalling answer sequence implemented |
+
+**Annotation** `wacrg:SIG-16` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/flow-incoming-1to1.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/flow-incoming-1to1.yaml)
 

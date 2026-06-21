@@ -44,3 +44,4 @@ open_questions:
   - "Whether an explicit media-key length/salt is carried, or all is derived
     from the Signal plaintext."
 discovered_by: vinikjkkj
+code: SIG-01

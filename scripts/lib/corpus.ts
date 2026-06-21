@@ -263,6 +263,8 @@ export interface RfcImplementation {
  */
 export interface RfcPart {
   id: string;
+  /** Small stable annotation id (e.g. ENC-04) embedded in flavor source as `wacrg:<code>`. */
+  code: string;
   category: RfcCategory;
   title: string;
   status?: Status;

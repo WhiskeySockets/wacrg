@@ -66,6 +66,13 @@ function cell(text: string | undefined): string {
   return String(text).replace(/\|/g, '\\|').replace(/\n+/g, ' ').trim();
 }
 
+/** The first sentence of a string (for one-line section summaries). */
+function firstSentence(s: string | undefined): string {
+  const t = (s ?? '').trim().replace(/\s+/g, ' ');
+  const m = t.match(/^(.*?[.!?])(\s|$)/);
+  return m ? m[1] : t;
+}
+
 function yesNo(v: boolean | undefined): string {
   return v ? 'yes' : 'no';
 }
@@ -803,8 +810,14 @@ function renderSpecIndex(
     out.push(`## ${SPEC_CATEGORY_META[cat].label}`);
     out.push(SPEC_CATEGORY_META[cat].blurb);
     out.push(
-      '**In this section:** ' +
-        top.map((p, i) => `[${i + 1}. ${cell(p.title)}](#${p.id})`).join(' · '),
+      ['| # | Section | Summary |', '| --- | --- | --- |']
+        .concat(
+          top.map(
+            (p, i) =>
+              `| ${i + 1} | [${cell(p.title)}](#${p.id}) | ${cell(firstSentence(p.summary))} |`,
+          ),
+        )
+        .join('\n'),
     );
     const lctx = { linkRequire: (id: string) => `#${id}`, partIds, demote: true };
     top.forEach((p, i) => {

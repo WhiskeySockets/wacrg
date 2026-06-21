@@ -12,7 +12,23 @@ The normative spec of the WhatsApp 1:1 and group call stack. Implement to these 
 
 Call control over the WABinary/XMPP transport: the <call> stanza family and feature signalling.
 
-**In this section:** [1. Call offer stanza](#call-offer) · [2. Video call negotiation](#video-call) · [3. Call accept stanza](#call-accept) · [4. Call pre-accept (ringing)](#call-preaccept) · [5. Transport stanza](#call-transport) · [6. Group call setup](#group-call) · [7. Call stanza acknowledgement](#call-ack) · [8. Call reject stanza](#call-reject) · [9. Missed / timed-out call flow](#flow-call-missed) · [10. Mute signalling](#call-mute) · [11. Call terminate stanza](#call-terminate) · [12. Relay latency reporting](#call-relaylatency) · [13. Incoming 1:1 call flow](#flow-incoming-1to1) · [14. Outgoing 1:1 call flow](#flow-outgoing-1to1) · [15. Rejected call flow](#flow-call-rejected)
+| # | Section | Summary |
+| --- | --- | --- |
+| 1 | [Call offer stanza](#call-offer) | A caller opens a 1:1 call with a <call> stanza whose <offer> child proposes the session, carries per-device media keys, and seeds transport negotiation. |
+| 2 | [Video call negotiation](#video-call) | A call is video-capable iff its `<offer>` carries a `<video>` child; the group fan-out notice signals video via `media="video"`. |
+| 3 | [Call accept stanza](#call-accept) | The callee answers an offer with a <call> stanza whose <accept> child selects the media format and commits the call to the v2 SRTP key path. |
+| 4 | [Call pre-accept (ringing)](#call-preaccept) | Optional <preaccept> stanza a callee sends to signal "ringing" before answering with <accept>. |
+| 5 | [Transport stanza](#call-transport) | The <transport> action of the <call> stanza negotiates ICE/relay candidates after the offer, carrying the relay token and network medium. |
+| 6 | [Group call setup](#group-call) | A multi-party call extends the 1:1 offer/accept flow with a joinable group session, a participant roster, and per-sender media keying. |
+| 7 | [Call stanza acknowledgement](#call-ack) | Acknowledging an inbound `<call>` stanza: a generic `<ack>` for every `<call>`, plus an `<offer>`-only `<receipt><offer/></receipt>`. |
+| 8 | [Call reject stanza](#call-reject) | The `<reject>` action stanza declines an incoming call offer before the media phase, naming the call by `call-id`/`call-creator` with no child elements. |
+| 9 | [Missed / timed-out call flow](#flow-call-missed) | Stanza sequence for a 1:1 call offered but never answered: offer, per-device offer-receipt, no preaccept/accept, then a timeout-driven terminate. |
+| 10 | [Mute signalling](#call-mute) | A participant signals an in-call mute state change by sending a `<call>` stanza wrapping a `<mute_v2>` action. |
+| 11 | [Call terminate stanza](#call-terminate) | The <terminate> action stanza that ends a call, its reason attribute, destination fan-out, and inbound duration counters. |
+| 12 | [Relay latency reporting](#call-relaylatency) | A client reports a measured relay round-trip time via a `<relaylatency>` call action whose `<te>` element names the relay and carries an offset-encoded latency. |
+| 13 | [Incoming 1:1 call flow](#flow-incoming-1to1) | Receiver-side stanza sequence for an incoming 1:1 call: parse `<call><offer>`, send an offer receipt, then either ring-and-accept (`<preaccept>` then `<accept>`) or `<reject>`, all addressed to the caller. |
+| 14 | [Outgoing 1:1 call flow](#flow-outgoing-1to1) | Caller-side stanza sequence for a 1:1 call: key delivery, offer, ack, receipts, preaccept/accept, transport, media, and terminate, with the ordering and correlation rules between them. |
+| 15 | [Rejected call flow](#flow-call-rejected) | Callee-decline flow: acknowledge the `<offer>`, then emit a single `<reject>` without entering preaccept, accept, media-keying, relay, or transport. |
 
 <a id="call-offer"></a>
 
@@ -830,7 +846,11 @@ unspecified.
 
 Media codecs and payload formats: MLow, Opus, and video.
 
-**In this section:** [1. MLow audio codec](#mlow) · [2. Opus codec](#opus) · [3. Video codec](#video)
+| # | Section | Summary |
+| --- | --- | --- |
+| 1 | [MLow audio codec](#mlow) | WhatsApp's low-bitrate split-band CELP speech codec ("SMPL") that reuses the Opus/CELT range coder for entropy coding. |
+| 2 | [Opus codec](#opus) | Standard Opus and MLow payloads share one RTP audio stream; the receiver routes each frame to a decoder by the top two bits of its first payload byte. |
+| 3 | [Video codec](#video) | Video and screen-share tracks are carried as H.264; profile/level negotiation and packetization mode are not yet specified. |
 
 <a id="mlow"></a>
 
@@ -2287,7 +2307,13 @@ implementation MUST NOT assume a fixed value until they are pinned (see open_que
 
 Keying and media protection: SRTP (hop-by-hop and end-to-end), SFrame, WARP, group-call crypto.
 
-**In this section:** [1. Call key establishment](#call-key) · [2. SRTP master key and salt derivation](#srtp-master-key) · [3. SFrame media end-to-end encryption](#sframe-media) · [4. Group call crypto](#group-call-crypto) · [5. WARP key wrap](#warp-crypto)
+| # | Section | Summary |
+| --- | --- | --- |
+| 1 | [Call key establishment](#call-key) | The 32-byte call key is the root secret for all per-call media keying, delivered to each recipient device inside the offer's per-device Signal-encrypted <enc> payload. |
+| 2 | [SRTP master key and salt derivation](#srtp-master-key) | Derive the per-participant SRTP master key/salt from the call key, then expand the six SRTP/SRTCP session keys. |
+| 3 | [SFrame media end-to-end encryption](#sframe-media) | Per-frame end-to-end AEAD sealing of media payloads, applied above SRTP so the relay only forwards ciphertext. |
+| 4 | [Group call crypto](#group-call-crypto) | A single 32-byte call key is shared with every group-call participant, and each participant derives one SFrame key per sender keyed by that sender's participant id. |
+| 5 | [WARP key wrap](#warp-crypto) | WARP adds a per-call authentication key and a truncated per-packet MESSAGE-INTEGRITY tag, carried by the audio-piggyback RTP extension word. |
 
 <a id="call-key"></a>
 
@@ -2568,7 +2594,14 @@ The piggyback word MUST be emitted as a big-endian 32-bit value
 
 The media transport and relay stack: STUN, the relay handshake, RTP/RTCP framing, and the media loop.
 
-**In this section:** [1. Transport candidates](#relay-candidates) · [2. STUN relay handshake](#stun-relay) · [3. RTCP control](#rtcp) · [4. RTP framing](#rtp-framing) · [5. SSRC allocation](#ssrc) · [6. Media loop and session](#media-loop)
+| # | Section | Summary |
+| --- | --- | --- |
+| 1 | [Transport candidates](#relay-candidates) | Parse the `<relay>` block of a call ack into relay endpoints (`<te2>` packed addresses), keying material, and indexed token tables, then select which endpoint to probe for latency versus connect media to. |
+| 2 | [STUN relay handshake](#stun-relay) | A STUN-dialect handshake binds the client to a relay candidate before WARP media frames flow. |
+| 3 | [RTCP control](#rtcp) | RTCP feedback/control packets on the call media path: a standard Sender Report (PT 200) plus two WhatsApp compact reports (PT 208, PT 209), and the rule for classifying a received packet as RTP or RTCP on a shared port. |
+| 4 | [RTP framing](#rtp-framing) | RTP framing for SRTP-protected Opus media: the 16-byte speech and 20-byte DTX/piggyback headers (ext profile 0xdebe), payload classification, and send-side sequencing. |
+| 5 | [SSRC allocation](#ssrc) | RTP SSRCs are deterministically derived per participant and stream slot via HKDF-SHA256 over the call id, participant LID, and slot index. |
+| 6 | [Media loop and session](#media-loop) | Per-call session state machine plus the outbound (protect) and inbound (unprotect) audio frame pipelines: RTP framing, E2E-SRTP, and WARP tagging. |
 
 <a id="relay-candidates"></a>
 

@@ -88,7 +88,7 @@ real data.
 - **Flavor** (`spec/flavors/<id>.yaml`): an independent reimplementation (library/port)
   that *realizes the spec in code* — `id`, `language`, `maturity`, `maintainer`, `covers`
   (planes), `basis` (techniques it was reconstructed from), and `derives_from` (flavors it
-  ports, so a port is not counted as independent of its upstream). Each RFC part records
+  ports, so a port is not counted as independent of its upstream). Each spec part records
   its in-the-wild implementation status across flavors. A flavor is a corroborating source.
 - **Glossary** (`spec/glossary.yaml`): shared `terms`.
 

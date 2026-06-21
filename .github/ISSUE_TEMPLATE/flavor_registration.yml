@@ -12,7 +12,7 @@ body:
         On submit, automation writes `spec/flavors/<id>.yaml` and opens a PR for
         review. Your GitHub identity is recorded as the flavor's `maintainer`
         automatically. To declare per-part implementation status, set
-        `implementations` on the relevant RFC parts.
+        `implementations` on the relevant spec parts.
 
   - type: input
     id: flavor-id

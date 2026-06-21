@@ -34,12 +34,12 @@ export type TechniqueId = (typeof TECHNIQUE_IDS)[number];
 
 export const SPEC_VERSION = '0.1.0';
 
-/** Top-level RFC divisions (distinct from the stanza `Category` area enum). */
-export const RFC_CATEGORIES = ['signalling', 'encodings', 'crypto', 'relay'] as const;
-export type RfcCategory = (typeof RFC_CATEGORIES)[number];
+/** Top-level spec divisions (distinct from the stanza `Category` area enum). */
+export const SPEC_CATEGORIES = ['signalling', 'encodings', 'crypto', 'relay'] as const;
+export type SpecCategory = (typeof SPEC_CATEGORIES)[number];
 
-/** Human label + order for each RFC category on the compiled page. */
-export const RFC_CATEGORY_META: Record<RfcCategory, { label: string; blurb: string }> = {
+/** Human label + order for each spec category on the compiled page. */
+export const SPEC_CATEGORY_META: Record<SpecCategory, { label: string; blurb: string }> = {
   signalling: { label: 'Signalling', blurb: 'Call control over the WABinary/XMPP transport: the <call> stanza family and feature signalling.' },
   encodings: { label: 'Encodings', blurb: 'Media codecs and payload formats: MLow, Opus, and video.' },
   crypto: { label: 'Crypto', blurb: 'Keying and media protection: SRTP (hop-by-hop and end-to-end), SFrame, WARP, group-call crypto.' },
@@ -215,7 +215,7 @@ export interface Flavor {
   basis?: string[];
   /** Flavor ids this one was ported/derived from; it is not independent of these. */
   derives_from?: string[];
-  /** owner/repo to notify when an implemented RFC part changes (opt-in push). */
+  /** owner/repo to notify when an implemented spec part changes (opt-in push). */
   notify_repo?: string;
   /** When true (with notify_repo), the spec-notify workflow opens issues there. */
   notify_opt_in?: boolean;
@@ -247,8 +247,8 @@ export interface FlavorMap {
   entries?: FlavorMapEntry[];
 }
 
-/** A flavor's in-the-wild implementation status for one RFC part (light, not a code map). */
-export interface RfcImplementation {
+/** A flavor's in-the-wild implementation status for one spec part (light, not a code map). */
+export interface SpecImplementation {
   flavor: string;
   status: 'working' | 'partial' | 'planned' | 'unknown';
   note?: string;
@@ -257,15 +257,15 @@ export interface RfcImplementation {
 }
 
 /**
- * One normative section of the RFC (spec/rfc/<category>/<id>.yaml). Parts compile
+ * One normative section of the spec (spec/<category>/<id>.yaml). Parts compile
  * into a single ever-scrolling page and each renders as its own lookup page; the
  * id is the permanent citable reference.
  */
-export interface RfcPart {
+export interface SpecPart {
   id: string;
   /** Small stable annotation id (e.g. ENC-04) embedded in flavor source as `wacrg:<code>`. */
   code: string;
-  category: RfcCategory;
+  category: SpecCategory;
   title: string;
   status?: Status;
   order?: number;
@@ -276,7 +276,7 @@ export interface RfcPart {
   /** Id of the parent part this nests under (same category) in the numbered hierarchy. */
   parent?: string;
   requires?: string[];
-  implementations?: RfcImplementation[];
+  implementations?: SpecImplementation[];
   /** Contributor id credited with first reverse-engineering this part. */
   discovered_by?: string;
   since?: string;
@@ -422,9 +422,9 @@ export function loadFlavorMaps(): Loaded<FlavorMap>[] {
   return loadDir<FlavorMap>('spec/flavors/*.map.yaml');
 }
 
-/** RFC parts, nested one level under spec/rfc/<category>/. */
-export function loadRfcParts(): Loaded<RfcPart>[] {
-  return loadDir<RfcPart>('spec/rfc/**/*.yaml');
+/** Spec parts, one file per id under spec/<category>/ (the four SPEC_CATEGORIES). */
+export function loadSpecParts(): Loaded<SpecPart>[] {
+  return loadDir<SpecPart>(`spec/{${SPEC_CATEGORIES.join(',')}}/*.yaml`);
 }
 
 export function loadCaptures(): Loaded<Capture>[] {

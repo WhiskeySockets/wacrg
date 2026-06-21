@@ -66,11 +66,11 @@
     "notify_repo": {
       "type": "string",
       "pattern": "^[^/]+/[^/]+$",
-      "description": "owner/repo to notify (open a tracking issue) when an RFC part this flavor implements changes. Opt-in push channel; pull is always available via the feed."
+      "description": "owner/repo to notify (open a tracking issue) when a spec part this flavor implements changes. Opt-in push channel; pull is always available via the feed."
     },
     "notify_opt_in": {
       "type": "boolean",
-      "description": "When true (and notify_repo is set), the spec-notify workflow opens/updates a tracking issue in notify_repo on relevant RFC changes."
+      "description": "When true (and notify_repo is set), the spec-notify workflow opens/updates a tracking issue in notify_repo on relevant spec changes."
     },
     "description": {
       "type": "string"

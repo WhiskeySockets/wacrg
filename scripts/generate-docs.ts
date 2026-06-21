@@ -15,8 +15,8 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import {
-  RFC_CATEGORIES,
-  RFC_CATEGORY_META,
+  SPEC_CATEGORIES,
+  SPEC_CATEGORY_META,
   SPEC_VERSION,
   fromRoot,
   loadContributors,
@@ -25,7 +25,7 @@ import {
   loadFlavors,
   loadFlows,
   loadGlossary,
-  loadRfcParts,
+  loadSpecParts,
   loadStanzas,
   loadTechniques,
   loadTools,
@@ -33,8 +33,8 @@ import {
   type Child,
   type FlavorMapEntry,
   type Flow,
-  type RfcCategory,
-  type RfcPart,
+  type SpecCategory,
+  type SpecPart,
   type Stanza,
 } from './lib/corpus.ts';
 
@@ -636,8 +636,8 @@ function renderFlavorMap(
 // RFC: small YAML parts compiled into one ever-scrolling page + per-part pages.
 // ---------------------------------------------------------------------------
 
-function rfcSorted(parts: ReturnType<typeof loadRfcParts>): RfcPart[] {
-  const order = (c: string) => (RFC_CATEGORIES as readonly string[]).indexOf(c);
+function specSorted(parts: ReturnType<typeof loadSpecParts>): SpecPart[] {
+  const order = (c: string) => (SPEC_CATEGORIES as readonly string[]).indexOf(c);
   return parts
     .map((p) => p.data)
     .slice()
@@ -650,7 +650,7 @@ function rfcSorted(parts: ReturnType<typeof loadRfcParts>): RfcPart[] {
     });
 }
 
-function rfcImplTable(part: RfcPart, toFlavors: string): string {
+function specImplTable(part: SpecPart, toFlavors: string): string {
   if (!part.implementations?.length) return '_No known implementations yet._';
   const head = '| Flavor | Status | Note |\n| --- | --- | --- |';
   const rows = part.implementations.map(
@@ -660,7 +660,7 @@ function rfcImplTable(part: RfcPart, toFlavors: string): string {
 }
 
 /** Rewrite ergonomic `](part-id)` cross-refs to the correct anchor/page link. */
-function rfcResolveRefs(
+function specResolveRefs(
   md: string,
   partIds: Set<string>,
   linkRequire: (id: string) => string,
@@ -671,7 +671,7 @@ function rfcResolveRefs(
 }
 
 /** Reverse-deps: a part's "breakdown" is the parts that require it. */
-function rfcBreakdownMap(parts: RfcPart[]): Map<string, string[]> {
+function specBreakdownMap(parts: SpecPart[]): Map<string, string[]> {
   const m = new Map<string, string[]>();
   for (const p of parts) {
     for (const dep of p.requires ?? []) {
@@ -685,12 +685,12 @@ function rfcBreakdownMap(parts: RfcPart[]): Map<string, string[]> {
 
 const WACRG_REPO = 'https://github.com/WhiskeySockets/wacrg';
 
-/** The logic only: meta line + summary + normative. Used in the compiled RFC. */
-function rfcLogic(
-  part: RfcPart,
+/** The logic only: meta line + summary + normative. Used in the compiled spec. */
+function specLogic(
+  part: SpecPart,
   ctx: { linkRequire: (id: string) => string; partIds: Set<string>; demote?: boolean },
 ): string {
-  const ref = (md: string) => rfcResolveRefs(md, ctx.partIds, ctx.linkRequire);
+  const ref = (md: string) => specResolveRefs(md, ctx.partIds, ctx.linkRequire);
   // In the compiled page, a part is a heading; any headings inside its own
   // normative text would clash with the page hierarchy, so fold them to bold.
   const fold = (md: string) =>
@@ -705,8 +705,8 @@ function rfcLogic(
 }
 
 /** The full detail view for a part page: logic + notes + nav + implementations + history. */
-function rfcDetails(
-  part: RfcPart,
+function specDetails(
+  part: SpecPart,
   ctx: {
     linkRequire: (id: string) => string;
     partIds: Set<string>;
@@ -715,9 +715,9 @@ function rfcDetails(
     contributorName: (id: string) => string;
   },
 ): string {
-  const ref = (md: string) => rfcResolveRefs(md, ctx.partIds, ctx.linkRequire);
+  const ref = (md: string) => specResolveRefs(md, ctx.partIds, ctx.linkRequire);
   const link = (id: string) => `[\`${id}\`](${ctx.linkRequire(id)})`;
-  const out: string[] = [rfcLogic(part, ctx)];
+  const out: string[] = [specLogic(part, ctx)];
   if (part.findings?.trim()) out.push('**Notes.** ' + ref(part.findings.trim()));
   const nav: string[] = [];
   if (part.parent) nav.push('Parent: ' + link(part.parent));
@@ -741,7 +741,7 @@ function rfcDetails(
       `source with this comment; a script clones the source, finds it, and attaches the ` +
       `commit blame/permalink.`,
   );
-  const file = `spec/rfc/${part.category}/${part.id}.yaml`;
+  const file = `spec/${part.category}/${part.id}.yaml`;
   const history: string[] = [];
   if (part.discovered_by) history.push(`Discovered by ${ctx.contributorName(part.discovered_by)}`);
   history.push(`[protocol history / diff ↗](${WACRG_REPO}/commits/main/${file})`);
@@ -757,8 +757,8 @@ function rfcDetails(
   return out.join('\n\n');
 }
 
-function rfcGroupByCategory(sorted: RfcPart[]): Map<RfcCategory, RfcPart[]> {
-  const byCat = new Map<RfcCategory, RfcPart[]>();
+function specGroupByCategory(sorted: SpecPart[]): Map<SpecCategory, SpecPart[]> {
+  const byCat = new Map<SpecCategory, SpecPart[]>();
   for (const p of sorted) {
     const arr = byCat.get(p.category) ?? [];
     arr.push(p);
@@ -772,8 +772,8 @@ function rfcGroupByCategory(sorted: RfcPart[]): Map<RfcCategory, RfcPart[]> {
  * no implementation/discovery detail. Each category numbers its top-level parts and
  * nests children under them; every part links to its full "View details" page.
  */
-function renderRfcIndex(
-  parts: ReturnType<typeof loadRfcParts>,
+function renderSpecIndex(
+  parts: ReturnType<typeof loadSpecParts>,
   ctx: {
     partLink: (cat: string, id: string) => string;
     feed: string;
@@ -781,27 +781,27 @@ function renderRfcIndex(
     contributors: Array<{ id: string; name?: string; github?: string }>;
   },
 ): string {
-  const sorted = rfcSorted(parts);
-  const byCat = rfcGroupByCategory(sorted);
+  const sorted = specSorted(parts);
+  const byCat = specGroupByCategory(sorted);
   const partIds = new Set(sorted.map((p) => p.id));
-  const cats = RFC_CATEGORIES.filter((c) => byCat.get(c)?.length);
+  const cats = SPEC_CATEGORIES.filter((c) => byCat.get(c)?.length);
   const out: string[] = [];
-  out.push('# WhatsApp Calls — the RFC');
+  out.push('# WhatsApp Calls — the spec');
   out.push(
     'The normative spec of the WhatsApp 1:1 and group call stack. Implement to these ' +
       'sections to interoperate; each is citable by its stable id and has its own ' +
       `details page. Libraries follow changes via the [feed](${ctx.feed}) ` +
       `([updates](${ctx.updates})).`,
   );
-  out.push(cats.map((c) => `[${RFC_CATEGORY_META[c].label}](#${c})`).join(' · '));
+  out.push(cats.map((c) => `[${SPEC_CATEGORY_META[c].label}](#${c})`).join(' · '));
 
   for (const cat of cats) {
     const ps = byCat.get(cat)!;
     const top = ps.filter((p) => !p.parent);
     const childrenOf = (id: string) => ps.filter((p) => p.parent === id);
     out.push(`<a id="${cat}"></a>`);
-    out.push(`## ${RFC_CATEGORY_META[cat].label}`);
-    out.push(RFC_CATEGORY_META[cat].blurb);
+    out.push(`## ${SPEC_CATEGORY_META[cat].label}`);
+    out.push(SPEC_CATEGORY_META[cat].blurb);
     out.push(
       '**In this section:** ' +
         top.map((p, i) => `[${i + 1}. ${cell(p.title)}](#${p.id})`).join(' · '),
@@ -812,12 +812,12 @@ function renderRfcIndex(
       out.push(`<a id="${p.id}"></a>`);
       out.push(`### ${n}. ${cell(p.title)}`);
       out.push(`[View details →](${ctx.partLink(p.category, p.id)})`);
-      out.push(rfcLogic(p, lctx));
+      out.push(specLogic(p, lctx));
       childrenOf(p.id).forEach((ch, j) => {
         out.push(`<a id="${ch.id}"></a>`);
         out.push(`#### ${n}.${j + 1} ${cell(ch.title)}`);
         out.push(`[View details →](${ctx.partLink(ch.category, ch.id)})`);
-        out.push(rfcLogic(ch, lctx));
+        out.push(specLogic(ch, lctx));
       });
       out.push('---');
     });
@@ -838,35 +838,35 @@ function renderRfcIndex(
   return out.join('\n\n');
 }
 
-function renderRfcPartPage(
-  part: RfcPart,
-  partById: Map<string, RfcPart>,
+function renderSpecPartPage(
+  part: SpecPart,
+  partById: Map<string, SpecPart>,
   breakdown: Map<string, string[]>,
   ctx: { flavorUrl: (id: string) => string | undefined; contributorName: (id: string) => string },
 ): string {
   const out: string[] = [];
   out.push(`# ${part.title}`);
-  out.push(`_${RFC_CATEGORY_META[part.category]?.label ?? part.category} · \`${part.id}\`_`);
+  out.push(`_${SPEC_CATEGORY_META[part.category]?.label ?? part.category} · \`${part.id}\`_`);
   out.push(
-    rfcDetails(part, {
+    specDetails(part, {
       partIds: new Set(partById.keys()),
       breakdown: breakdown.get(part.id),
       flavorUrl: ctx.flavorUrl,
       contributorName: ctx.contributorName,
       linkRequire: (id) => {
         const d = partById.get(id);
-        return d ? `../${d.category}/${d.id}.md` : `../../../index.md#${id}`;
+        return d ? `../${d.category}/${d.id}.md` : `../../index.md#${id}`;
       },
     }),
   );
   out.push('---');
-  out.push(`[← in the full RFC](../../../index.md#${part.id})`);
+  out.push(`[← in the full spec](../../index.md#${part.id})`);
   return out.join('\n\n');
 }
 
 /** The pull feed: a poll-able JSON of every part + which flavors implement it. */
-function renderRfcFeed(parts: ReturnType<typeof loadRfcParts>, flavorIds: string[]): string {
-  const sorted = rfcSorted(parts);
+function renderSpecFeed(parts: ReturnType<typeof loadSpecParts>, flavorIds: string[]): string {
+  const sorted = specSorted(parts);
   const partObjs = sorted.map((p) => ({
     id: p.id,
     category: p.category,
@@ -899,8 +899,8 @@ function renderRfcFeed(parts: ReturnType<typeof loadRfcParts>, flavorIds: string
   );
 }
 
-function renderRfcUpdates(parts: ReturnType<typeof loadRfcParts>): string {
-  const sorted = rfcSorted(parts);
+function renderSpecUpdates(parts: ReturnType<typeof loadSpecParts>): string {
+  const sorted = specSorted(parts);
   const out: string[] = [];
   out.push('# RFC updates');
   out.push(
@@ -912,7 +912,7 @@ function renderRfcUpdates(parts: ReturnType<typeof loadRfcParts>): string {
       'a part it implements changes.',
   );
   out.push('## Parts by version');
-  const byVer = new Map<string, RfcPart[]>();
+  const byVer = new Map<string, SpecPart[]>();
   for (const p of sorted) {
     const v = p.since ?? '(unversioned)';
     const arr = byVer.get(v) ?? [];
@@ -923,11 +923,11 @@ function renderRfcUpdates(parts: ReturnType<typeof loadRfcParts>): string {
     out.push(`### ${ver}`);
     out.push(
       ps
-        .map((p) => `- [\`${p.id}\`](../../index.md#${p.id}) — ${cell(p.title)} (${p.category}, ${p.status ?? 'draft'})`)
+        .map((p) => `- [\`${p.id}\`](../index.md#${p.id}) — ${cell(p.title)} (${p.category}, ${p.status ?? 'draft'})`)
         .join('\n'),
     );
   }
-  out.push('[← the RFC](../../index.md)');
+  out.push('[← the spec](../index.md)');
   return out.join('\n\n');
 }
 
@@ -952,7 +952,7 @@ function renderGlossary(): string {
 }
 
 function renderOverview(counts: {
-  rfcParts: number;
+  specParts: number;
   stanzas: number;
   flows: number;
   enums: number;
@@ -978,7 +978,7 @@ function renderOverview(counts: {
   out.push('## Contents');
   out.push(
     `| Section | Count |\n| --- | --- |\n` +
-      `| [**The RFC**](../index.md) — normative call-stack spec | ${counts.rfcParts} parts |\n` +
+      `| [**The spec**](../index.md) — normative call-stack spec | ${counts.specParts} parts |\n` +
       `| [Stanzas](./stanzas/index.md) | ${counts.stanzas} |\n` +
       `| [Flows](./flows/index.md) | ${counts.flows} |\n` +
       `| [Enums](./enums.md) | ${counts.enums} |\n` +
@@ -1018,7 +1018,7 @@ const contributors = loadContributors();
 const tools = loadTools();
 const flavors = loadFlavors();
 const flavorMaps = loadFlavorMaps();
-const rfcParts = loadRfcParts();
+const specParts = loadSpecParts();
 
 for (const { data } of stanzas) {
   write(`docs/spec/stanzas/${data.id}.md`, renderStanza(data));
@@ -1034,19 +1034,19 @@ write('docs/spec/enums.md', renderEnums(enums));
 write('docs/spec/techniques.md', renderTechniques(techniques));
 write('docs/spec/flavors.md', renderFlavors(flavors));
 
-// The RFC is the site home page (docs/index.md): logic only. Each part also has a
+// The spec is the site home page (docs/index.md): logic only. Each part also has a
 // full details page, plus the pull feed and updates page.
-const rfcPartById = new Map(rfcParts.map((p) => [p.data.id, p.data]));
-const rfcBreakdown = rfcBreakdownMap(rfcParts.map((p) => p.data));
+const specPartById = new Map(specParts.map((p) => [p.data.id, p.data]));
+const specBreakdown = specBreakdownMap(specParts.map((p) => p.data));
 const flavorUrl = (id: string) => flavors.find((f) => f.data.id === id)?.data.url;
 const contributorName = (id: string) =>
   contributors.find((c) => c.data.id === id)?.data.name ?? id;
 write(
   'docs/index.md',
-  renderRfcIndex(rfcParts, {
-    partLink: (cat, id) => `spec/rfc/${cat}/${id}.md`,
-    feed: 'spec/rfc/feed.json',
-    updates: 'spec/rfc/updates.md',
+  renderSpecIndex(specParts, {
+    partLink: (cat, id) => `spec/${cat}/${id}.md`,
+    feed: 'spec/feed.json',
+    updates: 'spec/updates.md',
     contributors: contributors.map((c) => ({
       id: c.data.id,
       name: c.data.name,
@@ -1054,21 +1054,21 @@ write(
     })),
   }),
 );
-for (const { data } of rfcParts) {
+for (const { data } of specParts) {
   write(
-    `docs/spec/rfc/${data.category}/${data.id}.md`,
-    renderRfcPartPage(data, rfcPartById, rfcBreakdown, { flavorUrl, contributorName }),
+    `docs/spec/${data.category}/${data.id}.md`,
+    renderSpecPartPage(data, specPartById, specBreakdown, { flavorUrl, contributorName }),
   );
 }
-write('docs/spec/rfc/updates.md', renderRfcUpdates(rfcParts));
-writeRaw('docs/spec/rfc/feed.json', renderRfcFeed(rfcParts, flavors.map((f) => f.data.id)));
+write('docs/spec/updates.md', renderSpecUpdates(specParts));
+writeRaw('docs/spec/feed.json', renderSpecFeed(specParts, flavors.map((f) => f.data.id)));
 
 write('docs/spec/contributors.md', renderContributors(contributors));
 write('docs/spec/glossary.md', renderGlossary());
 write(
   'docs/spec/index.md',
   renderOverview({
-    rfcParts: rfcParts.length,
+    specParts: specParts.length,
     stanzas: stanzas.length,
     flows: flows.length,
     enums: enums.length,

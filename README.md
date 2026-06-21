@@ -103,7 +103,7 @@ spec/*.yaml  ──▶  scripts/validate.ts   (schema + referential integrity)
 - **Contributors** ([`spec/contributors/`](./spec/contributors)) record who produced each
   fact. See [attribution & proof](./docs/attribution.md).
 - **Flavors** ([`spec/flavors/`](./spec/flavors)) are independent reimplementations
-  (libraries/ports) that corroborate the spec by realizing it in code; each RFC part
+  (libraries/ports) that corroborate the spec by realizing it in code; each spec part
   records its in-the-wild implementation status across them.
 - **Glossary** ([`spec/glossary.yaml`](./spec/glossary.yaml)) defines shared terms (WABinary,
   Noise, SRTP, and others).
@@ -139,7 +139,7 @@ the workflow, and [warden's repository](https://github.com/purpshell/warden) for
 
 | Path | What lives here |
 | --- | --- |
-| [`spec/`](./spec) | The machine-readable corpus: `rfc/` (the normative spec parts), `stanzas/`, `flows/`, `enums/`, `techniques/`, `flavors/`, `contributors/`, `glossary.yaml`, and `schema/` (JSON Schemas). **The source of truth.** |
+| [`spec/`](./spec) | The machine-readable corpus: `signalling/`, `encodings/`, `crypto/`, `relay/` (the normative spec parts), plus `stanzas/`, `flows/`, `enums/`, `techniques/`, `flavors/`, `contributors/`, `glossary.yaml`, and `schema/`. **The source of truth.** |
 | [`corpus/`](./corpus) | Capture intake: `captures/` (synthetic/sanitized observations) and `schema/capture.schema.json`. |
 | [`docs/`](./docs) | **Generated** human docs + the Pages/mkdocs site. `docs/spec/` is produced by the generator; `docs/coverage-badge.json` feeds the badge. Do not hand-edit generated files. |
 | [`scripts/`](./scripts) | TypeScript tooling run via `tsx`: `validate.ts`, `generate-docs.ts`, `coverage.ts`, `ingest-issue.ts`, and shared helpers in `scripts/lib/corpus.ts`. |

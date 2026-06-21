@@ -1,8 +1,8 @@
 # Notify libraries when the RFC changes (opt-in push channel).
-# On a push to main that touches spec/rfc/**, work out which RFC parts changed,
+# On a push to main that touches spec category dirs, work out which spec parts changed,
 # map them to the flavors that implement them and have opted in
 # (notify_opt_in + notify_repo), and open a tracking issue in each such repo.
-# The pull channel (docs/spec/rfc/feed.json) is always available and needs none
+# The pull channel (docs/spec/feed.json) is always available and needs none
 # of this. Push degrades to a no-op when no cross-repo token is configured.
 
 name: Spec notify
@@ -11,7 +11,10 @@ on:
   push:
     branches: [main]
     paths:
-      - "spec/rfc/**"
+      - "spec/signalling/**"
+      - "spec/encodings/**"
+      - "spec/crypto/**"
+      - "spec/relay/**"
   workflow_dispatch:
 
 permissions:
@@ -39,14 +42,14 @@ jobs:
       - name: Install dependencies
         run: npm i
 
-      - name: Compute changed RFC parts
+      - name: Compute changed spec parts
         id: changed
         run: |
           base="${{ github.event.before }}"
           if [ -z "$base" ] || ! git cat-file -e "${base}^{commit}" 2>/dev/null; then
             base="HEAD~1"
           fi
-          files=$(git diff --name-only "$base" HEAD -- 'spec/rfc/**/*.yaml' | tr '\n' ' ')
+          files=$(git diff --name-only "$base" HEAD -- spec/signalling spec/encodings spec/crypto spec/relay | tr '\n' ' ')
           echo "files=${files}" >> "$GITHUB_OUTPUT"
 
       - name: Map changed parts to opted-in flavors
@@ -86,7 +89,7 @@ jobs:
             ids=$(jq -r ".[$i].parts | map(.id) | join(\", \")" notify-payload.json)
             body=$(jq -r ".[$i].parts | map(\"- [\(.id)](\(.ref)) — \(.title)\") | join(\"\n\")" notify-payload.json)
             gh issue create --repo "$repo" \
-              --title "[wacrg] RFC update affecting ${flavor}: ${ids}" \
-              --body "$(printf 'The wacrg RFC changed in parts your implementation maps to:\n\n%s\n\nFollow the feed: https://whiskeysockets.github.io/wacrg/spec/rfc/feed.json' "$body")" \
+              --title "[wacrg] spec update affecting ${flavor}: ${ids}" \
+              --body "$(printf 'The wacrg spec changed in parts your implementation maps to:\n\n%s\n\nFollow the feed: https://whiskeysockets.github.io/wacrg/spec/feed.json' "$body")" \
               || echo "Could not open an issue in ${repo} (token scope?)."
           done

@@ -17,7 +17,7 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 import type { ErrorObject, ValidateFunction } from 'ajv';
 import addFormats from 'ajv-formats';
 import {
-  RFC_CATEGORIES,
+  SPEC_CATEGORIES,
   TECHNIQUE_IDS,
   fromRoot,
   loadCaptures,
@@ -26,7 +26,7 @@ import {
   loadFlavorMaps,
   loadFlavors,
   loadFlows,
-  loadRfcParts,
+  loadSpecParts,
   loadStanzas,
   loadTechniques,
   loadTools,
@@ -40,7 +40,7 @@ import {
   type FlavorMap,
   type Loaded,
   type Provenance,
-  type RfcPart,
+  type SpecPart,
   type Stanza,
   type Tool,
 } from './lib/corpus.ts';
@@ -99,9 +99,9 @@ const SCHEMAS: Record<string, SchemaKind> = {
     label: 'flavor-map',
     schemaPath: 'spec/schema/flavor-map.schema.json',
   },
-  rfcPart: {
-    label: 'rfc-part',
-    schemaPath: 'spec/schema/rfc-part.schema.json',
+  specPart: {
+    label: 'spec-part',
+    schemaPath: 'spec/schema/spec-part.schema.json',
   },
   glossary: {
     label: 'glossary',
@@ -167,7 +167,7 @@ const contributors = loadContributors();
 const tools = loadTools();
 const flavors = loadFlavors();
 const flavorMaps = loadFlavorMaps();
-const rfcParts = loadRfcParts();
+const specParts = loadSpecParts();
 const captures = loadCaptures();
 
 // Reference sets for integrity checks.
@@ -178,8 +178,8 @@ const flowIds = new Set<string>(flows.map((f) => f.data.id));
 const contributorIds = new Set<string>(contributors.map((c) => c.data.id));
 const toolIds = new Set<string>(tools.map((t) => t.data.id));
 const flavorIds = new Set<string>(flavors.map((f) => f.data.id));
-const rfcPartIds = new Set<string>(rfcParts.map((p) => p.data.id));
-const rfcCategories = new Set<string>(RFC_CATEGORIES);
+const specPartIds = new Set<string>(specParts.map((p) => p.data.id));
+const specCategories = new Set<string>(SPEC_CATEGORIES);
 const fixedTechniqueIds = new Set<string>(TECHNIQUE_IDS);
 
 // During bootstrap the spec/techniques/ directory may not exist yet. When no
@@ -203,7 +203,7 @@ for (const f of contributors) validateFile('contributor', f);
 for (const f of tools) validateFile('tool', f);
 for (const f of flavors) validateFile('flavor', f);
 for (const f of flavorMaps) validateFile('flavorMap', f);
-for (const f of rfcParts) validateFile('rfcPart', f);
+for (const f of specParts) validateFile('specPart', f);
 for (const f of captures) validateFile('capture', f);
 
 // Validate the glossary file directly (single-file kind).
@@ -382,52 +382,52 @@ for (const { relPath, data } of flavorMaps as Loaded<FlavorMap>[]) {
   }
 }
 
-// RFC parts: id matches file name, category matches parent dir, ids are unique,
+// Spec parts: id matches file name, category matches parent dir, ids are unique,
 // requires resolve to other parts, and implementation flavors are registered.
-const rfcSeen = new Map<string, string>();
-const rfcCodeSeen = new Map<string, string>();
-for (const { relPath, data } of rfcParts as Loaded<RfcPart>[]) {
-  const segments = relPath.split('/'); // spec/rfc/<category>/<id>.yaml
+const specSeen = new Map<string, string>();
+const specCodeSeen = new Map<string, string>();
+for (const { relPath, data } of specParts as Loaded<SpecPart>[]) {
+  const segments = relPath.split('/'); // spec/<category>/<id>.yaml
   const stem = (segments.at(-1) ?? '').replace(/\.yaml$/, '');
   const parentDir = segments.at(-2);
   if (data.id !== stem) {
-    fail(relPath, `rfc part id "${data.id}" does not match file name "${stem}.yaml"`);
+    fail(relPath, `spec part id "${data.id}" does not match file name "${stem}.yaml"`);
   }
   if (data.category && parentDir && data.category !== parentDir) {
-    fail(relPath, `rfc part category "${data.category}" does not match directory "${parentDir}/"`);
+    fail(relPath, `spec part category "${data.category}" does not match directory "${parentDir}/"`);
   }
-  if (data.category && !rfcCategories.has(data.category)) {
-    fail(relPath, `rfc part category "${data.category}" is not a known category`);
+  if (data.category && !specCategories.has(data.category)) {
+    fail(relPath, `spec part category "${data.category}" is not a known category`);
   }
-  const prior = rfcSeen.get(data.id);
-  if (prior) fail(relPath, `duplicate rfc part id "${data.id}" (also in ${prior})`);
-  else rfcSeen.set(data.id, relPath);
+  const prior = specSeen.get(data.id);
+  if (prior) fail(relPath, `duplicate spec part id "${data.id}" (also in ${prior})`);
+  else specSeen.set(data.id, relPath);
   if (data.code) {
-    const cprior = rfcCodeSeen.get(data.code);
+    const cprior = specCodeSeen.get(data.code);
     if (cprior) fail(relPath, `duplicate annotation code "${data.code}" (also in ${cprior})`);
-    else rfcCodeSeen.set(data.code, relPath);
+    else specCodeSeen.set(data.code, relPath);
   }
   for (const dep of data.requires ?? []) {
-    if (!rfcPartIds.has(dep)) {
-      fail(relPath, `rfc part "${data.id}": requires "${dep}" has no matching spec/rfc part`);
+    if (!specPartIds.has(dep)) {
+      fail(relPath, `spec part "${data.id}": requires "${dep}" has no matching spec part`);
     }
   }
   if (data.parent) {
-    const pp = rfcParts.find((p) => p.data.id === data.parent);
+    const pp = specParts.find((p) => p.data.id === data.parent);
     if (!pp) {
-      fail(relPath, `rfc part "${data.id}": parent "${data.parent}" has no matching spec/rfc part`);
+      fail(relPath, `spec part "${data.id}": parent "${data.parent}" has no matching spec part`);
     } else if (pp.data.category !== data.category) {
-      fail(relPath, `rfc part "${data.id}": parent "${data.parent}" is in a different category`);
+      fail(relPath, `spec part "${data.id}": parent "${data.parent}" is in a different category`);
     } else if (data.parent === data.id) {
-      fail(relPath, `rfc part "${data.id}": parent cannot be itself`);
+      fail(relPath, `spec part "${data.id}": parent cannot be itself`);
     }
   }
   if (data.discovered_by && contributorsPresent && !contributorIds.has(data.discovered_by)) {
-    fail(relPath, `rfc part "${data.id}": discovered_by "${data.discovered_by}" has no matching spec/contributors/${data.discovered_by}.yaml`);
+    fail(relPath, `spec part "${data.id}": discovered_by "${data.discovered_by}" has no matching spec/contributors/${data.discovered_by}.yaml`);
   }
   for (const impl of data.implementations ?? []) {
     if (flavorsPresent && impl.flavor && !flavorIds.has(impl.flavor)) {
-      fail(relPath, `rfc part "${data.id}": implementation flavor "${impl.flavor}" has no matching spec/flavors/${impl.flavor}.yaml`);
+      fail(relPath, `spec part "${data.id}": implementation flavor "${impl.flavor}" has no matching spec/flavors/${impl.flavor}.yaml`);
     }
   }
 }
@@ -463,7 +463,7 @@ for (const { relPath, data } of captures) {
 const fileCount =
   stanzas.length + flows.length + enums.length + techniques.length +
   contributors.length + tools.length + flavors.length + flavorMaps.length +
-  rfcParts.length + captures.length;
+  specParts.length + captures.length;
 
 console.log('wacrg corpus validation');
 console.log('-----------------------');
@@ -471,7 +471,7 @@ console.log(
   `stanzas: ${stanzas.length}  flows: ${flows.length}  enums: ${enums.length}  ` +
     `techniques: ${techniques.length}  contributors: ${contributors.length}  ` +
     `tools: ${tools.length}  flavors: ${flavors.length}  flavor-maps: ${flavorMaps.length}  ` +
-    `rfc-parts: ${rfcParts.length}  captures: ${captures.length}  (total ${fileCount} files)`,
+    `spec-parts: ${specParts.length}  captures: ${captures.length}  (total ${fileCount} files)`,
 );
 
 if (warnings.length) {

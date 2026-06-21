@@ -60,7 +60,7 @@ Breakdown: [`flow-call-missed`](../signalling/flow-call-missed.md), [`flow-call-
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | — | build_terminate emits the action; the inbound parser decodes duration/audio_duration. |
+| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | build_terminate emits the action; the inbound parser decodes duration/audio_duration. |
 | `zapo-caller` | working | — | signalling builder ported from this flavor's signaling.ts. |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/call-terminate.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/call-terminate.yaml)

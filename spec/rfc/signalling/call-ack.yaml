@@ -45,7 +45,11 @@ findings: |
   offline delivery.
 requires: [ call-offer ]
 implementations:
-  - { flavor: whatsapp-rust, status: working }
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
   - {
       flavor: zapo-caller,
       status: working,

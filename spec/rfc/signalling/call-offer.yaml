@@ -28,7 +28,11 @@ normative: |
     `type="msg"` to reuse. A multi-device callee receives several `<enc>` nodes.
 requires: []
 implementations:
-  - { flavor: whatsapp-rust, status: working }
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
   - { flavor: zapo-caller, status: working }
 references:
   - {

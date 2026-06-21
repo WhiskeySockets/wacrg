@@ -56,7 +56,8 @@ implementations:
       flavor: whatsapp-rust,
       status: working,
       note: "build_relay_latency + encode_latency in wacore voip::stanza; parsed as
-        CallAction::RelayLatency"
+        CallAction::RelayLatency",
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
     }
   - {
       flavor: zapo-caller,

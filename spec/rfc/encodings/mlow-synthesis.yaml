@@ -152,7 +152,15 @@ findings: |
 requires: [ mlow-lsf-lpc, mlow-excitation, mlow-noise, mlow-postfilter, mlow-frame ]
 
 implementations:
-  - { flavor: whatsapp-rust, status: working }
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits:
+        [
+          ed12f359a086b28e807ba236f0977af1000859fe,
+          674e85164b35ca19115dfebcf605708d15951ee7
+        ]
+    }
   - {
       flavor: meowcaller,
       status: partial,

@@ -70,7 +70,11 @@ findings: |
   secret from the offer (`<raw_e2e>`, >=32 bytes); derivation is otherwise identical.
 requires: [ call-key, srtp-master-key, srtp-hop-by-hop ]
 implementations:
-  - { flavor: whatsapp-rust, status: working }
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
   - {
       flavor: zapo-caller,
       status: working,

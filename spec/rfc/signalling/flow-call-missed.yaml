@@ -69,7 +69,8 @@ implementations:
       note: "Parses inbound <call>/<offer>, auto-emits the <receipt><offer/></receipt>
         ack, and builds <terminate>; example bot rejects/accepts rather than
         ringing out, so the timeout-driven terminate is not exercised
-        end-to-end."
+        end-to-end.",
+      commits: [ d68af6c608297c864669850b9bc05d4a54410d15 ]
     }
   - {
       flavor: zapo-caller,

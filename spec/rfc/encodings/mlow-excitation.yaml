@@ -104,7 +104,11 @@ normative: |
   previous gain index, filter index, integer lag, and fractional lag.
 requires: [ mlow, mlow-rangecoder, mlow-lsf-lpc, mlow-synthesis ]
 implementations:
-  - { flavor: whatsapp-rust, status: working }
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
   - {
       flavor: meowcaller,
       status: partial,

@@ -314,7 +314,8 @@ implementations:
   - {
       flavor: whatsapp-rust,
       status: working,
-      note: "full ec_dec + ec_enc port; round-trip vectors pass"
+      note: "full ec_dec + ec_enc port; round-trip vectors pass",
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
     }
   - {
       flavor: meowcaller,

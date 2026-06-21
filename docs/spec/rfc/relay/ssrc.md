@@ -47,7 +47,7 @@ Breakdown: [`video-packetization`](../encodings/video-packetization.md), [`media
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | — | — |
+| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | original derivation ported from src/media/voip-crypto.ts |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/relay/ssrc.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/relay/ssrc.yaml)

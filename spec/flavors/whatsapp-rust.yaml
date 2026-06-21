@@ -1,6 +1,6 @@
 id: whatsapp-rust
 name: whatsapp-rust (VoIP)
-url: https://github.com/oxidezap/whatsapp-rust
+url: https://github.com/oxidezap/whatsapp-rust-private
 language: rust
 maturity: working
 maintainer: jlucaso1

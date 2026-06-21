@@ -144,7 +144,8 @@ implementations:
       flavor: whatsapp-rust,
       status: working,
       note: "all three filters ported and validated against the live WASM decoder and
-        the C decoder dumps"
+        the C decoder dumps",
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
     }
   - {
       flavor: meowcaller,

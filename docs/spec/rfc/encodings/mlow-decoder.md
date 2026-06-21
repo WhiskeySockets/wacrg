@@ -106,7 +106,7 @@ Breakdown: [`mlow-encoder`](../encodings/mlow-encoder.md)
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | — | pure-Rust stateful MlowDecoder; e2e decode matches the smpl_opus useSmpl reference at lag 0 |
+| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | pure-Rust stateful MlowDecoder; e2e decode matches the smpl_opus useSmpl reference at lag 0 |
 | `meowcaller` | partial | — | codec modules partial; full decode orchestration in progress |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-decoder.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-decoder.yaml)

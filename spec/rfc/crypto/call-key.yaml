@@ -42,7 +42,11 @@ normative: |
   keygen=2, the `raw_e2e` material). Its serialization is not pinned by this section.
 requires: [ call-offer, srtp-master-key, sframe-media, warp ]
 implementations:
-  - { flavor: whatsapp-rust, status: working }
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
   - { flavor: zapo-caller, status: working }
   - { flavor: meowcaller, status: planned }
 references:

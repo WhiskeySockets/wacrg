@@ -113,7 +113,7 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md)
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | — | depack_split_red parses the RED envelope; bare-frame streams bypass it |
+| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | depack_split_red parses the RED envelope; bare-frame streams bypass it |
 | `meowcaller` | partial | — | codec modules partial |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-red-fec.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-red-fec.yaml)

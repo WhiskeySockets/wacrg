@@ -36,7 +36,11 @@ normative: |
   - `<voip_settings uncompressed="1">` — VoIP settings blob; MUST be the last child.
 requires: [ call-offer, call-preaccept, srtp-master-key ]
 implementations:
-  - { flavor: whatsapp-rust, status: working }
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
   - { flavor: zapo-caller, status: working }
 open_questions:
   - "Byte layout and semantics of the <te priority=2> relay transport-endpoint

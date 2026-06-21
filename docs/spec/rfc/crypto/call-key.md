@@ -46,7 +46,7 @@ Breakdown: [`srtp-e2e`](../crypto/srtp-e2e.md)
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | — | — |
+| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | — |
 | `meowcaller` | planned | — | — |
 

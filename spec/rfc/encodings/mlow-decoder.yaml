@@ -117,7 +117,8 @@ implementations:
       flavor: whatsapp-rust,
       status: working,
       note: "pure-Rust stateful MlowDecoder; e2e decode matches the smpl_opus useSmpl
-        reference at lag 0"
+        reference at lag 0",
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
     }
   - {
       flavor: meowcaller,

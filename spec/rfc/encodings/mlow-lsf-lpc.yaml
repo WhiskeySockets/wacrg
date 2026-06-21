@@ -98,7 +98,16 @@ findings: |
   transform (Q16 coefficients -> Q15 NLSF, scaled to radians).
 requires: [ mlow, mlow-rangecoder, mlow-frame ]
 implementations:
-  - { flavor: whatsapp-rust, status: working }
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits:
+        [
+          ed12f359a086b28e807ba236f0977af1000859fe,
+          c697c36ffa7875c304ceea9154be30b66cada914,
+          674e85164b35ca19115dfebcf605708d15951ee7
+        ]
+    }
   - {
       flavor: meowcaller,
       status: partial,

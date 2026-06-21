@@ -41,7 +41,8 @@ implementations:
       flavor: whatsapp-rust,
       status: working,
       note: "Parses the <video> child (is_video) on <offer> and media=\"video\" on
-        <offer_notice>; inbound recognition."
+        <offer_notice>; inbound recognition.",
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
     }
   - {
       flavor: zapo-caller,

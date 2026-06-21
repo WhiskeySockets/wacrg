@@ -94,7 +94,8 @@ implementations:
       flavor: whatsapp-rust,
       status: working,
       note: "session state machine and protect/unprotect pipeline composition; live
-        relay flow over the channel is deferred"
+        relay flow over the channel is deferred",
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
     }
   - {
       flavor: zapo-caller,

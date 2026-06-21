@@ -11,4 +11,4 @@ covers:
 basis:
   - wasm-analysis
   - frida-hooking
-description: TypeScript reconstruction of the WhatsApp caller (signaling, SRTP/SFrame/WARP keying, STUN/relay, RTP), created by Vini with Auties, Edgard, and Shelltear.
+description: TypeScript reconstruction of the WhatsApp caller (signaling, SRTP/SFrame/WARP keying, STUN/relay, RTP), built by Vini and Edgard.

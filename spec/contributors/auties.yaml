@@ -3,8 +3,7 @@ name: Auties
 github: Auties00
 techniques:
   - wasm-analysis
-flavors:
-  - zapo-caller
 links:
   - title: GitHub
     url: https://github.com/Auties00
+affiliation: WhiskeySockets

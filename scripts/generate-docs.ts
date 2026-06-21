@@ -73,6 +73,14 @@ function firstSentence(s: string | undefined): string {
   return m ? m[1] : t;
 }
 
+/** A circular GitHub avatar `<img>` (rounded like github.com). */
+function avatarImg(github: string, size: number, name: string): string {
+  return (
+    `<img src="https://github.com/${github}.png?size=${size}" alt="${cell(name)}" ` +
+    `width="${size}" height="${size}" style="border-radius:50%;vertical-align:middle">`
+  );
+}
+
 function yesNo(v: boolean | undefined): string {
   return v ? 'yes' : 'no';
 }
@@ -485,9 +493,7 @@ function renderContributors(
     .sort((a, b) => a.data.id.localeCompare(b.data.id))
     .map(({ data }) => {
       const name = cell(data.name ?? data.id);
-      const pfp = data.github
-        ? `![${name}](https://github.com/${data.github}.png?size=24) `
-        : '';
+      const pfp = data.github ? `${avatarImg(data.github, 24, name)} ` : '';
       // Anchor on the id so spec parts can deep-link to this contributor.
       const who = data.github
         ? `<a id="${data.id}"></a>[${pfp}${name}](https://github.com/${data.github})`
@@ -763,16 +769,15 @@ function specDetails(
       `commit blame/permalink.`,
   );
   if (part.contributors?.length) {
-    const items = part.contributors.map((c) => {
+    const head = '| Contributor | Role |\n| --- | --- |';
+    const rows = part.contributors.map((c) => {
       const info = ctx.contributor(c.contributor);
-      const name = info?.name ?? c.contributor;
-      const pfp = info?.github
-        ? `![${cell(name)}](https://github.com/${info.github}.png?size=20) `
-        : '';
-      const note = c.note ? ` (${cell(c.note)})` : '';
-      return `[${pfp}${cell(name)}](../contributors.md#${c.contributor})${note}`;
+      const name = cell(info?.name ?? c.contributor);
+      const pfp = info?.github ? `${avatarImg(info.github, 20, name)} ` : '';
+      const who = `[${pfp}${name}](../contributors.md#${c.contributor})`;
+      return `| ${who} | ${c.note ? cell(c.note) : '—'} |`;
     });
-    out.push('**Contributors** ' + items.join(' - '));
+    out.push('**Contributors**\n\n' + [head, ...rows].join('\n'));
   }
   const file = `spec/${part.category}/${part.id}.yaml`;
   out.push(

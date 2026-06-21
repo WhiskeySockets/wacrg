@@ -5,3 +5,4 @@ techniques:
   - wasm-analysis
 flavors:
   - zapo-caller
+affiliation: WhiskeySockets

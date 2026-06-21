@@ -13,7 +13,7 @@
     "generate": "tsx scripts/generate-docs.ts",
     "coverage": "tsx scripts/coverage.ts",
     "build": "npm run validate && npm run generate && npm run coverage",
-    "check": "npm run build && git diff --exit-code -- docs/spec COVERAGE.md docs/coverage-badge.json",
+    "check": "npm run build && git diff --exit-code -- docs/index.md docs/spec COVERAGE.md docs/coverage-badge.json",
     "ingest": "tsx scripts/ingest-issue.ts",
     "ingest:flavor": "tsx scripts/ingest-flavor.ts",
     "notify": "tsx scripts/notify.ts",

@@ -8,11 +8,11 @@ body:
       value: |
         Register a **flavor**: an independent reimplementation (library/port) of the
         WhatsApp call protocol that corroborates the spec by realizing it in code.
-        This is **not** an evidence-gathering tool (those live in `spec/tools/`).
 
-        On submit, automation writes `spec/flavors/<id>.yaml` (and, if you fill in the
-        coverage map, `spec/flavors/<id>.map.yaml`) and opens a PR for review. Your
-        GitHub identity is recorded as the flavor's `maintainer` automatically.
+        On submit, automation writes `spec/flavors/<id>.yaml` and opens a PR for
+        review. Your GitHub identity is recorded as the flavor's `maintainer`
+        automatically. To declare per-part implementation status, set
+        `implementations` on the relevant RFC parts.
 
   - type: input
     id: flavor-id
@@ -109,7 +109,7 @@ body:
       description: >-
         Comma-separated flavor ids your implementation is a port/derivative of, if any.
         A port is NOT independent corroboration of its upstream, so list them honestly.
-      placeholder: meowmeow, zapo-caller
+      placeholder: zapo-caller
     validations:
       required: false
 
@@ -117,22 +117,7 @@ body:
     id: description
     attributes:
       label: Description
-      description: What the implementation is, what it does, and how it is validated (e.g. known-answer vectors).
-      placeholder: A pure-Rust reconstruction of the call media stack, primitives pinned to KAT vectors.
-    validations:
-      required: false
-
-  - type: textarea
-    id: coverage-map
-    attributes:
-      label: Coverage map
-      description: >-
-        Optional inverse Source-of-truth: one row per spec bit you realize, pipe-delimited as
-        `area | module | code-url | symbol | kat | status`. `area` is one of
-        signaling/keying/media/transport; `code-url` is a GitHub permalink (pin a commit SHA);
-        `status` is scaffolded/implemented/verified. area and code-url are required per row.
-      placeholder: |
-        media | mlow/rangecoder | https://github.com/you/lib/blob/<sha>/src/range.rs#L10-L40 | RangeDecoder | rc_vectors.json | verified
-        keying | srtp/e2e | https://github.com/you/lib/blob/<sha>/src/srtp.rs#L5-L80 | derive_srtp | | implemented
+      description: One line — what the implementation is and what it covers.
+      placeholder: A pure-Rust reconstruction of the call media stack.
     validations:
       required: false

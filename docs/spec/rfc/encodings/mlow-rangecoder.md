@@ -2,27 +2,21 @@
 
 # MLow range coder
 
-**Category:** [Encodings](../index.md#encodings)  
-**Part id:** `mlow-rangecoder`
+_Encodings · `mlow-rangecoder`_
 
-**`mlow-rangecoder`** · status: review · features: audio · since: 0.1.0
+_status: review · audio_
 
-The Opus/CELT range entropy coder (RFC 6716 §4.1) that MLow reuses verbatim to pack a frame: range-coded symbols are read from the front of the payload and raw uniform bits from the back, sharing a single byte buffer. This part specifies the coder state, the constants, the symbol/raw-bit primitives, and the encoder flush that merges the two streams.
+The Opus/CELT range entropy coder (RFC 6716 §4.1), reused verbatim by MLow: range-coded symbols packed from the buffer front, raw uniform bits from the back, sharing one byte buffer.
 
-**Normative**
+An MLow payload is one byte buffer carrying two interleaved bit streams from a
+single Opus/CELT range coder: **range-coded symbols** from the **front** (low
+offsets, ascending) and **raw uniform bits** from the **back** (high offsets,
+descending). A decoder MUST consume both streams from the same buffer with the
+algorithms below; the two cursors MUST NOT overlap in a well-formed payload.
 
-An MLow payload is a single byte buffer that carries two interleaved bit
-streams produced by one Opus/CELT range coder: **range-coded symbols** packed
-from the **front** (low offsets, ascending) and **raw uniform bits** packed
-from the **back** (high offsets, descending). A decoder MUST consume both
-streams from the same buffer with the algorithms below; the streams meet
-somewhere in the middle and the two cursors never overlap in a well-formed
-payload.
+All arithmetic is unsigned 32-bit with modular (wrapping) semantics where noted.
 
 ## Constants
-
-All arithmetic is on unsigned 32-bit integers with modular (wrapping)
-semantics wherever noted. The coder uses these fixed constants:
 
 ```
 EC_SYM_BITS   = 8                         ; bits per renormalisation byte
@@ -42,9 +36,7 @@ of `a` and `b`.
 
 ## Decoder
 
-### Initialisation
-
-A decoder MUST initialise its state as follows (RFC 6716 `ec_dec_init`):
+### Initialisation (`ec_dec_init`)
 
 ```
 offs       = 0                ; front cursor (range bytes)
@@ -64,7 +56,8 @@ buffer (reading past the end yields zero bytes, it is not an error).
 
 ### Normalisation
 
-After every symbol the decoder MUST renormalise so that `rng > EC_CODE_BOT`:
+After every symbol the decoder MUST renormalise so that `rng > EC_CODE_BOT`.
+All `val` updates here MUST use wrapping 32-bit arithmetic.
 
 ```
 while rng <= EC_CODE_BOT:
@@ -76,12 +69,7 @@ while rng <= EC_CODE_BOT:
     val  = ((val << EC_SYM_BITS) + (EC_SYM_MAX & ~sym)) & (EC_CODE_TOP - 1)
 ```
 
-All `val` updates here MUST use wrapping 32-bit arithmetic.
-
 ### Decoding a symbol
-
-Decoding a symbol against a frequency table of total `ft` is two steps: read
-the cumulative frequency, locate the symbol externally, then advance.
 
 `decode(ft)` MUST return a value in `[0, ft)`:
 
@@ -107,8 +95,8 @@ normalize()
 ### CDF table decode
 
 A symbol against a **u16 cumulative CDF table** `cdf` (length `n >= 2`) MUST be
-decoded as follows. A non-zero base `cdf[0]` is subtracted from every entry, so
-the effective total is `cdf[n-1] - cdf[0]`:
+decoded as follows. Base `cdf[0]` is subtracted from every entry; effective
+total is `cdf[n-1] - cdf[0]`:
 
 ```
 if n < 2:                     err = 1; return 0
@@ -183,10 +171,7 @@ else:
     return s
 ```
 
-### 64-symbol fine-lag decode
-
-The MLow excitation parser reads a 64-value uniform fine-lag symbol
-(`decode_64_fine_sym`) as:
+### 64-symbol fine-lag decode (`decode_64_fine_sym`)
 
 ```
 ext = rng >> 6
@@ -199,8 +184,8 @@ return sym
 
 ### Raw bits from the back
 
-Raw bits are pulled from the **back** of the buffer, LSB-first, through a
-32-bit window. `bits_n(n)` MUST:
+Raw bits are pulled from the **back**, LSB-first, through a 32-bit window.
+`bits_n(n)` MUST:
 
 ```
 window = end_window ; available = nend_bits
@@ -231,9 +216,8 @@ the synthesised values. `ec_tell` MUST be `nbits_total - ilog(rng)`.
 ## Encoder
 
 The encoder is the exact inverse and produces a byte-identical buffer. It MUST
-initialise with `rng = EC_CODE_TOP`, `val = 0`, `rem = -1`, `offs = 0`,
-`end_offs = 0`, `nbits_total = EC_CODE_BITS + 1`, and an output buffer of fixed
-`size` bytes.
+initialise: `rng = EC_CODE_TOP`, `val = 0`, `rem = -1`, `offs = 0`,
+`end_offs = 0`, `nbits_total = EC_CODE_BITS + 1`, fixed-`size` output buffer.
 
 ### Renormalisation and carry
 
@@ -320,45 +304,27 @@ cursors MUST be zero-fill padding written by the flush. A successful flush MUST
 have `err == 0`; a non-zero `err` means the buffer was too small and the output
 MUST be discarded.
 
-**Findings**
+**Notes.** MLow's own decode path uses only `decode_cdf`/`encode_cdf` (u16 cumulative CDF),
+the uniform `nbits`-bit raw symbol, and `decode_64_fine_sym`. The generic
+`decode_uint`, `decode_icdf`, and `bit_logp` paths exist but are not on it.
 
-The coder is the standard Opus/CELT range coder of RFC 6716 §4.1 (libopus
-`celt/entdec.c` / `celt/entenc.c`), used unchanged. Encoder and decoder are
-exact inverses: encoding a script of mixed `icdf`, raw back-bits, `bit_logp`,
-and `uint` operations and then decoding the result reproduces the original
-values, and the encoded bytes are reproducible byte-for-byte from the same
-script.
-
-MLow exercises a specific subset of the primitives: the u16 cumulative-CDF
-symbol coder (`decode_cdf`/`encode_cdf`), the uniform `nbits`-bit raw symbol,
-and the 64-symbol fine-lag read used by the excitation/pitch-lag parser. The
-generic `decode_uint`, `decode_icdf`, and `bit_logp` paths are part of the same
-coder and remain available, but several are not on MLow's own decode path.
-
-The split-stream layout is the key wire detail: range-coded symbols grow from
-the front of the buffer and raw uniform bits grow from the back, both managed by
-one coder, and `done()` is what stitches them together with zero padding in the
-middle.
-
-**Requires:** [`mlow`](../encodings/mlow.md)
+Parent: [`mlow`](../encodings/mlow.md)  
+Requires: [`mlow`](../encodings/mlow.md)  
+Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-encoder`](../encodings/mlow-encoder.md), [`mlow-excitation`](../encodings/mlow-excitation.md), [`mlow-frame`](../encodings/mlow-frame.md), [`mlow-lsf-lpc`](../encodings/mlow-lsf-lpc.md)
 
 **Implemented by**
+- **whatsapp-rust** — working — full ec_dec + ec_enc port; round-trip vectors pass · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+- **meowcaller** — partial — encodings codec modules are partial · [commits ↗](https://github.com/purpshell/meowcaller/commits)
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | working | full ec_dec + ec_enc port; round-trip vectors pass |
-| [`meowmeow`](../../flavors.md) | working | Go reference (voip/media/rangecoder.go) the Rust port matches bit-for-bit |
-| [`meowcaller`](../../flavors.md) | partial | encodings codec modules are partial |
+Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-rangecoder.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-rangecoder.yaml)
 
 **Open questions**
-
 - Which exact subset of primitives the MLow frame parser invokes, and in what order, is defined by the frame/excitation parts rather than the coder itself.
 
 **References**
-
 - [RFC 6716 — Definition of the Opus Audio Codec, §4.1 (Range Decoder)](https://www.rfc-editor.org/rfc/rfc6716#section-4.1)
 - [libopus — celt/entdec.c / celt/entenc.c](https://github.com/xiph/opus/blob/main/celt/entdec.c)
 
 ---
 
-[in the full RFC →](../index.md#mlow-rangecoder) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#mlow-rangecoder)

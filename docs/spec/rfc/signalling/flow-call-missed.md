@@ -2,46 +2,37 @@
 
 # Missed / timed-out call flow
 
-**Category:** [Signalling](../index.md#signalling)  
-**Part id:** `flow-call-missed`
+_Signalling · `flow-call-missed`_
 
-**`flow-call-missed`** · status: draft · features: audio, video · since: 0.1.0
+_status: draft · audio, video_
 
-The stanza sequence for a 1:1 call that is offered but never answered: the caller's <offer>, each callee device's offer-receipt acknowledgement, the absence of any <preaccept>/<accept>, and the terminating <terminate> that ends the unanswered call once it times out.
+Stanza sequence for a 1:1 call offered but never answered: offer, per-device offer-receipt, no preaccept/accept, then a timeout-driven terminate.
 
-**Normative**
+Opens like any 1:1 call (see [flow-incoming-1to1](../signalling/flow-incoming-1to1.md),
+[call-offer](../signalling/call-offer.md)) but never reaches accept.
 
-A missed call follows the same opening as any 1:1 call (see
-[flow-incoming-1to1](../signalling/flow-incoming-1to1.md) and [call-offer](../signalling/call-offer.md)) but never
-reaches the accept stage. The full stanza sequence is:
+1. **Offer.** Caller sends `<call to="{callee}" id="{stanza-id}">` wrapping
+   `<offer call-id call-creator>` (see [call-offer](../signalling/call-offer.md)). Server `<ack>`s
+   and fans out to each callee device.
 
-1. **Offer.** The caller sends `<call to="{callee}" id="{stanza-id}">` wrapping an
-   `<offer call-id call-creator>` (see [call-offer](../signalling/call-offer.md)). The server
-   `<ack>`s the stanza and fans the offer out to each of the callee's devices.
-
-2. **Offer-receipt (per device).** Each callee device that receives the offer
-   MUST acknowledge it with a `<receipt>` echoing the offer, in addition to the
-   transport-level `<ack>`:
+2. **Offer-receipt (per device).** Each callee device receiving the offer MUST
+   send a `<receipt>` in addition to the transport `<ack>`:
 
        <receipt to="{caller}" id="{offer-stanza-id}" [from="{own-device-jid}"]>
          <offer call-id="{call-id}" call-creator="{call-creator}"/>
        </receipt>
 
-   The `id` MUST equal the `id` of the inbound `<call>` stanza (not the
-   `call-id`). The `from` attribute, when present, MUST be the acknowledging
-   device's own addressable JID; it is set to the device's LID when the offer
-   arrived addressed to a LID and to the device's PN otherwise. This receipt
-   signals to the caller's signaling layer that the device received the ring;
-   it is NOT an accept and MUST NOT be treated as one.
+   - `id` MUST equal the inbound `<call>` stanza `id` (NOT `call-id`).
+   - `from`, when present, MUST be the acknowledging device's own addressable
+     JID: its LID if the offer arrived addressed to a LID, otherwise its PN.
+   - This is NOT an accept and MUST NOT be treated as one.
 
-3. **No answer.** For a missed call no callee device sends `<preaccept>` (see
+3. **No answer.** No callee device sends `<preaccept>` (see
    [call-preaccept](../signalling/call-preaccept.md)) or `<accept>` (see [call-accept](../signalling/call-accept.md)).
-   The call remains in the ringing state for the duration of the offer/ring
-   timeout window.
+   Call stays ringing for the offer/ring timeout window.
 
-4. **Terminate.** When the ring times out with no answer, the call MUST be ended
-   with a `<terminate>` action inside the standard `<call>` wrapper (see
-   [call-terminate](../signalling/call-terminate.md)):
+4. **Terminate.** On ring timeout with no answer, the call MUST be ended with a
+   `<terminate>` inside the `<call>` wrapper (see [call-terminate](../signalling/call-terminate.md)):
 
        <call to="{peer-jid}">
          <terminate call-id="{call-id}" call-creator="{call-creator}"
@@ -50,55 +41,37 @@ reaches the accept stage. The full stanza sequence is:
          </terminate>
        </call>
 
-   The `<terminate>` MUST carry the same `call-id` and `call-creator` that
-   identified the offer. When the terminate targets a peer's other ringing
-   devices, it MAY carry a single `<destination>` child enumerating those
-   devices with one `<to jid="..."/>` per device; otherwise `<destination>`
-   MUST be omitted. A `reason` attribute, when not specified, MUST be omitted
-   entirely rather than sent empty.
+   - `<terminate>` MUST carry the same `call-id`/`call-creator` as the offer.
+   - When targeting a peer's other ringing devices, it MAY carry a single
+     `<destination>` enumerating them with one `<to jid="..."/>` per device;
+     otherwise `<destination>` MUST be omitted.
+   - `reason`, when unspecified, MUST be omitted entirely (never sent empty).
 
-A `<terminate>` received for an unanswered call MAY carry `duration` and
-`audio_duration` counters; for a missed call these are expected to be zero or
-absent, and a receiver MUST treat their absence as "not reported" rather than
-inferring a value.
+A `<terminate>` for an unanswered call MAY carry `duration`/`audio_duration`
+counters; expected zero/absent for a missed call. A receiver MUST treat their
+absence as "not reported", not infer a value.
 
 A receiver that does not recognize a `<call>` action child MUST ignore the
-stanza rather than error, so future action additions do not break the handler.
+stanza rather than error.
 
-**Findings**
-
-The offer-receipt acknowledgement is emitted automatically on every inbound
-`<offer>`; the builder echoes the offer's `call-id`/`call-creator` back inside a
-`<receipt>` whose `id` is the inbound `<call>` stanza id, with `from` chosen by
-the server of the inbound `from` JID (LID -> own LID, otherwise own PN). The
-missed-call path is distinguished from the accepted path purely by the absence
-of a `<preaccept>`/`<accept>` from any callee device before the call is torn
-down with `<terminate>`. The terminate action, its optional `reason`, its
-`<destination>` device fan-out, and the optional inbound `duration`/
-`audio_duration` counters are the same machinery used for ordinary hang-ups.
-
-**Requires:** [`call-offer`](../signalling/call-offer.md), [`call-accept`](../signalling/call-accept.md), [`call-preaccept`](../signalling/call-preaccept.md), [`call-terminate`](../signalling/call-terminate.md), [`flow-incoming-1to1`](../signalling/flow-incoming-1to1.md)
+Requires: [`call-offer`](../signalling/call-offer.md), [`call-accept`](../signalling/call-accept.md), [`call-preaccept`](../signalling/call-preaccept.md), [`call-terminate`](../signalling/call-terminate.md), [`flow-incoming-1to1`](../signalling/flow-incoming-1to1.md)
 
 **Implemented by**
+- **whatsapp-rust** — working — Parses inbound <call>/<offer>, auto-emits the <receipt><offer/></receipt> ack, and builds <terminate>; example bot rejects/accepts rather than ringing out, so the timeout-driven terminate is not exercised end-to-end. · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+- **zapo-caller** — working — Signalling builders (offer/accept/terminate) ported from this flavor's signaling.ts.
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | working | Parses the inbound <call>/<offer>, auto-emits the <receipt><offer/></receipt> ack, and builds <terminate>; the example bot rejects or accepts rather than letting a call ring out, so the timeout-driven terminate is not exercised end-to-end. |
-| [`zapo-caller`](../../flavors.md) | working | Signalling builders (offer/accept/terminate) ported from this flavor's signaling.ts. |
-| [`meowcaller`](../../flavors.md) | planned | Signalling is a planned module. |
+Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/flow-call-missed.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/flow-call-missed.yaml)
 
 **Open questions**
-
 - The ring/offer timeout duration and which side (caller, callee, or server) drives the terminate when a call goes unanswered.
 - Whether a distinct reason value (e.g. a 'timeout'/'no_answer' code) marks a missed-call terminate, or whether the reason is simply omitted; the source only confirms accepted_elsewhere.
 - Whether the server emits its own terminate/notification for a timed-out call independent of the caller's terminate, and how a missed call is recorded in chat history.
 - Exact values of duration/audio_duration on a missed-call terminate (expected zero/absent but not confirmed from source).
 
 **References**
-
 - wacore voip signaling builders (build_offer, build_terminate)
 - wacore call stanza parser and build_offer_ack_receipt
 
 ---
 
-[in the full RFC →](../index.md#flow-call-missed) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#flow-call-missed)

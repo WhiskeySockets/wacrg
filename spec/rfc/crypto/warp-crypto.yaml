@@ -3,70 +3,66 @@ category: crypto
 title: WARP key wrap
 status: review
 order: 40
-features: [audio, video]
+features: [ audio, video ]
 since: "0.1.0"
 summary: >
-  The WARP authentication key derived from the call key and the truncated
-  WARP MESSAGE-INTEGRITY tag that authenticates each protected RTP packet,
-  together with the audio-piggyback RTP extension word that carries it.
+  WARP adds a per-call authentication key and a truncated per-packet
+  MESSAGE-INTEGRITY tag, carried by the audio-piggyback RTP extension word.
 normative: |
   WARP adds a per-call **authentication key** and a per-packet
-  **MESSAGE-INTEGRITY (MI)** tag on top of the end-to-end SRTP payload cipher
-  (see [srtp-e2e](srtp-e2e)). It uses the RTP extension profile `0xDEBE`.
+  **MESSAGE-INTEGRITY (MI)** tag on top of the E2E SRTP payload cipher
+  ([srtp-e2e](srtp-e2e)). RTP extension profile: `0xDEBE`.
 
-  **WARP auth key.** Each participant MUST derive the WARP auth key from the
-  32-byte call key (`callKey`, see [call-offer](call-offer)) with HKDF-SHA256:
+  **WARP auth key.** Derive from the 32-byte call key (`callKey`, see
+  [call-offer](call-offer)) with HKDF-SHA256:
 
-      IKM  = callKey                   ; the full 32 bytes
-      salt = (empty)                   ; zero-length salt
+      IKM  = callKey                   ; full 32 bytes
+      salt = (empty)                   ; zero-length
       info = "warp auth key"           ; ASCII, no NUL terminator
       L    = 32
       authKey = OKM(32)
 
-  The derivation MUST NOT be performed unless `callKey` is exactly 32 bytes.
+  Derivation MUST NOT run unless `callKey` is exactly 32 bytes.
 
-  **WARP MESSAGE-INTEGRITY tag.** The MI tag MUST be computed as the first
-  4 bytes of HMAC-SHA1 over the protected packet bytes (everything that
-  precedes the tag) concatenated with the 32-bit rollover counter (ROC) in
-  big-endian byte order:
+  **MI tag.** First 4 bytes of HMAC-SHA1 over the protected packet bytes
+  (everything preceding the tag) concatenated with the 32-bit ROC in big-endian:
 
-      tag = HMAC-SHA1(authKey, packet_without_tag || ROC_be32)[0..4]
-
-  where `ROC_be32` is the 4-byte big-endian encoding of the same ROC used to
-  build the E2E SRTP packet index. The 4-byte tag MUST be appended to the end
-  of the protected packet:
-
+      tag  = HMAC-SHA1(authKey, packet_without_tag || ROC_be32)[0..4]
       wire = packet_without_tag || tag(4)
 
-  The sender MUST append this tag to every protected packet.
+  `ROC_be32` is the 4-byte big-endian encoding of the same ROC used to build the
+  E2E SRTP packet index. The sender MUST append the 4-byte tag to every
+  protected packet.
 
-  **Audio piggyback extension.** The MI tag is carried via a WARP RTP
-  extension. For audio, the per-packet extension word is selected by 0-based
-  packet index:
+  **Audio piggyback extension.** The MI tag is carried via a WARP RTP extension,
+  selected by 0-based packet index:
 
       packet_index 0, 1  -> no piggyback word (empty extension)
       packet_index >= 2  -> piggyback word 0x30010000
 
-  i.e. the first two packets of a stream carry an empty WARP extension and
-  every subsequent packet carries the 4-byte extension word `0x30 0x01 0x00
-  0x00`. The piggyback word MUST be emitted as a big-endian 32-bit value.
+  The piggyback word MUST be emitted as a big-endian 32-bit value
+  (`0x30 0x01 0x00 0x00`).
 findings: |
-  HMAC-SHA1, AES-128-CTR and HKDF-SHA256 are proven primitives. The auth key is
-  derived once per call from the full 32-byte call key (unlike the per-participant
-  E2E SRTP keys, which mix in the participant LID). The MI tag is present on the
-  wire but the receiver does not re-verify it; the payload cipher's correctness
-  is what gates a valid frame.
-requires: [srtp-e2e, call-offer]
+  The MI tag is present on the wire but the receiver does not re-verify it; the
+  payload cipher's correctness gates a valid frame.
+requires: [ srtp-e2e, call-offer ]
 implementations:
   - { flavor: whatsapp-rust, status: working }
   - { flavor: zapo-caller, status: working }
-  - { flavor: meowmeow, status: working }
   - { flavor: meowcaller, status: planned }
 references:
   - { title: "RFC 2104 — HMAC", url: "https://www.rfc-editor.org/rfc/rfc2104" }
   - { title: "RFC 5869 — HKDF", url: "https://www.rfc-editor.org/rfc/rfc5869" }
-  - { title: "RFC 8285 — A General Mechanism for RTP Header Extensions", url: "https://www.rfc-editor.org/rfc/rfc8285" }
+  - {
+      title: "RFC 8285 — A General Mechanism for RTP Header Extensions",
+      url: "https://www.rfc-editor.org/rfc/rfc8285"
+    }
 open_questions:
-  - "Whether the receiver is ever required to verify the WARP MI tag, and what action a mismatch triggers."
-  - "The full meaning of the 0x30010000 piggyback word beyond signalling MI presence, and the video-stream piggyback schedule (only the audio schedule is pinned)."
-  - "Whether the empty-extension-then-piggyback start offset (index >= 2) is fixed on the wire or negotiable."
+  - "Whether the receiver is ever required to verify the WARP MI tag, and what
+    action a mismatch triggers."
+  - "The full meaning of the 0x30010000 piggyback word beyond signalling MI
+    presence, and the video-stream piggyback schedule (only the audio schedule
+    is pinned)."
+  - "Whether the empty-extension-then-piggyback start offset (index >= 2) is
+    fixed on the wire or negotiable."
+discovered_by: vinikjkkj

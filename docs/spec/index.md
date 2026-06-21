@@ -11,14 +11,12 @@ This is the generated, human-readable view of the wacrg corpus, a machine-readab
 
 | Section | Count |
 | --- | --- |
-| [**The RFC**](./rfc/index.md) — normative call-stack spec | 47 parts |
+| [**The RFC**](../index.md) — normative call-stack spec | 47 parts |
 | [Stanzas](./stanzas/index.md) | 9 |
 | [Flows](./flows/index.md) | 4 |
 | [Enums](./enums.md) | 3 |
 | [Techniques](./techniques.md) | 7 |
-| [Tools](./tools.md) | 5 |
-| [Flavors](./flavors.md) | 4 |
-| [Implementation map](./flavor-map.md) | - |
+| [Flavors](./flavors.md) | 3 |
 | [Contributors](./contributors.md) | 6 |
 | [Glossary](./glossary.md) | - |
 | [Coverage](./coverage.md) | - |

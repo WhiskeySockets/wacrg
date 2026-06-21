@@ -2,23 +2,20 @@
 
 # MLow comfort noise
 
-**Category:** [Encodings](../index.md#encodings)  
-**Part id:** `mlow-noise`
+_Encodings · `mlow-noise`_
 
-**`mlow-noise`** · status: review · features: audio · since: 0.1.0
+_status: review · audio_
 
-The MLow comfort-noise (generated-noise) stage: the per-subframe shaped residual noise the decoder adds into the LPC excitation before synthesis, with separate voiced and unvoiced shaping branches driven by a deterministic PRNG and persistent cross-subframe state.
+Per-subframe shaped comfort noise the MLow decoder adds into the LPC excitation before CELP synthesis, with separate voiced/unvoiced branches.
 
-**Normative**
+Run the comfort-noise generator once per subframe of length `L` (`L <= 160`,
+`fs = 16 kHz`) and add its output into the LPC excitation *before* CELP synthesis
+(see [mlow-synthesis](../encodings/mlow-synthesis.md)). Output MUST be bit-identical for identical
+inputs and state. All arithmetic is single-precision; accumulation order is fixed
+(4-wide envelope and pulse loops). `pi` is the literal `3.1415926535897`. `sigmoid`
+clamps its argument to `[-80, 80]`.
 
-The MLow decoder MUST run the comfort-noise generator once per subframe of length
-`L` samples (`L <= 160`, `fs = 16 kHz`) and add its output into the LPC excitation
-*before* CELP synthesis (see [mlow-synthesis](../encodings/mlow-synthesis.md)). The generator is
-deterministic: given identical inputs and identical generator state it MUST produce
-bit-identical output, so encoder and decoder remain phase-locked.
-
-**Persistent state.** The generator MUST keep, across subframes, a state record
-zero-initialised at decoder start:
+**Persistent state.** Keep across subframes, zero-initialised at decoder start:
 
     env_smth        : f32        ; running envelope smoother
     env_last        : f32        ; last subframe envelope value
@@ -30,103 +27,85 @@ zero-initialised at decoder start:
     since_unvoiced  : i32        ; subframes since the last unvoiced subframe
     rand_seed       : i32        ; PRNG seed
 
-**PRNG.** Random pulses MUST be produced by the LCG
+**PRNG.** LCG, wrapping i32 arithmetic:
 
-    seed' = 907633515 + (u32)seed * 196314165      ; computed in wrapping i32 arithmetic
+    seed' = 907633515 + (u32)seed * 196314165
 
-Pulses are generated four at a time: each new `seed` yields four samples by
-reinterpreting the seed left-shifted by 0, 8, 16, 24 bits as a signed i32 and
-scaling by `8.1e-10`; a trailing tail of fewer than four samples MUST draw one fresh
-`seed` per sample (no bit-rotation). The shared seed MUST advance for every pulse
-buffer drawn in a subframe (this exact call count and ordering is observable in the
-output seed).
+Pulses are drawn four at a time: each new `seed` yields four samples by
+reinterpreting the seed left-shifted by 0, 8, 16, 24 bits as a signed i32 scaled by
+`8.1e-10`. A trailing tail of fewer than four samples MUST draw one fresh `seed` per
+sample (no bit-rotation). The shared seed MUST advance for every pulse buffer drawn
+in a subframe (call count and ordering is observable in the output seed).
 
-**Voiced branch** (`voiced = true`). The generator MUST:
+**Voiced branch** (`voiced = true`):
 
-1. Compute the 3-tap autocorrelation `corrs[0..2]` of the LPC excitation `exc_lpc`,
-   then bias `corrs[0] += 1e-12`.
-2. Smooth it into `corr_smth` with coefficient `0.4` when `L == 160` else `0.16`:
+1. Compute 3-tap autocorrelation `corrs[0..2]` of `exc_lpc`; bias `corrs[0] += 1e-12`.
+2. Smooth into `corr_smth` with coef `0.4` if `L == 160` else `0.16`:
    `corr_smth[i] += coef * (corrs[i] - corr_smth[i])`.
-3. Form the target correlation `c = corr_smth * (0.35^2 * corrs[0] / corr_smth[0])`,
-   then double `c[1]` and `c[2]`.
-4. Map `c` through the noise DCT (a `3 x 16` cosine matrix, scale `1/sqrt(16)`,
-   `omega` step `(0.5 + i) * pi / 16`) to a 16-bin spectrum `f2`, set the target
-   `f2_tgt = max(f2) * 1.5 - f2`, and map back with the DCT transpose to `ctgt`.
-5. Draw white pulses, reset `env_smth` to `env_last` if the previous subframe was
-   unvoiced, apply the squared-signal envelope (smoothing coefficient `0.95`), then
-   normalise `ctgt` by `1/(noise energy + 1e-12)`.
-6. Spectrally factor `ctgt` into a 3-tap MA filter and filter the noise through it
+3. `c = corr_smth * (0.35^2 * corrs[0] / corr_smth[0])`; then double `c[1]` and `c[2]`.
+4. Map `c` through the noise DCT (`3 x 16` cosine matrix, scale `1/sqrt(16)`, `omega`
+   step `(0.5 + i) * pi / 16`) to a 16-bin spectrum `f2`; set
+   `f2_tgt = max(f2) * 1.5 - f2`; map back via DCT transpose to `ctgt`.
+5. Draw white pulses; reset `env_smth` to `env_last` if previous subframe was
+   unvoiced; apply squared-signal envelope (smoothing coef `0.95`); normalise `ctgt`
+   by `1/(noise energy + 1e-12)`.
+6. Spectrally factor `ctgt` into a 3-tap MA filter; filter the noise through it
    (`shape_state`).
 7. On a voiced subframe immediately following an unvoiced one, seed an unvoiced
-   cross-fade noise with a decaying `0.99` envelope; otherwise zero it when
+   cross-fade noise with a decaying `0.99` envelope; else zero it when
    `since_unvoiced < 2`.
 
-**Unvoiced branch** (`voiced = false`). The generator MUST clear `corr_smth` and
-`shape_state` and zero the voiced noise, then:
+**Unvoiced branch** (`voiced = false`). Clear `corr_smth` and `shape_state`, zero the
+voiced noise, then:
 
-- If `num_pulses > 0`: compute `nrg_ratio = energy(exc_lpc) / (nrgres + 1e-20)`,
-  `hardness = 10 + 20 * normalized_bitrate`, and the softplus-limited target
-  `nrg_tgt = nrgres * ln(exp(hardness * (1 - nrg_ratio)) + 1) / hardness`, then take
-  the excitation envelope with smoothing coefficient `0.995`.
-- Else (`num_pulses == 0`): set `nrg_ratio = 0`, `nrg_tgt = nrgres`, and take the
-  decaying no-excitation envelope `env0` (coefficient `0.995`).
+- If `num_pulses > 0`: `nrg_ratio = energy(exc_lpc) / (nrgres + 1e-20)`;
+  `hardness = 10 + 20 * normalized_bitrate`;
+  `nrg_tgt = nrgres * ln(exp(hardness * (1 - nrg_ratio)) + 1) / hardness`; take the
+  excitation envelope with smoothing coef `0.995`.
+- Else: `nrg_ratio = 0`, `nrg_tgt = nrgres`; take the decaying no-excitation
+  envelope `env0` (coef `0.995`).
 
-The generator MUST then solve for an affine envelope gain `(f, g)` such that the
-generated noise hits `nrg_tgt` while matching `env_last` at the subframe boundary
-(the quadratic with the `f = 0` / `g = 0` degenerate branches as specified by the
-energy-matching solver), draw white pulses, and scale them by `f + g * env[i]`.
-When `num_pulses > 0` the scaled value MUST be clamped to
-`fcbgains_uv[fcbg_idx] * 0.5` and applied only where `exc_lpc[i] == 0`, leaving
-pulse positions at zero; `env_last` MUST be updated to the clamped final gain. The
-unvoiced gain table is `fcbgains_uv[ix] = 10^(0.05 * (ix - 90))`, `ix` in `0..=90`.
+Solve for affine envelope gain `(f, g)` so generated noise hits `nrg_tgt` while
+matching `env_last` at the subframe boundary (quadratic with `f = 0` / `g = 0`
+degenerate branches per the energy-matching solver). Draw white pulses; scale by
+`f + g * env[i]`. When `num_pulses > 0` the scaled value MUST be clamped to
+`fcbgains_uv[fcbg_idx] * 0.5` and applied only where `exc_lpc[i] == 0` (pulse
+positions left at zero); `env_last` MUST be updated to the clamped final gain.
+Unvoiced gain table: `fcbgains_uv[ix] = 10^(0.05 * (ix - 90))`, `ix` in `0..=90`.
 
-**Output mixing.** After the branch:
+**Output mixing.**
 
-- If `prev_voiced || voiced`, the voiced noise MUST be passed through the fixed MA2
-  filter `[0.25, -0.496, 0.25]` (`out_state_v`) into the output; otherwise the
-  output MUST be zeroed.
-- If `since_unvoiced < 2 || !voiced`, the unvoiced noise MUST be high-pass shaped by
-  `add_noise_uv` (an ARMA1 whose corner frequency is derived from `lsf[0]`,
-  `lsf[1]`, `nrg_ratio`, base corner `800 Hz`, clamped to `1500 Hz`, gain `0.8`) and
-  added into the output; otherwise `out_state_uv` MUST be reset to `[0, 0]`.
+- If `prev_voiced || voiced`: pass voiced noise through fixed MA2 filter
+  `[0.25, -0.496, 0.25]` (`out_state_v`) into the output; else zero the output.
+- If `since_unvoiced < 2 || !voiced`: high-pass shape unvoiced noise via
+  `add_noise_uv` (ARMA1, corner freq from `lsf[0]`, `lsf[1]`, `nrg_ratio`, base
+  corner `800 Hz`, clamped to `1500 Hz`, gain `0.8`) and add into output; else reset
+  `out_state_uv` to `[0, 0]`.
 
-Finally the generator MUST set `prev_voiced = voiced`, increment `since_unvoiced`
-on a voiced subframe and reset it to `0` on an unvoiced subframe.
+Finally set `prev_voiced = voiced`; increment `since_unvoiced` on a voiced subframe,
+reset it to `0` on an unvoiced subframe.
 
-The residual energy `nrgres` consumed here MUST be decoded from the per-subframe
-Q14 quantised value as
-`nrgres = max(0, 10^(0.1 * q14 / 2^14) - 3.1622776e-9) * fcb_subfrlen`, and
+**Inputs.** Decode residual energy from the per-subframe Q14 value:
+`nrgres = max(0, 10^(0.1 * q14 / 2^14) - 3.1622776e-9) * fcb_subfrlen`.
 `normalized_bitrate = sigmoid(1.4 * log2(pulses_per_20ms + 1) - 6.5)` with
 `pulses_per_20ms = num_pulses * frame_length_16 / 320`.
 
-**Findings**
-
-The unvoiced branch is the dominant path; the voiced branch only adds a small
-high-band noise floor. Without this stage the excitation is bare fixed-codebook
-pulses, which sound buzzy/robotic with starved high frequencies. The float
-constants are the codec's verbatim 32-bit literals, and `pi` is the exact literal
-`3.1415926535897`; all arithmetic is single-precision and the accumulation order is
-fixed (4-wide envelope and pulse loops) because the output is required to be
-bit-exact. The `sigmoid` helper clamps its argument to `[-80, 80]`.
-
-**Requires:** [`mlow`](../encodings/mlow.md), [`mlow-frame`](../encodings/mlow-frame.md), [`mlow-excitation`](../encodings/mlow-excitation.md), [`mlow-lsf-lpc`](../encodings/mlow-lsf-lpc.md), [`mlow-synthesis`](../encodings/mlow-synthesis.md), [`mlow-vad`](../encodings/mlow-vad.md)
+Parent: [`mlow`](../encodings/mlow.md)  
+Requires: [`mlow`](../encodings/mlow.md), [`mlow-frame`](../encodings/mlow-frame.md), [`mlow-excitation`](../encodings/mlow-excitation.md), [`mlow-lsf-lpc`](../encodings/mlow-lsf-lpc.md), [`mlow-synthesis`](../encodings/mlow-synthesis.md), [`mlow-vad`](../encodings/mlow-vad.md)  
+Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-synthesis`](../encodings/mlow-synthesis.md)
 
 **Implemented by**
+- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+- **meowcaller** — partial — encodings DSP modules are KAT-verified piecewise; full decoder orchestration in progress · [commits ↗](https://github.com/purpshell/meowcaller/commits)
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | working |  |
-| [`meowmeow`](../../flavors.md) | working |  |
-| [`meowcaller`](../../flavors.md) | partial | encodings DSP modules are KAT-verified piecewise; full decoder orchestration in progress |
+Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-noise.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-noise.yaml)
 
 **Open questions**
-
 - Exact bit layout and subframe schedule by which num_pulses, nrgres (Q14), fcbg_idx and the LSFs are delivered from the frame to this stage is specified in mlow-frame / mlow-excitation, not here.
 
 **References**
-
 - [RFC 6716 — Opus (CELT range coder reused by MLow)](https://www.rfc-editor.org/rfc/rfc6716)
 
 ---
 
-[in the full RFC →](../index.md#mlow-noise) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#mlow-noise)

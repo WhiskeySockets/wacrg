@@ -13,12 +13,4 @@ derives_from:
   - whatsapp-rust
 notify_repo: purpshell/meowcaller
 notify_opt_in: true
-description: >
-  A clean-room, pure-Go WhatsApp 1:1 calling library built module by module under
-  human audit and verified byte-exact against shared known-answer vectors. An
-  independent Go flavor whose codec modules port the upstream whatsapp-rust
-  reference (oxidezap/whatsapp-rust) one module at a time; each Go function carries a
-  // Source of truth: permalink to that reference, and the spec-to-code inverse is
-  recorded in meowcaller.map.yaml. In progress: the MLow receive DSP is largely
-  KAT-verified; keying, signaling, and transport are planned. Listed as covering
-  only media until those land (honesty over coverage).
+description: Clean-room pure-Go WhatsApp calling library porting the whatsapp-rust codec module by module under human audit.

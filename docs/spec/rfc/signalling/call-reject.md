@@ -2,17 +2,13 @@
 
 # Call reject stanza
 
-**Category:** [Signalling](../index.md#signalling)  
-**Part id:** `call-reject`
+_Signalling · `call-reject`_
 
-**`call-reject`** · status: review · features: audio, video · since: 0.1.0
+_status: review · audio, video_
 
-The `<reject>` action stanza, sent by a callee device to decline an incoming call offer without ever entering the media phase. It names the call by its `call-id`/`call-creator` and carries no child elements.
+The `<reject>` action stanza declines an incoming call offer before the media phase, naming the call by `call-id`/`call-creator` with no child elements.
 
-**Normative**
-
-A callee device declines a ringing call by sending a `<call>` stanza whose
-single action child is `<reject>`. The wire layout is:
+Wire layout:
 
     <call to="{caller-jid}">
       <reject call-id="{call-id}" call-creator="{call-creator-jid}"/>
@@ -20,70 +16,53 @@ single action child is `<reject>`. The wire layout is:
 
 **Construction.**
 
-- The outer `<call>` element MUST carry a `to` attribute set to the JID the
-  offer was received from (the caller). The reject builder MUST NOT add an
-  `id` attribute to the `<call>` wrapper; the I/O layer's stanza id applies.
-- The `<reject>` action element MUST carry exactly two attributes:
-  - `call-id` — the `call-id` copied verbatim from the `<offer>` being
-    declined (see [call-offer](../signalling/call-offer.md)).
-  - `call-creator` — the `call-creator` JID copied verbatim from that
-    `<offer>`.
-- The `<reject>` element MUST be empty: it MUST NOT contain any child
-  elements and carries no content bytes.
+- The outer `<call>` MUST carry `to` = the JID the offer was received from
+  (the caller). The builder MUST NOT add an `id` attribute to `<call>`; the
+  I/O layer's stanza id applies.
+- `<reject>` MUST carry exactly two attributes:
+  - `call-id` — copied verbatim from the declined `<offer>` (see
+    [call-offer](../signalling/call-offer.md)).
+  - `call-creator` — `call-creator` JID copied verbatim from that `<offer>`.
+- `<reject>` MUST be empty: no child elements, no content bytes.
 
 **Semantics.**
 
-- A device MUST send `<reject>` only to decline an offer it has not accepted.
-  It is distinct from `<terminate>` (see [call-terminate](../signalling/call-terminate.md)),
-  which ends a call that has already progressed past offer.
+- Send `<reject>` only to decline an offer not yet accepted; distinct from
+  `<terminate>` (see [call-terminate](../signalling/call-terminate.md)), which ends a call past
+  offer.
 - `<reject>` MUST NOT be preceded by `<preaccept>` or `<accept>` for the same
-  call from the same device; rejecting is the terminal action for that offer.
-- No media keying, relay allocation, or transport negotiation is performed on
-  the reject path: a rejecting device skips the entire media stack.
+  call from the same device; it is the terminal action for that offer.
+- No media keying, relay allocation, or transport negotiation occurs on the
+  reject path.
 
 **Receiving.**
 
-- A `<reject>` arrives wrapped in an inbound `<call>` stanza alongside the
-  standard call envelope attributes (`from`, `id`, `t`, and optionally
-  `notify`, `platform`, `version`, `e`). A receiver MUST treat `call-id` and
-  `call-creator` on the `<reject>` element as required; a `<reject>` missing
-  either attribute MUST be rejected as malformed.
-- The generic `<call>` acknowledgement covers receipt of a `<reject>`; no
-  `<receipt>`-style ack-of-offer is emitted in response (that is specific to
-  `<offer>`).
-
-**Findings**
-
-The `<reject>` action is symmetric on both directions of the stack: the
-outbound builder emits `<call to=peer><reject call-id call-creator/></call>`
-with no children, and the inbound parser recognises `reject` as a known action
-carrying only `call-id` and `call-creator`, mapping it to a `Reject` call
-action that mirrors the stanza one-to-one.
+- A `<reject>` arrives in an inbound `<call>` stanza with the standard
+  envelope attributes (`from`, `id`, `t`, optionally `notify`, `platform`,
+  `version`, `e`). A receiver MUST treat `call-id` and `call-creator` as
+  required; a `<reject>` missing either MUST be rejected as malformed.
+- The generic `<call>` acknowledgement covers receipt; no `<receipt>`-style
+  ack-of-offer is emitted (that is specific to `<offer>`).
 
 Unlike `<terminate>`, `<reject>` carries no `reason`, `duration`, or
-`audio_duration` attributes and no `<destination>` child for fanning the
-decline out to sibling devices — declining is expressed purely by the two
-identifying attributes.
+`audio_duration` attributes and no `<destination>` child.
 
-**Requires:** [`call-offer`](../signalling/call-offer.md)
+Requires: [`call-offer`](../signalling/call-offer.md)  
+Breakdown: [`flow-call-rejected`](../signalling/flow-call-rejected.md), [`flow-incoming-1to1`](../signalling/flow-incoming-1to1.md)
 
 **Implemented by**
+- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+- **zapo-caller** — working — ported from zapo-caller signaling.ts
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | working |  |
-| [`zapo-caller`](../../flavors.md) | working | ported from zapo-caller signaling.ts |
-| [`meowcaller`](../../flavors.md) | planned | signalling is a planned module |
+Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/call-reject.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/call-reject.yaml)
 
 **Open questions**
-
 - Whether any client emits an optional <reject> attribute (e.g. a reason or media-type hint) under newer protocol versions; none is observed in the current builders or parser.
 - Whether the caller forwards a reject-derived terminate to other callee devices, or whether each device rejects independently.
 
 **References**
-
 - [RFC 2119 — Key words for use in RFCs](https://www.rfc-editor.org/rfc/rfc2119)
 
 ---
 
-[in the full RFC →](../index.md#call-reject) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#call-reject)

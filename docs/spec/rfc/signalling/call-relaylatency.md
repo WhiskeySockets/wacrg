@@ -2,18 +2,14 @@
 
 # Relay latency reporting
 
-**Category:** [Signalling](../index.md#signalling)  
-**Part id:** `call-relaylatency`
+_Signalling · `call-relaylatency`_
 
-**`call-relaylatency`** · status: draft · features: audio, video, group · since: 0.1.0
+_status: draft · audio, video, group_
 
-How a client reports a measured round-trip latency to a relay server using the `<relaylatency>` call action, including the offset encoding of the latency value and the `<te>` element that names the relay and carries its address.
+A client reports a measured relay round-trip time via a `<relaylatency>` call action whose `<te>` element names the relay and carries an offset-encoded latency.
 
-**Normative**
-
-A client reports a measured relay round-trip time (RTT) by sending a `<call>`
-stanza carrying a `<relaylatency>` action child. The action element MUST carry
-the same `call-id` and `call-creator` attributes used by the rest of the call's
+Send a `<call>` stanza carrying a `<relaylatency>` action child. The action MUST
+carry the `call-id` and `call-creator` attributes used by the rest of the call's
 signalling (see [call-offer](../signalling/call-offer.md)):
 
     <call to="{peer-jid}">
@@ -26,72 +22,51 @@ signalling (see [call-offer](../signalling/call-offer.md)):
       </relaylatency>
     </call>
 
-The outbound `<call>` wrapper MUST set `to` to the peer JID. It MUST NOT carry an
-`id` attribute on this action.
+- The `<call>` wrapper MUST set `to` to the peer JID and MUST NOT carry an `id`
+  attribute on the action.
+- The action MUST contain exactly one `<te>` child. The `<te>` element MUST carry
+  a `latency` attribute (encoding below), a `relay_name` attribute naming the relay
+  (e.g. `gru1c02`), and the relay's binary address as the element's raw byte content.
 
-**The `<te>` element.** A `<relaylatency>` action MUST contain exactly one `<te>`
-child describing the relay that was probed. The `<te>` element:
-
-- MUST carry a `latency` attribute encoding the measured RTT (see below).
-- MUST carry a `relay_name` attribute naming the relay (e.g. `gru1c02`).
-- MUST carry the relay's binary address as the element's raw byte content.
-
-**Latency encoding.** The `latency` attribute value MUST be the decimal string of
-the RTT in milliseconds added to the fixed 32-bit offset `0x02000000`
-(33554432):
+**Latency encoding.** `latency` MUST be the decimal string of the RTT in
+milliseconds added to the fixed 32-bit offset `0x02000000` (33554432), in unsigned
+32-bit arithmetic:
 
     latency = decimal_string( 0x02000000 + rtt_ms )
 
-For example, an RTT of 45 ms MUST be encoded as `"33554477"`. The addition is
-performed in unsigned 32-bit arithmetic.
+RTT 45 ms encodes as `"33554477"`.
 
-**Destination.** When the report targets specific peer devices, the action SHOULD
-include a `<destination>` child containing one `<to jid="..."/>` element per
-target device. The `<destination>` element MUST be omitted when there are no
-target devices (for example, an inbound callee reporting to the call creator).
+**Destination.** When targeting specific peer devices, the action SHOULD include a
+`<destination>` child with one `<to jid="..."/>` per target device. `<destination>`
+MUST be omitted when there are no target devices (e.g. an inbound callee reporting
+to the call creator).
 
-**Receiving.** A client receiving a `<call>` whose action child tag is
-`relaylatency` MUST treat it as a relay-latency report keyed by its `call-id` and
-`call-creator`. A receiver MUST NOT reject the call signalling when the action
-carries no `<te>` or `<destination>` children.
+**Receiving.** A `<call>` whose action child tag is `relaylatency` MUST be treated
+as a relay-latency report keyed by `call-id` and `call-creator`. A receiver MUST NOT
+reject the signalling when the action carries no `<te>` or `<destination>` children.
 
-**Findings**
+**Notes.** `relaylatency` is a recognised call action alongside `offer`, `offer_notice`,
+`preaccept`, `accept`, `reject`, `terminate`, and `transport`; parsers omitting it
+from their known-action set silently drop the stanza.
 
-The `<relaylatency>` action shares the `offer`-style envelope used by other call
-actions: a `<call>` wrapper around an action element that carries `call-id` and
-`call-creator`. It is one of the recognised call actions alongside `offer`,
-`offer_notice`, `preaccept`, `accept`, `reject`, `terminate`, and `transport`;
-parsers that omit it from their known-action set silently drop the stanza.
-
-The 32-bit offset `0x02000000` keeps the encoded value in a distinct numeric band
-well above plausible raw millisecond RTTs, which lets a receiver recover the RTT
-by subtracting the offset.
-
-The `<te>` element carries the relay's address as raw element bytes rather than as
-an attribute, mirroring how relay candidate addresses are carried elsewhere in the
-call protocol.
-
-**Requires:** [`call-offer`](../signalling/call-offer.md), [`stun-relay`](../relay/stun-relay.md)
+Requires: [`call-offer`](../signalling/call-offer.md), [`stun-relay`](../relay/stun-relay.md)  
+Breakdown: [`relay-candidates`](../relay/relay-candidates.md), [`flow-outgoing-1to1`](../signalling/flow-outgoing-1to1.md)
 
 **Implemented by**
+- **whatsapp-rust** — working — build_relay_latency + encode_latency in wacore voip::stanza; parsed as CallAction::RelayLatency · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+- **zapo-caller** — working — ported from src/signaling.ts; relay path covered
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | working | build_relay_latency + encode_latency in wacore voip::stanza; parsed as CallAction::RelayLatency |
-| [`zapo-caller`](../../flavors.md) | working | ported from src/signaling.ts; relay path covered |
-| [`meowcaller`](../../flavors.md) | planned |  |
+Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/call-relaylatency.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/call-relaylatency.yaml)
 
 **Open questions**
-
 - Exact byte layout of the relay address carried as <te> content, and whether it matches the relay-candidate address format.
 - The set of valid relay_name values and how a client selects which relay(s) to report.
 - Whether the receiver (server or peer) sends any acknowledgement specific to relaylatency, and the cadence/trigger for emitting reports.
 - Whether group calls report latency per relay for multiple relays in a single action or one action per relay.
 
 **References**
-
 - [RFC 5245 — ICE (relay/RTT context)](https://www.rfc-editor.org/rfc/rfc5245)
 
 ---
 
-[in the full RFC →](../index.md#call-relaylatency) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#call-relaylatency)

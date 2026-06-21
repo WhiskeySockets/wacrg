@@ -2,150 +2,115 @@
 
 # MLow voice activity detection
 
-**Category:** [Encodings](../index.md#encodings)  
-**Part id:** `mlow-vad`
+_Encodings · `mlow-vad`_
 
-**`mlow-vad`** · status: draft · features: audio · since: 0.1.0
+_status: draft · audio_
 
-The voice activity detector the MLow encoder runs over the raw input PCM to produce a per-internal-frame speech-activity probability and the packet-level coded_as_active_voice flag that drive the encoder's bitrate, voiced/unvoiced classification, and DTX / comfort-noise decisions. The VAD is a fixed-point SILK VAD (a four-band SNR estimator over an allpass filterbank with an adaptive noise floor and a per-packet DTX hangover).
+Fixed-point SILK VAD over a four-band allpass filterbank that produces a per-internal-frame speech-activity probability and a packet-level coded_as_active_voice flag.
 
-**Normative**
+Run the VAD on the raw int16 input PCM, **before** any encoder high-pass
+stage, at 16 kHz. Internal frame = 320 samples (20 ms). A media packet = 60 ms
+= 3 internal frames (960 samples).
 
-The encoder MUST run the VAD on the raw int16 input PCM, **before** any
-encoder high-pass stage, at 16 kHz with an internal frame length of 320
-samples (20 ms). A media packet covers 60 ms = three internal frames of 320
-samples each (960 samples).
+Persistent state across packets: three two-element allpass-filterbank states,
+per-band carried subframe energy (`xnrg_subfr`), four per-band noise levels
+and their reciprocals, per-band noise-level bias, frame counter, high-pass
+filter state, DTX hangover counter.
 
-The VAD MUST carry persistent state across packets: the three two-element
-allpass-filterbank states, the per-band carried subframe energy, the four
-per-band noise levels and their reciprocals, the per-band noise-level bias,
-a frame counter, the high-pass filter state, and the DTX hangover counter.
+Default tuning: `noise_lvl_update_speed`, `non_binariness`,
+`highpass_sharpness` all 0.
 
-## Per-internal-frame speech activity
+## Per-internal-frame speech_activity_Q8 (range 0..=255, reported /256)
 
-For each internal frame the encoder MUST compute `speech_activity_Q8`
-(a value in `0..=255`, reported as `speech_activity_Q8 / 256`) as follows.
+**1. Four-band split** (`ana_filt_bank_1`) into 0–1, 1–2, 2–4, 4–8 kHz via
+three cascaded first-order allpass splits:
+- 0–8 kHz → 0–4 (low) + 4–8 (high);
+- 0–4 → 0–2 + 2–4;
+- 0–2 → 0–1 + 1–2.
 
-**1. Four-band split.** The 0–8 kHz frame MUST be split into four bands —
-0–1 kHz, 1–2 kHz, 2–4 kHz, 4–8 kHz — by three cascaded first-order allpass
-filterbank splits (`ana_filt_bank_1`):
+Coefficients: `A_FB1_20 = 3894 << 1`, `A_FB1_21 = -29322`. Even-indexed input
+samples go through the `A_FB1_21` branch (`x = SMLAWB(y, y, A_FB1_21)`),
+odd-indexed through `A_FB1_20` (`x = SMULWB(y, A_FB1_20)`). Low output =
+`RSHIFT_ROUND(out_2 + out_1, 11)`, high output = `RSHIFT_ROUND(out_2 - out_1, 11)`,
+both saturated to int16. Each split carries its own two-element state.
 
-- split the full 0–8 kHz frame into 0–4 kHz (low) and 4–8 kHz (high);
-- split the 0–4 kHz band into 0–2 kHz and 2–4 kHz;
-- split the 0–2 kHz band into 0–1 kHz and 1–2 kHz.
+**2. Lowest-band high-pass.** First-order ARMA (zero at DC, −3 dB @ 66 Hz) on
+the lowest band: `a_neg_Q16 = 53084` (scaled by `(100 - highpass_sharpness)/100`),
+`b_Q16 = (65536 + a_neg_Q16) / 2`, carrying `hp_state`.
 
-Each split MUST use the two-tap allpass coefficients `A_FB1_20 = 3894 << 1`
-and `A_FB1_21 = -29322`. Even-indexed input samples are processed through the
-`A_FB1_21` branch (`x = SMLAWB(y, y, A_FB1_21)`), odd-indexed through the
-`A_FB1_20` branch (`x = SMULWB(y, A_FB1_20)`); the low output is
-`RSHIFT_ROUND(out_2 + out_1, 11)` and the high output is
-`RSHIFT_ROUND(out_2 - out_1, 11)`, both saturated to int16. Each split MUST
-carry its own two-element state across frames.
+**3. Per-band energy.** Sum over four internal subframes; each sample
+right-shifted by 3 before squaring (`SMLABB`), accumulated with saturating
+positive adds. Carry the last subframe's energy of each band into the next
+frame (`xnrg_subfr`); running total adds the final subframe's energy at half
+weight (`sum_squared >> 1`).
 
-**2. Lowest-band high-pass.** A first-order ARMA high-pass (zero at DC, −3 dB
-at 66 Hz) MUST be applied to the lowest band with `a_neg_Q16 = 53084`
-(scaled by `(100 - highpass_sharpness) / 100`) and `b_Q16 = (65536 + a_neg_Q16) / 2`,
-carrying `hp_state` across frames.
+**4. Noise-level update** (`GetNoiseLevels`), before SNR:
+- smoothing coef `VAD_NOISE_LEVEL_SMOOTH_COEF_Q16 = 1024`, reduced to `>> 3`
+  when band energy > `8 * nl`, full when < `nl`, interpolated between;
+- while `counter < 1000`, floor coef at `min_coef = INT16_MAX / ((counter >> 4) + 1)`
+  and increment `counter`;
+- bias each band energy by `noise_level_bias[b]`; clamp `nl[b]` to ≤ `0x00FF_FFFF`.
 
-**3. Per-band energy.** For each band the energy MUST be summed over four
-internal subframes, with each sample right-shifted by 3 before squaring
-(`SMLABB`) and accumulated with saturating positive adds. The energy of the
-last subframe of each band MUST be carried into the next frame (`xnrg_subfr`),
-and the running total adds the final subframe's energy at half weight
-(`sum_squared >> 1`).
+Init: `bias[b] = max(VAD_NOISE_LEVELS_BIAS / (b+1), 1)` with
+`VAD_NOISE_LEVELS_BIAS = 50`; `nl[b] = 100 * bias[b]`;
+`inv_nl[b] = INT32_MAX / nl[b]`; `counter = 15`.
 
-**4. Noise-level update.** The four per-band noise levels MUST be updated
-(`GetNoiseLevels`) from the band energies before the SNR computation:
-
-- the smoothing coefficient is `VAD_NOISE_LEVEL_SMOOTH_COEF_Q16 = 1024`,
-  reduced to `>> 3` when the band energy exceeds `8 * nl`, kept full when it
-  is below `nl`, and interpolated in between;
-- while `counter < 1000`, the coefficient is floored at
-  `min_coef = INT16_MAX / ((counter >> 4) + 1)` and `counter` is incremented;
-- each band energy is biased by `noise_level_bias[b]`, and `nl[b]` is clamped
-  to at most `0x00FF_FFFF`.
-
-At init the per-band bias MUST be `max(VAD_NOISE_LEVELS_BIAS / (b+1), 1)` with
-`VAD_NOISE_LEVELS_BIAS = 50`, the noise level `nl[b] = 100 * bias[b]`, the
-reciprocal `inv_nl[b] = INT32_MAX / nl[b]`, and `counter = 15`.
-
-**5. SNR and activity.** For each band the speech energy is `xnrg[b] - nl[b]`;
-for positive speech energy the encoder MUST form a Q8 ratio, convert it to a
-Q7 SNR via `lin2log` minus `8 * 128`, accumulate the squared SNR, and weight a
-tilt accumulator by `TILT_WEIGHTS = [30000, 6000, -12000, -12000]`. The mean
-squared SNR is square-rooted (`SQRT_APPROX`) and scaled by 3 to form
-`p_SNR_dB_Q7`. The final probability is
+**5. SNR and activity.** Per band, speech energy = `xnrg[b] - nl[b]`. For
+positive speech energy: form a Q8 ratio, convert to Q7 SNR via `lin2log` minus
+`8 * 128`, accumulate squared SNR, weight a tilt accumulator by
+`TILT_WEIGHTS = [30000, 6000, -12000, -12000]`. Square-root the mean squared
+SNR (`SQRT_APPROX`), scale by 3 → `p_SNR_dB_Q7`. Then:
 
     sa_Q15 = sigm_Q15(SMULWB(vad_snr_factor_Q16, p_SNR_dB_Q7) - VAD_NEGATIVE_OFFSET_Q5)
     speech_activity_Q8 = min(sa_Q15 >> 7, 255)
 
-with `VAD_SNR_FACTOR_Q16 = 45000` (scaled by `(150 - non_binariness) / 150`)
-and `VAD_NEGATIVE_OFFSET_Q5 = 128`. In the default encoder configuration the
-tuning parameters `noise_lvl_update_speed`, `non_binariness`, and
-`highpass_sharpness` are all 0.
+with `VAD_SNR_FACTOR_Q16 = 45000` (scaled by `(150 - non_binariness)/150`) and
+`VAD_NEGATIVE_OFFSET_Q5 = 128`.
 
-This per-frame path MUST be bit-exact with the reference fixed-point SILK
-`smpl_VAD_GetSA_Q8_c`; all arithmetic is the SILK fixed-point primitives
-(`SMULWB`, `SMLAWB`, `SMULWW`, `SMULBB`, `SMLABB`, saturating adds, `lin2log`,
-`sqrt_approx`, `sigm_Q15`, `RSHIFT_ROUND`).
+This path MUST be bit-exact with reference fixed-point SILK
+`smpl_VAD_GetSA_Q8_c`; use SILK fixed-point primitives (`SMULWB`, `SMLAWB`,
+`SMULWW`, `SMULBB`, `SMLABB`, saturating adds, `lin2log`, `sqrt_approx`,
+`sigm_Q15`, `RSHIFT_ROUND`).
 
 ## Packet-level activity and DTX hangover
 
-For each 60 ms packet the encoder MUST classify each of the three internal
-frames as `Active` when `speech_activity_Q8 > SPEECH_ACTIVITY_DTX_THRES_Q8`
-(= `round(0.05 * 256)` = 12) and `Inactive` otherwise, then apply a per-packet
-hangover:
+Per 60 ms packet, classify each of the 3 internal frames as `Active` when
+`speech_activity_Q8 > SPEECH_ACTIVITY_DTX_THRES_Q8` (= `round(0.05*256)` = 12),
+else `Inactive`, then apply hangover:
+- `Active` frame: reset `remaining_dtx_hangover` to `hangover_ms` (default 60);
+- non-`Active` frame while `remaining_dtx_hangover > 0`: reclassify as
+  `Hangover`, decrement by `PACKET_MS / FRAMES_PER_PACKET` (= 60/3 = 20).
 
-- on an `Active` frame, reset `remaining_dtx_hangover` to `hangover_ms`
-  (default 60 ms);
-- on a non-`Active` frame while `remaining_dtx_hangover > 0`, reclassify the
-  frame as `Hangover` and decrement `remaining_dtx_hangover` by
-  `PACKET_MS / FRAMES_PER_PACKET` (= 60 / 3 = 20).
-
-The packet's `coded_as_active_voice` flag MUST be set true if any frame is
-classified `Active` or `Hangover`, and false only if all three frames are
-`Inactive`. The encoder MUST use this flag for its DTX / comfort-noise
-decision and the per-frame `speech_activity` for bitrate control and
+Set `coded_as_active_voice` true if any frame is `Active` or `Hangover`, false
+only if all three are `Inactive`. Use this flag for the DTX / comfort-noise
+decision; use per-frame `speech_activity` for bitrate control and
 voiced/unvoiced classification.
 
-This specification reflects the `activity == NO_DECISION` path (the threshold
-drives the per-frame type directly); the input-tilt value computed during the
+This reflects the `activity == NO_DECISION` path; the input-tilt value from the
 SNR pass is not consumed downstream in this configuration.
 
-**Findings**
+**Notes.** Per-frame `speech_activity` and packet `coded_as_active_voice` are validated
+bit-exactly against reference libopus `smpl_VAD_GetSA_Q8_c` (enc_dump) over
+packets where carried noise-level state remains bit-exact.
 
-The detector is a faithful fixed-point port of the SILK VAD: the two-band
-allpass filterbank (`smpl_ana_filt_bank_1`), the per-band noise-level tracker
-(`smpl_VAD_GetNoiseLevels`), the four-band SNR-to-sigmoid activity estimate
-(`smpl_VAD_GetSA_Q8_c`), and the per-packet DTX hangover. It runs on the raw
-microphone PCM rather than the encoder's high-pass output, with its own −3 dB
-@ 66 Hz lowest-band high-pass internal to the VAD.
-
-The per-frame `speech_activity` and the packet `coded_as_active_voice` flag
-are validated bit-exactly against the reference libopus encoder
-(`smpl_VAD_GetSA_Q8_c` enc_dump) over the packets where the carried
-noise-level state remains bit-exact.
-
-**Requires:** [`mlow`](../encodings/mlow.md), [`mlow-frame`](../encodings/mlow-frame.md)
+Parent: [`mlow`](../encodings/mlow.md)  
+Requires: [`mlow`](../encodings/mlow.md), [`mlow-frame`](../encodings/mlow-frame.md)  
+Breakdown: [`mlow-encoder`](../encodings/mlow-encoder.md), [`mlow-noise`](../encodings/mlow-noise.md)
 
 **Implemented by**
+- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+- **meowcaller** — partial — encoding codec modules are partial · [commits ↗](https://github.com/purpshell/meowcaller/commits)
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | working |  |
-| [`meowmeow`](../../flavors.md) | working |  |
-| [`meowcaller`](../../flavors.md) | partial | encoding codec modules are partial |
+Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-vad.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-vad.yaml)
 
 **Open questions**
-
 - Whether non-default VAD tuning (noise_lvl_update_speed, non_binariness, highpass_sharpness) is ever negotiated on the wire, or always left at 0.
 - How the per-frame speech_activity is quantised into the bitrate controller and the voiced/unvoiced classifier downstream of the VAD.
 - Whether the input_tilt_Q15 value is consumed by any other encoder configuration.
 
 **References**
-
 - [RFC 6716 — Definition of the Opus Audio Codec (SILK VAD)](https://www.rfc-editor.org/rfc/rfc6716)
 
 ---
 
-[in the full RFC →](../index.md#mlow-vad) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#mlow-vad)

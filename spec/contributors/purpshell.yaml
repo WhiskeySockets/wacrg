@@ -6,11 +6,7 @@ techniques:
   - websocket-capture
   - baileys-instrumentation
   - wasm-analysis
-tools:
-  - baileys
-  - warden
 flavors:
-  - meowmeow
   - meowcaller
 links:
   - title: GitHub

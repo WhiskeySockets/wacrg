@@ -2,24 +2,20 @@
 
 # RTP framing
 
-**Category:** [Relay](../index.md#relay)  
-**Part id:** `rtp-framing`
+_Relay · `rtp-framing`_
 
-**`rtp-framing`** · status: review · features: audio, video · since: 0.1.0
+_status: review · audio, video_
 
-The RTP packet framing that carries SRTP-protected Opus media: the fixed WhatsApp 16-byte speech header and 20-byte DTX/piggyback header (RTP extension profile 0xdebe), the Opus payload-type and payload classifiers, and the send-side sequencing of sequence number, timestamp, and marker bit.
+RTP framing for SRTP-protected Opus media: the 16-byte speech and 20-byte DTX/piggyback headers (ext profile 0xdebe), payload classification, and send-side sequencing.
 
-**Normative**
+Protected media MUST use RTP version 2. Audio payload type is **120** (Opus); a
+receiver MUST also accept **121**. Byte 1 = `marker << 7 | (payloadType & 0x7f)`.
+CC MUST be 0; P MUST be 0. All multi-byte fields MUST be big-endian.
 
-Protected media MUST be carried in RTP version 2 packets. Audio uses payload
-type **120** (Opus); a receiver MUST also accept payload type **121** as
-WhatsApp Opus. The marker bit and the 7-bit payload type occupy byte 1
-(`marker << 7 | (payloadType & 0x7f)`).
-
-**Header layout.** Every packet MUST carry exactly one of two header shapes.
-A plain speech packet MUST use the 16-byte header; a DTX or
-warp-piggyback packet MUST use the 20-byte header, which sets the RTP
-extension bit (`X=1`) and appends a single 0xdebe extension word.
+**Header shape.** Every packet MUST carry exactly one of two headers. Speech uses
+the 16-byte header (`X=0`); DTX or warp-piggyback uses the 20-byte header (`X=1`).
+The 0xdebe extension profile tag MUST be emitted on every header; the 16-byte form
+has extension length 0 (no extension block), the 20-byte form has length 1 word.
 
 16-byte speech header:
 
@@ -35,8 +31,8 @@ extension bit (`X=1`) and appends a single 0xdebe extension word.
     |       0xdebe (ext profile)    |     ext length = 0 words      |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-20-byte DTX / piggyback header (16-byte header with ext length = 1 word,
-followed by one 32-bit extension word):
+20-byte DTX / piggyback header (16-byte header with ext length = 1 word, then one
+32-bit extension word):
 
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |       0xdebe (ext profile)    |     ext length = 1 word       |
@@ -44,82 +40,55 @@ followed by one 32-bit extension word):
     |                       extension word                         |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-All multi-byte fields (sequence number, timestamp, SSRC, the 0xdebe profile,
-the extension length, and the extension word) MUST be big-endian. The contributing
-source count (CC) MUST be 0 and the padding bit (P) MUST be 0 for these headers.
+**Extension word** (20-byte header only):
+- DTX (comfort-noise): MUST be `0x30010000`.
+- Warp-piggyback: MUST be the piggyback word for that packet (see [warp](../relay/warp.md)).
 
-Even when the 16-byte header carries no extension words, the sender MUST emit the
-0xdebe extension profile tag with an extension length of 0; the `X` bit is therefore
-0 for the 16-byte form (no extension block follows) and 1 for the 20-byte form.
-
-**Extension word.** When the header is 20 bytes:
-
-- For a DTX (comfort-noise) packet the extension word MUST be `0x30010000`.
-- For a warp-piggyback packet the extension word MUST be the piggyback word
-  computed for that packet (see [warp](../relay/warp.md)).
-
-**Payload classification.** The sender MUST select the header shape and marker
-behaviour from the Opus payload:
-
-- A payload is **DTX/comfort-noise** when: it is a single byte `0x10`, `0x88`,
-  or `0x90`; or it is 2–15 bytes whose first byte `b0` satisfies
-  `(b0 & 0xf8) == 0x08` or `b0 == 0x0a`; or it is ≤ 6 bytes with
-  `(b0 & 0xf0) == 0x30`. DTX payloads MUST use the 20-byte header.
-- A payload is an **Opus priming frame** when it equals one of the fixed
-  priming frames. Priming and DTX payloads MUST NOT latch the speech marker.
+**Payload classification.** Select header shape and marker from the Opus payload:
+- **DTX/comfort-noise** when: single byte `0x10`, `0x88`, or `0x90`; or 2–15 bytes
+  with first byte `b0` where `(b0 & 0xf8) == 0x08` or `b0 == 0x0a`; or ≤ 6 bytes
+  with `(b0 & 0xf0) == 0x30`. MUST use the 20-byte header.
+- **Opus priming frame** when it equals one of the fixed priming frames.
 - All other payloads are **speech** and MUST use the 16-byte header.
+- Priming and DTX payloads MUST NOT latch the speech marker.
 
-**Sequencing (send side).** A stream MUST start its sequence number at **1** and
-its timestamp at **0**. Each emitted packet MUST advance the sequence number by 1
-(wrapping modulo 2^16) and the timestamp by `samplesPerPacket` (wrapping modulo
-2^32). The marker bit MUST be set on the first speech packet of the stream (the
-speech onset); priming and DTX packets sent before speech MUST NOT set the marker
-and MUST NOT latch the onset. Subsequent speech packets MUST NOT set the marker
-unless an explicit marker is requested by the caller.
+**Sequencing (send side).** A stream MUST start sequence number at **1** and
+timestamp at **0**. Each packet MUST advance the sequence number by 1 (mod 2^16)
+and the timestamp by `samplesPerPacket` (mod 2^32). The marker bit MUST be set on
+the first speech packet (speech onset); priming/DTX packets before speech MUST NOT
+set the marker or latch the onset. Subsequent speech packets MUST NOT set the
+marker unless the caller explicitly requests it.
 
-**Wire-size estimation.** Implementations MAY estimate the on-wire SRTP size of a
-packet as `headerSize + payloadLength + authTagLength`, where `headerSize` is 16
-for speech or 20 for DTX, and `authTagLength` is the SRTP auth tag length (see
-[srtp-hop-by-hop](../crypto/srtp-hop-by-hop.md)): the short 4-byte tag applies to DTX packets
-and to short speech packets (priming frames or payloads ≤ 18 bytes), and the
-full 10-byte tag applies otherwise.
+**Wire-size estimation.** Implementations MAY estimate on-wire SRTP size as
+`headerSize + payloadLength + authTagLength`, where `headerSize` is 16 (speech) or
+20 (DTX), and `authTagLength` (see [srtp-hop-by-hop](../crypto/srtp-hop-by-hop.md)) is the
+short 4-byte tag for DTX and short speech packets (priming frames or payloads
+≤ 18 bytes), else the full 10-byte tag.
 
-**Findings**
+**Notes.** On parse, only the fixed 12-byte RTP fields are decoded; total header length is
+computed from version, CC, and (when `X=1`) the extension length, so the payload
+offset is found without interpreting the extension word.
 
-The 0xdebe extension profile is WhatsApp-specific and is present on every header,
-distinguishing the 16-byte (zero extension words) and 20-byte (one extension word)
-forms by the extension-length field alone. The DTX extension word `0x30010000` and
-the header byte layouts are fixed.
+Mlow Opus speech frames are recognisable by first byte (20 ms `0x48..0x4f`,
+60 ms `0x50..0x57`) on payloads ≥ 18 bytes; this does not change the 16-byte header.
 
-On parse, only the fixed 12-byte RTP fields are decoded; the total header length is
-computed from the version, CC, and (when `X=1`) the extension length so the payload
-offset can be found without interpreting the extension word.
-
-Opus speech frames produced by the mlow codec can be recognised by their first byte
-(20 ms frames `0x48..0x4f`, 60 ms frames `0x50..0x57`) on payloads of at least 18
-bytes; this classification does not change the RTP header shape, which is the
-16-byte speech form.
-
-**Requires:** [`warp`](../relay/warp.md), [`srtp-hop-by-hop`](../crypto/srtp-hop-by-hop.md), [`opus`](../encodings/opus.md), [`ssrc`](../relay/ssrc.md)
+Requires: [`warp`](../relay/warp.md), [`srtp-hop-by-hop`](../crypto/srtp-hop-by-hop.md), [`opus`](../encodings/opus.md), [`ssrc`](../relay/ssrc.md)  
+Breakdown: [`video-packetization`](../encodings/video-packetization.md), [`media-loop`](../relay/media-loop.md), [`rtcp`](../relay/rtcp.md)
 
 **Implemented by**
+- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+- **zapo-caller** — working — ported to whatsapp-rust from the zapo-caller src/media/rtp.ts framing
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | working |  |
-| [`zapo-caller`](../../flavors.md) | working | ported to whatsapp-rust from the zapo-caller src/media/rtp.ts framing |
-| [`meowcaller`](../../flavors.md) | planned |  |
+Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/relay/rtp-framing.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/relay/rtp-framing.yaml)
 
 **Open questions**
-
 - Whether payload type 121 is used for a distinct media variant or is only accepted on receive.
 - The full set of warp-piggyback extension words and the packet index at which piggybacking begins.
 
 **References**
-
 - [RFC 3550 — RTP](https://www.rfc-editor.org/rfc/rfc3550)
 - [RFC 8285 — A General Mechanism for RTP Header Extensions](https://www.rfc-editor.org/rfc/rfc8285)
 
 ---
 
-[in the full RFC →](../index.md#rtp-framing) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#rtp-framing)

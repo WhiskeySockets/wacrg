@@ -11,12 +11,12 @@ belongs to the standard-Opus/CELT fallback path, which the decoder selects
 separately by TOC (see [TOC routing](#toc-routing-mlow-vs-standard-opus)).
 
 > **Confidence.** The CELP architecture and the CELT range coder are now
-> corroborated (static `wasm-analysis` plus the [meowmeow](../../spec/flavors.md)
-> Go reference and the [whatsapp-rust](../../spec/flavors.md) Rust port, both pinned
+> corroborated (static `wasm-analysis` plus the
+> [whatsapp-rust](../../spec/flavors.md) Rust port, pinned
 > to captured decode vectors): `probable` with executable backing. Per-stage
 > constants below are `probable` where two sources agree, `speculative` where
-> only the WASM read has them. Provenance: technique `wasm-analysis` · tools
-> `warden` · flavors `meowmeow`, `whatsapp-rust` · contributors `purpshell`, `jlucaso1` ·
+> only the WASM read has them. Provenance: technique `wasm-analysis` ·
+> flavors `whatsapp-rust` · contributors `purpshell`, `jlucaso1` ·
 > source: `wacore/src/voip/mlow/` (Rust), commit
 > `365daa6` (the range coder is additionally corroborated by the round-trip test
 > in `impl/mlow/`). Functions cited by index.
@@ -130,8 +130,8 @@ and per-subframe voiced flags in the TOC. RED redundancy uses a
 
 - **Implemented + tested:** the range coder (decode and a matched encoder).
 - A complete, validated reference now exists in Rust
-  ([whatsapp-rust](../../spec/flavors.md) `wacore/src/voip/mlow/`) and Go
-  ([meowmeow](../../spec/flavors.md)), both pinned to captured decode vectors. The
+  ([whatsapp-rust](../../spec/flavors.md) `wacore/src/voip/mlow/`), pinned to
+  captured decode vectors. The
   wacrg `impl/mlow/` Go reference can now follow that recovered CELP pipeline
   (LSF/NLSF -> LPC -> LTP -> algebraic pulse -> synthesis -> harmonic comb)
   rather than re-deriving it; the cross-check is the existing reconstructions.

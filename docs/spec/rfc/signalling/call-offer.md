@@ -2,56 +2,45 @@
 
 # Call offer stanza
 
-**Category:** [Signalling](../index.md#signalling)  
-**Part id:** `call-offer`
+_Signalling · `call-offer`_
 
-**`call-offer`** · status: review · features: audio, video · since: 0.1.0
+_status: review · audio, video_
 
-The opening stanza of a 1:1 call: a <call> node whose <offer> child proposes the session, delivers the per-device media key, and seeds transport negotiation.
+A caller opens a 1:1 call with a <call> stanza whose <offer> child proposes the session, carries per-device media keys, and seeds transport negotiation.
 
-**Normative**
+Send a top-level `<call>` stanza with `id` (stanza id, correlates the server
+`<ack>`), `from`, and `to`. Its `<offer>` child MUST carry `call-id` (opaque
+logical call identifier, echoed in every later stanza for this call) and
+`call-creator`.
 
-A caller device MUST open a call by sending a top-level `<call>` stanza with an
-`id` (the stanza id used to correlate the server `<ack>`), a `from`, and a `to`.
-Its `<offer>` child MUST carry `call-id` (the opaque logical call identifier,
-echoed in every later stanza for this call) and `call-creator`.
-
-The `<offer>` children MUST appear in this exact order; a mis-ordered offer is
+`<offer>` children MUST appear in this exact order; a mis-ordered offer is
 rejected by the server with error **439**:
 
     privacy → audio(8000) → audio(16000) → net(medium) → capability
             → (destination | enc) → encopt(keygen) → device-identity
 
-Media is advertised as two `<audio enc="opus" rate="8000|16000">` nodes. The
-`<capability ver="1">` body MUST be the fixed 7-byte blob
-`01 05 f7 09 e4 bb 13`. `<encopt keygen="2">` selects the v2 SRTP key path. Each
-recipient device MUST receive its own `<enc>` node carrying the call key encrypted
-to that device's Signal session (`type="pkmsg"` to establish, `type="msg"` to
-reuse); a multi-device callee therefore receives several `<enc>` nodes.
+- Media: two nodes `<audio enc="opus" rate="8000">` and `<audio enc="opus" rate="16000">`.
+- `<capability ver="1">` body MUST be the fixed 7-byte blob `01 05 f7 09 e4 bb 13`.
+- `<encopt keygen="2">` selects the v2 SRTP key path.
+- Each recipient device MUST receive its own `<enc>` node carrying the call key
+  encrypted to that device's Signal session: `type="pkmsg"` to establish,
+  `type="msg"` to reuse. A multi-device callee receives several `<enc>` nodes.
 
-**Findings**
-
-The structure and the load-bearing details (child order, the 439 rejection, the
-fixed capability blob, the keygen=2 path) are corroborated by independent working
-reconstructions that place real calls.
+Breakdown: [`call-key`](../crypto/call-key.md), [`group-call-crypto`](../crypto/group-call-crypto.md), [`srtp-master-key`](../crypto/srtp-master-key.md), [`warp-crypto`](../crypto/warp-crypto.md), [`opus`](../encodings/opus.md), [`video-packetization`](../encodings/video-packetization.md), [`stun-relay`](../relay/stun-relay.md), [`call-accept`](../signalling/call-accept.md), [`call-ack`](../signalling/call-ack.md), [`call-mute`](../signalling/call-mute.md), [`call-preaccept`](../signalling/call-preaccept.md), [`call-reject`](../signalling/call-reject.md), [`call-relaylatency`](../signalling/call-relaylatency.md), [`call-terminate`](../signalling/call-terminate.md), [`call-transport`](../signalling/call-transport.md), [`flow-call-missed`](../signalling/flow-call-missed.md), [`flow-call-rejected`](../signalling/flow-call-rejected.md), [`flow-incoming-1to1`](../signalling/flow-incoming-1to1.md), [`flow-outgoing-1to1`](../signalling/flow-outgoing-1to1.md), [`group-call`](../signalling/group-call.md), [`video-call`](../signalling/video-call.md)
 
 **Implemented by**
+- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+- **zapo-caller** — working
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | working |  |
-| [`zapo-caller`](../../flavors.md) | working |  |
-| [`meowcaller`](../../flavors.md) | planned |  |
+Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/call-offer.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/call-offer.yaml)
 
 **Open questions**
-
 - Full meaning of the packed <capability> bitfield.
 - Whether an explicit media-key length/salt is carried, or all is derived from the Signal plaintext.
 
 **References**
-
 - [Signal Protocol (X3DH + Double Ratchet)](https://signal.org/docs/)
 
 ---
 
-[in the full RFC →](../index.md#call-offer) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#call-offer)

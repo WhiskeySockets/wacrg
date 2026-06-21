@@ -406,6 +406,19 @@ for (const { relPath, data } of rfcParts as Loaded<RfcPart>[]) {
       fail(relPath, `rfc part "${data.id}": requires "${dep}" has no matching spec/rfc part`);
     }
   }
+  if (data.parent) {
+    const pp = rfcParts.find((p) => p.data.id === data.parent);
+    if (!pp) {
+      fail(relPath, `rfc part "${data.id}": parent "${data.parent}" has no matching spec/rfc part`);
+    } else if (pp.data.category !== data.category) {
+      fail(relPath, `rfc part "${data.id}": parent "${data.parent}" is in a different category`);
+    } else if (data.parent === data.id) {
+      fail(relPath, `rfc part "${data.id}": parent cannot be itself`);
+    }
+  }
+  if (data.discovered_by && contributorsPresent && !contributorIds.has(data.discovered_by)) {
+    fail(relPath, `rfc part "${data.id}": discovered_by "${data.discovered_by}" has no matching spec/contributors/${data.discovered_by}.yaml`);
+  }
   for (const impl of data.implementations ?? []) {
     if (flavorsPresent && impl.flavor && !flavorIds.has(impl.flavor)) {
       fail(relPath, `rfc part "${data.id}": implementation flavor "${impl.flavor}" has no matching spec/flavors/${impl.flavor}.yaml`);

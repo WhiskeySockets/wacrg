@@ -2,35 +2,26 @@
 
 # In-call emoji reactions
 
-**Category:** [Signalling](../index.md#signalling)  
-**Part id:** `reactions`
+_Signalling · `reactions`_
 
-**`reactions`** · status: draft · features: reactions, group · since: 0.1.0
+_status: draft · reactions, group_
 
-The signal a participant sends to broadcast an emoji reaction during a call.
+A participant broadcasts a transient emoji reaction during a call.
 
-**Normative**
+NOT YET SPECIFIED. Carrying stanza, attributes, and emoji encoding are
+unknown (not reverse-engineered to wire level).
 
-TODO. A participant broadcasts a transient emoji reaction to other participants
-over the call signalling channel. The carrying stanza and the emoji encoding are
-not yet specified.
-
-**Findings**
-
-An in-call UX feature. Not yet reverse-engineered to wire level.
-
-**Requires:** [`group-call`](../signalling/group-call.md)
+Parent: [`group-call`](../signalling/group-call.md)  
+Requires: [`group-call`](../signalling/group-call.md)
 
 **Implemented by**
+- **whatsapp-rust** — unknown · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | unknown |  |
+Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/reactions.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/reactions.yaml)
 
 **Open questions**
-
 - Stanza/attribute and emoji encoding for an in-call reaction; TTL/debounce behaviour.
 
 ---
 
-[in the full RFC →](../index.md#reactions) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#reactions)

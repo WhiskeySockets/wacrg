@@ -2,38 +2,32 @@
 
 # Group call setup
 
-**Category:** [Signalling](../index.md#signalling)  
-**Part id:** `group-call`
+_Signalling · `group-call`_
 
-**`group-call`** · status: draft · features: group, audio, video · since: 0.1.0
+_status: draft · group, audio, video_
 
-How a multi-party call is created and how participants join, leave, and are tracked, extending the 1:1 offer/accept flow.
+A multi-party call extends the 1:1 offer/accept flow with a joinable group session, a participant roster, and per-sender media keying.
 
-**Normative**
+TODO — not yet fully specified.
 
-TODO. A group call extends the 1:1 flow: the creator establishes a group call
-session that additional participants join, each keyed independently (see
-[srtp-master-key](../crypto/srtp-master-key.md)) with per-sender media keys for SFrame (see
-[sframe-media](../crypto/sframe-media.md)). The participant roster, join/leave stanzas, and
-group key distribution are not yet fully specified.
+- The creator establishes a group call session that additional participants join.
+- Each participant is keyed independently; see [srtp-master-key](../crypto/srtp-master-key.md).
+- Media uses per-sender SFrame keys; see [sframe-media](../crypto/sframe-media.md).
+- Unspecified: the participant roster stanza, join/leave signalling, and group
+  key distribution/rotation on join/leave.
 
-**Findings**
-
-Group calls reuse the 1:1 keying and media planes with per-sender key separation.
-
-**Requires:** [`call-offer`](../signalling/call-offer.md)
+Requires: [`call-offer`](../signalling/call-offer.md)  
+Breakdown: [`group-call-crypto`](../crypto/group-call-crypto.md), [`raise-hand`](../signalling/raise-hand.md), [`reactions`](../signalling/reactions.md), [`screen-share`](../signalling/screen-share.md), [`video-call`](../signalling/video-call.md)
 
 **Implemented by**
+- **whatsapp-rust** — unknown · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | unknown |  |
+Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/group-call.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/group-call.yaml)
 
 **Open questions**
-
 - Group session creation, the participant roster stanza, and join/leave signalling.
 - Per-sender SFrame key distribution and rotation on join/leave.
 
 ---
 
-[in the full RFC →](../index.md#group-call) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#group-call)

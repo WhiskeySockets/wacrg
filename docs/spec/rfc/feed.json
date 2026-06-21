@@ -21,13 +21,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#call-offer"
+      "ref": "index.md#call-offer"
     },
     {
       "id": "video-call",
@@ -47,13 +43,9 @@
         {
           "flavor": "zapo-caller",
           "status": "partial"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#video-call"
+      "ref": "index.md#video-call"
     },
     {
       "id": "call-accept",
@@ -73,13 +65,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#call-accept"
+      "ref": "index.md#call-accept"
     },
     {
       "id": "call-preaccept",
@@ -99,13 +87,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#call-preaccept"
+      "ref": "index.md#call-preaccept"
     },
     {
       "id": "call-transport",
@@ -125,13 +109,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#call-transport"
+      "ref": "index.md#call-transport"
     },
     {
       "id": "group-call",
@@ -150,7 +130,7 @@
           "status": "unknown"
         }
       ],
-      "ref": "rfc/index.md#group-call"
+      "ref": "index.md#group-call"
     },
     {
       "id": "call-ack",
@@ -171,13 +151,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#call-ack"
+      "ref": "index.md#call-ack"
     },
     {
       "id": "call-reject",
@@ -197,13 +173,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#call-reject"
+      "ref": "index.md#call-reject"
     },
     {
       "id": "raise-hand",
@@ -221,7 +193,7 @@
           "status": "unknown"
         }
       ],
-      "ref": "rfc/index.md#raise-hand"
+      "ref": "index.md#raise-hand"
     },
     {
       "id": "reactions",
@@ -239,7 +211,7 @@
           "status": "unknown"
         }
       ],
-      "ref": "rfc/index.md#reactions"
+      "ref": "index.md#reactions"
     },
     {
       "id": "screen-share",
@@ -258,7 +230,7 @@
           "status": "unknown"
         }
       ],
-      "ref": "rfc/index.md#screen-share"
+      "ref": "index.md#screen-share"
     },
     {
       "id": "flow-call-missed",
@@ -278,13 +250,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#flow-call-missed"
+      "ref": "index.md#flow-call-missed"
     },
     {
       "id": "call-mute",
@@ -304,13 +272,9 @@
         {
           "flavor": "zapo-caller",
           "status": "planned"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#call-mute"
+      "ref": "index.md#call-mute"
     },
     {
       "id": "call-terminate",
@@ -331,13 +295,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#call-terminate"
+      "ref": "index.md#call-terminate"
     },
     {
       "id": "call-relaylatency",
@@ -358,13 +318,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#call-relaylatency"
+      "ref": "index.md#call-relaylatency"
     },
     {
       "id": "flow-incoming-1to1",
@@ -384,13 +340,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#flow-incoming-1to1"
+      "ref": "index.md#flow-incoming-1to1"
     },
     {
       "id": "flow-outgoing-1to1",
@@ -410,13 +362,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#flow-outgoing-1to1"
+      "ref": "index.md#flow-outgoing-1to1"
     },
     {
       "id": "flow-call-rejected",
@@ -436,13 +384,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#flow-call-rejected"
+      "ref": "index.md#flow-call-rejected"
     },
     {
       "id": "mlow",
@@ -459,15 +403,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "partial"
         }
       ],
-      "ref": "rfc/index.md#mlow"
+      "ref": "index.md#mlow"
     },
     {
       "id": "mlow-red-fec",
@@ -484,15 +424,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "partial"
-        },
-        {
           "flavor": "meowcaller",
           "status": "partial"
         }
       ],
-      "ref": "rfc/index.md#mlow-red-fec"
+      "ref": "index.md#mlow-red-fec"
     },
     {
       "id": "mlow-frame",
@@ -509,15 +445,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "partial"
         }
       ],
-      "ref": "rfc/index.md#mlow-frame"
+      "ref": "index.md#mlow-frame"
     },
     {
       "id": "mlow-rangecoder",
@@ -534,15 +466,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "partial"
         }
       ],
-      "ref": "rfc/index.md#mlow-rangecoder"
+      "ref": "index.md#mlow-rangecoder"
     },
     {
       "id": "opus",
@@ -559,15 +487,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "partial"
-        },
-        {
           "flavor": "meowcaller",
           "status": "partial"
         }
       ],
-      "ref": "rfc/index.md#opus"
+      "ref": "index.md#opus"
     },
     {
       "id": "video",
@@ -585,7 +509,7 @@
           "status": "unknown"
         }
       ],
-      "ref": "rfc/index.md#video"
+      "ref": "index.md#video"
     },
     {
       "id": "video-packetization",
@@ -603,15 +527,11 @@
           "status": "unknown"
         },
         {
-          "flavor": "meowmeow",
-          "status": "unknown"
-        },
-        {
           "flavor": "meowcaller",
           "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#video-packetization"
+      "ref": "index.md#video-packetization"
     },
     {
       "id": "mlow-lsf-lpc",
@@ -628,15 +548,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "partial"
         }
       ],
-      "ref": "rfc/index.md#mlow-lsf-lpc"
+      "ref": "index.md#mlow-lsf-lpc"
     },
     {
       "id": "mlow-encoder",
@@ -653,15 +569,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "partial"
         }
       ],
-      "ref": "rfc/index.md#mlow-encoder"
+      "ref": "index.md#mlow-encoder"
     },
     {
       "id": "mlow-excitation",
@@ -678,15 +590,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "partial"
         }
       ],
-      "ref": "rfc/index.md#mlow-excitation"
+      "ref": "index.md#mlow-excitation"
     },
     {
       "id": "mlow-decoder",
@@ -703,15 +611,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "partial"
         }
       ],
-      "ref": "rfc/index.md#mlow-decoder"
+      "ref": "index.md#mlow-decoder"
     },
     {
       "id": "mlow-noise",
@@ -728,15 +632,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "partial"
         }
       ],
-      "ref": "rfc/index.md#mlow-noise"
+      "ref": "index.md#mlow-noise"
     },
     {
       "id": "mlow-postfilter",
@@ -753,15 +653,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "partial"
         }
       ],
-      "ref": "rfc/index.md#mlow-postfilter"
+      "ref": "index.md#mlow-postfilter"
     },
     {
       "id": "mlow-synthesis",
@@ -778,15 +674,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "partial"
         }
       ],
-      "ref": "rfc/index.md#mlow-synthesis"
+      "ref": "index.md#mlow-synthesis"
     },
     {
       "id": "mlow-vad",
@@ -803,15 +695,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "partial"
         }
       ],
-      "ref": "rfc/index.md#mlow-vad"
+      "ref": "index.md#mlow-vad"
     },
     {
       "id": "call-key",
@@ -834,15 +722,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#call-key"
+      "ref": "index.md#call-key"
     },
     {
       "id": "srtp-master-key",
@@ -865,15 +749,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#srtp-master-key"
+      "ref": "index.md#srtp-master-key"
     },
     {
       "id": "srtp-hop-by-hop",
@@ -894,13 +774,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#srtp-hop-by-hop"
+      "ref": "index.md#srtp-hop-by-hop"
     },
     {
       "id": "sframe-media",
@@ -921,13 +797,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#sframe-media"
+      "ref": "index.md#sframe-media"
     },
     {
       "id": "srtp-e2e",
@@ -949,15 +821,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#srtp-e2e"
+      "ref": "index.md#srtp-e2e"
     },
     {
       "id": "group-call-crypto",
@@ -981,15 +849,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#group-call-crypto"
+      "ref": "index.md#group-call-crypto"
     },
     {
       "id": "warp-crypto",
@@ -1011,15 +875,11 @@
           "status": "working"
         },
         {
-          "flavor": "meowmeow",
-          "status": "working"
-        },
-        {
           "flavor": "meowcaller",
           "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#warp-crypto"
+      "ref": "index.md#warp-crypto"
     },
     {
       "id": "relay-candidates",
@@ -1040,13 +900,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#relay-candidates"
+      "ref": "index.md#relay-candidates"
     },
     {
       "id": "stun-relay",
@@ -1067,13 +923,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#stun-relay"
+      "ref": "index.md#stun-relay"
     },
     {
       "id": "warp",
@@ -1094,13 +946,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#warp"
+      "ref": "index.md#warp"
     },
     {
       "id": "rtcp",
@@ -1120,13 +968,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#rtcp"
+      "ref": "index.md#rtcp"
     },
     {
       "id": "rtp-framing",
@@ -1146,13 +990,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#rtp-framing"
+      "ref": "index.md#rtp-framing"
     },
     {
       "id": "ssrc",
@@ -1174,13 +1014,9 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#ssrc"
+      "ref": "index.md#ssrc"
     },
     {
       "id": "media-loop",
@@ -1200,61 +1036,13 @@
         {
           "flavor": "zapo-caller",
           "status": "working"
-        },
-        {
-          "flavor": "meowcaller",
-          "status": "planned"
         }
       ],
-      "ref": "rfc/index.md#media-loop"
+      "ref": "index.md#media-loop"
     }
   ],
   "flavors": {
     "meowcaller": [
-      "call-offer",
-      "video-call",
-      "call-accept",
-      "call-preaccept",
-      "call-transport",
-      "call-ack",
-      "call-reject",
-      "flow-call-missed",
-      "call-mute",
-      "call-terminate",
-      "call-relaylatency",
-      "flow-incoming-1to1",
-      "flow-outgoing-1to1",
-      "flow-call-rejected",
-      "mlow",
-      "mlow-red-fec",
-      "mlow-frame",
-      "mlow-rangecoder",
-      "opus",
-      "video-packetization",
-      "mlow-lsf-lpc",
-      "mlow-encoder",
-      "mlow-excitation",
-      "mlow-decoder",
-      "mlow-noise",
-      "mlow-postfilter",
-      "mlow-synthesis",
-      "mlow-vad",
-      "call-key",
-      "srtp-master-key",
-      "srtp-hop-by-hop",
-      "sframe-media",
-      "srtp-e2e",
-      "group-call-crypto",
-      "warp-crypto",
-      "relay-candidates",
-      "stun-relay",
-      "warp",
-      "rtcp",
-      "rtp-framing",
-      "ssrc",
-      "media-loop"
-    ],
-    "meowmeow": [
       "mlow",
       "mlow-red-fec",
       "mlow-frame",

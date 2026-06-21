@@ -2,37 +2,30 @@
 
 # Screen sharing
 
-**Category:** [Signalling](../index.md#signalling)  
-**Part id:** `screen-share`
+_Signalling · `screen-share`_
 
-**`screen-share`** · status: draft · features: screen-share, video, group · since: 0.1.0
+_status: draft · screen-share, video, group_
 
-The signalling that starts and stops a screen-share track within a call.
-
-**Normative**
+Start and stop a screen-share track within a call.
 
 TODO. A participant starts a screen-share by adding a video track flagged as
-screen content and signalling it to the other participants; the receiver renders
-it distinctly from the camera track. The track flag and start/stop stanzas are not
-yet specified.
+screen content; the receiver renders it distinctly from the camera track. The
+track flag and start/stop stanzas are not yet specified.
 
-**Findings**
+**Notes.** WhatsApp Web carries a `ScreenContentDetector` symbol; screen content is
+handled distinctly in the media path.
 
-The WhatsApp Web engine carries a `ScreenContentDetector`, indicating screen
-content is handled distinctly in the media path.
-
-**Requires:** [`group-call`](../signalling/group-call.md)
+Parent: [`group-call`](../signalling/group-call.md)  
+Requires: [`group-call`](../signalling/group-call.md)
 
 **Implemented by**
+- **whatsapp-rust** — unknown · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | unknown |  |
+Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/screen-share.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/screen-share.yaml)
 
 **Open questions**
-
 - How a screen-share track is flagged in signalling and in the RTP/encoding plane.
 
 ---
 
-[in the full RFC →](../index.md#screen-share) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#screen-share)

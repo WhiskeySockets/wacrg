@@ -11,11 +11,4 @@ covers:
 basis:
   - wasm-analysis
   - frida-hooking
-description: >
-  A TypeScript reconstruction of the WhatsApp call client (caller side), created by
-  Vini (vinikjkkj) with community contributors Auties, Edgard, and Sheiitear.
-  Implements the call signaling,
-  callKey/SRTP/SFrame/WARP keying, STUN/relay transport, and RTP framing, with
-  primitives pinned to known-answer vectors. The upstream source that the
-  whatsapp-rust VoIP crypto and signaling were ported from. An independent
-  reconstruction, not an evidence-gathering tool.
+description: TypeScript reconstruction of the WhatsApp caller (signaling, SRTP/SFrame/WARP keying, STUN/relay, RTP), created by Vini with Auties, Edgard, and Shelltear.

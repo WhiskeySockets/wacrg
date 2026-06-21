@@ -2,25 +2,20 @@
 
 # RTCP control
 
-**Category:** [Relay](../index.md#relay)  
-**Part id:** `rtcp`
+_Relay · `rtcp`_
 
-**`rtcp`** · status: review · features: audio, video · since: 0.1.0
+_status: review · audio, video_
 
-The RTCP feedback and control packets exchanged on the media path of a call: a standard Sender Report (PT 200) carrying NTP/RTP timing and send counters, and two WhatsApp compact control reports (PT 208 and PT 209). It also specifies how a received packet is classified as RTP or RTCP when both share a port.
+RTCP feedback/control packets on the call media path: a standard Sender Report (PT 200) plus two WhatsApp compact reports (PT 208, PT 209), and the rule for classifying a received packet as RTP or RTCP on a shared port.
 
-**Normative**
+RTCP shares the media 5-tuple with RTP and is protected as SRTCP (see
+[srtp-hop-by-hop](../crypto/srtp-hop-by-hop.md)). Every packet uses RTP version 2 (top two
+bits of byte 0 = `0b10`) and an 8-byte fixed header: `version/padding/count`,
+`payload type`, big-endian 16-bit `length`. `length` MUST be packet size in
+32-bit words minus one. All multi-byte integers are big-endian.
 
-RTCP packets share the media 5-tuple with RTP and are protected as SRTCP
-(see [srtp-hop-by-hop](../crypto/srtp-hop-by-hop.md)). Every RTCP packet defined here uses
-RTP version 2 (the top two bits of byte 0 are `0b10`) and an 8-byte fixed
-header of `version/padding/count`, `payload type`, and a big-endian 16-bit
-`length` field. The `length` field MUST be set to the packet size in 32-bit
-words minus one. All multi-byte integer fields are big-endian.
-
-**Sender Report (PT 200).** A sender MAY emit a 28-byte Sender Report
-describing its own stream. RC (report count) MUST be 0; the report carries no
-reception report blocks. The layout MUST be:
+**Sender Report (PT 200).** 28-byte cleartext. RC MUST be 0 (no reception
+report blocks). Layout:
 
 ```
  0               1               2               3
@@ -42,23 +37,17 @@ reception report blocks. The layout MUST be:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ```
 
-- byte 0 MUST be `0x80` (V=2, P=0, RC=0); byte 1 MUST be `200`; the `length`
-  field MUST be `6`.
-- `sender SSRC` MUST be the sender's own synchronization source identifier
-  (see [ssrc](../relay/ssrc.md)).
-- The NTP timestamp MUST encode the wall-clock send time as a 64-bit NTP value:
-  the high 32 bits are seconds since the NTP epoch (1900-01-01), computed as
-  `floor(now_ms / 1000) + 2208988800` truncated to 32 bits, and the low 32 bits
-  are the fractional second, computed as `floor((now_ms mod 1000) / 1000 *
-  2^32)`.
-- `RTP timestamp` MUST be the RTP timestamp corresponding to the same instant
-  as the NTP timestamp, in the sender stream's clock units.
-- `sender's packet count` MUST be the total number of RTP data packets the
-  sender has transmitted, and `sender's octet count` the total number of
-  payload octets transmitted, both since the start of the stream.
+- byte 0 MUST be `0x80`; byte 1 MUST be `200`; `length` MUST be `6`.
+- `sender SSRC` MUST be the sender's own SSRC (see [ssrc](../relay/ssrc.md)).
+- NTP timestamp encodes wall-clock send time as 64-bit NTP: high 32 bits =
+  `(floor(now_ms / 1000) + 2208988800) mod 2^32`; low 32 bits =
+  `floor((now_ms mod 1000) / 1000 * 2^32)`.
+- `RTP timestamp` MUST correspond to the same instant as the NTP timestamp, in
+  the sender stream's clock units.
+- `sender's packet count` / `sender's octet count` MUST be the total RTP data
+  packets / payload octets transmitted since stream start.
 
-**Compact report (PT 208).** A 12-byte compact control report binding a local
-source to a remote source. The layout MUST be:
+**Compact report (PT 208).** 12-byte cleartext binding local to remote source:
 
 ```
  0               1               2               3
@@ -71,13 +60,10 @@ source to a remote source. The layout MUST be:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ```
 
-- byte 0 MUST be `0x81` (V=2, P=0, RC=1); byte 1 MUST be `208`; the `length`
-  field MUST be `2`.
-- The first SSRC word MUST be the local source and the second MUST be the
-  remote source.
+- byte 0 MUST be `0x81`; byte 1 MUST be `208`; `length` MUST be `2`.
+- First SSRC word MUST be local source; second MUST be remote source.
 
-**Compact report (PT 209).** An 8-byte compact control report carrying only the
-local source, used in the pre-speech phase. The layout MUST be:
+**Compact report (PT 209).** 8-byte cleartext, local source only, pre-speech:
 
 ```
  0               1               2               3
@@ -88,59 +74,41 @@ local source, used in the pre-speech phase. The layout MUST be:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ```
 
-- byte 0 MUST be `0x81` (V=2, P=0, RC=1); byte 1 MUST be `209`; the `length`
-  field MUST be `1`.
+- byte 0 MUST be `0x81`; byte 1 MUST be `209`; `length` MUST be `1`.
 
-**On-the-wire size with SRTCP.** Each report above is the cleartext RTCP. After
-SRTCP protection an authenticated trailer of 14 bytes is appended (the SRTCP
-E-flag/index word plus the authentication tag), so the PT 208 report is 26 bytes
-on the wire, the PT 209 report is 22 bytes, and the Sender Report is 42 bytes.
+**On-the-wire size with SRTCP.** SRTCP appends a 14-byte authenticated trailer
+(E-flag/index word plus auth tag): PT 208 = 26 bytes, PT 209 = 22 bytes,
+Sender Report = 42 bytes on the wire.
 
-**Classification (RTP vs. RTCP).** When demultiplexing a received packet that
-shares a port with RTP media, a receiver MUST treat the packet as RTCP only if
-all of the following hold; otherwise it MUST treat it as RTP:
+**Classification (RTP vs. RTCP).** On a shared port, a receiver MUST treat a
+packet as RTCP only if ALL hold, else as RTP:
 
-- the packet is at least 22 bytes (the 8-byte header plus the 14-byte SRTCP
-  trailer);
-- the version bits (top two bits of byte 0) equal 2;
-- byte 1, interpreted as an unsigned 8-bit value, is `>= 64`.
+- length >= 22 bytes (8-byte header + 14-byte SRTCP trailer);
+- version bits (top two bits of byte 0) == 2;
+- byte 1 as unsigned 8-bit >= 64.
 
-Because WhatsApp RTP sets the extension bit (`X=1`, byte 0 `0x90`) and carries a
-7-bit payload type in the low bits of byte 1, a receiver MUST NOT classify a
-packet as RTCP when the extension bit is set in byte 0 and the low 7 bits of
-byte 1 equal the Opus RTP payload type. The RTCP payload type is then the full
-byte 1, and the sender SSRC is bytes 4..8 of the packet.
+WhatsApp RTP sets the extension bit (`X=1`, byte 0 `0x90`) and a 7-bit payload
+type in the low bits of byte 1: a receiver MUST NOT classify a packet as RTCP
+when byte 0's extension bit is set and the low 7 bits of byte 1 equal the Opus
+RTP payload type. The RTCP payload type is the full byte 1; sender SSRC is
+bytes 4..8.
 
-**Findings**
-
-The two compact reports (PT 208 and PT 209) use payload types in the
-application/profile-specific range and are specific to WhatsApp; PT 209 is the
-shorter, local-only form seen before speech begins, while PT 208 binds the
-local source to the remote source once both endpoints are known. The Sender
-Report follows RFC 3550 §6.4.1 with no reception report blocks (RC=0). The NTP
-fraction is computed with floating-point scaling against 2^32 and the seconds
-field is reduced modulo 2^32, matching the source arithmetic.
-
-**Requires:** [`srtp-hop-by-hop`](../crypto/srtp-hop-by-hop.md), [`ssrc`](../relay/ssrc.md), [`rtp-framing`](../relay/rtp-framing.md)
+Requires: [`srtp-hop-by-hop`](../crypto/srtp-hop-by-hop.md), [`ssrc`](../relay/ssrc.md), [`rtp-framing`](../relay/rtp-framing.md)
 
 **Implemented by**
+- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+- **zapo-caller** — working — origin of the rtcp.ts implementation this is ported from
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | working |  |
-| [`zapo-caller`](../../flavors.md) | working | origin of the rtcp.ts implementation this is ported from |
-| [`meowcaller`](../../flavors.md) | planned | relay modules are planned |
+Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/relay/rtcp.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/relay/rtcp.yaml)
 
 **Open questions**
-
 - Trigger conditions and cadence for emitting PT 208 vs PT 209, and how often Sender Reports are sent.
 - Semantics consumed by the peer/relay from the PT 208/209 compact reports beyond the SSRC binding.
 
 **References**
-
 - [RFC 3550 — RTP/RTCP](https://www.rfc-editor.org/rfc/rfc3550)
 - [RFC 3711 — SRTP/SRTCP](https://www.rfc-editor.org/rfc/rfc3711)
 
 ---
 
-[in the full RFC →](../index.md#rtcp) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#rtcp)

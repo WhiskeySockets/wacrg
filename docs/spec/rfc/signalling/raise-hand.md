@@ -2,35 +2,29 @@
 
 # Raise hand
 
-**Category:** [Signalling](../index.md#signalling)  
-**Part id:** `raise-hand`
+_Signalling · `raise-hand`_
 
-**`raise-hand`** · status: draft · features: group, raise-hand · since: 0.1.0
+_status: draft · group, raise-hand_
 
-The in-call signal a participant sends to raise or lower their hand in a group call.
+In-call signal a participant sends to raise or lower their hand in a group call.
 
-**Normative**
+A participant signals raise/lower-hand state to other participants in-band over
+the call signalling channel.
 
-TODO. A participant signals raise/lower-hand state to the other participants
-in-band over the call signalling channel. The exact stanza/attribute carrying this
-state is not yet specified.
+TODO: the exact stanza/attribute carrying this state, and whether it is acked,
+is not yet specified.
 
-**Findings**
-
-A group-call UX feature. Not yet reverse-engineered to wire level.
-
-**Requires:** [`group-call`](../signalling/group-call.md)
+Parent: [`group-call`](../signalling/group-call.md)  
+Requires: [`group-call`](../signalling/group-call.md)
 
 **Implemented by**
+- **whatsapp-rust** — unknown · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | unknown |  |
+Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/raise-hand.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/raise-hand.yaml)
 
 **Open questions**
-
 - Which stanza/attribute carries raise-hand state, and whether it is acked.
 
 ---
 
-[in the full RFC →](../index.md#raise-hand) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#raise-hand)

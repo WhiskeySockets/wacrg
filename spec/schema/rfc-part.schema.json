@@ -49,11 +49,19 @@
       "type": "string",
       "description": "Supporting detail and what is known. Markdown allowed."
     },
+    "parent": {
+      "type": "string",
+      "description": "Id of the parent part this one nests under in its category (e.g. mlow-rangecoder's parent is mlow). Must resolve to a part in the same category."
+    },
     "requires": {
       "type": "array",
       "uniqueItems": true,
       "items": { "type": "string" },
       "description": "Part ids this part depends on (each must resolve to another spec/rfc part)."
+    },
+    "discovered_by": {
+      "type": "string",
+      "description": "Contributor id credited with first reverse-engineering this part (must match spec/contributors/)."
     },
     "implementations": {
       "type": "array",

@@ -269,8 +269,12 @@ export interface RfcPart {
   summary: string;
   normative?: string;
   findings?: string;
+  /** Id of the parent part this nests under (same category) in the numbered hierarchy. */
+  parent?: string;
   requires?: string[];
   implementations?: RfcImplementation[];
+  /** Contributor id credited with first reverse-engineering this part. */
+  discovered_by?: string;
   since?: string;
   open_questions?: string[];
   references?: Reference[];

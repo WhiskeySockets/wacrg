@@ -13,15 +13,5 @@ covers:
 basis:
   - wasm-analysis
 derives_from:
-  - meowmeow
   - zapo-caller
-description: >
-  Pure-Rust reconstruction of the WhatsApp Web client with a working VoIP media
-  stack (wacore/src/voip): a from-scratch MLow/SMPL CELP codec, SFrame, E2E and
-  hop-by-hop SRTP, WARP, STUN/relay, RTP/RTCP, and call signaling. The codec is a
-  port of the byte-exact Go reference (meowmeow); the crypto and signaling are
-  ported from zapo-caller. Because it derives from those flavors it is NOT
-  independent corroboration of them. Upstream is oxidezap/whatsapp-rust; the full
-  VoIP media stack is staged in the whatsapp-rust-private feat/voip-media-stack
-  branch (cherry-picked onto mainstream over time). The meowcaller flavor ports
-  from it module by module.
+description: Pure-Rust reconstruction of the full WhatsApp VoIP stack — MLow codec, SFrame, SRTP, WARP, STUN/relay, RTP/RTCP, and call signaling.

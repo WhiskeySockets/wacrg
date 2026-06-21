@@ -2,36 +2,27 @@
 
 # STUN relay handshake
 
-**Category:** [Relay](../index.md#relay)  
-**Part id:** `stun-relay`
+_Relay · `stun-relay`_
 
-**`stun-relay`** · status: draft · features: audio, video, group · since: 0.1.0
+_status: draft · audio, video, group_
 
-The STUN dialect WhatsApp uses to bind to a relay and select transport candidates before media flows.
+A STUN-dialect handshake binds the client to a relay candidate before WARP media frames flow.
 
-**Normative**
+- Candidates come from the offer's `<destination>` (see [call-offer](../signalling/call-offer.md)),
+  each annotated with measured latency.
+- The client MUST complete the STUN handshake against these candidates to establish
+  the client↔relay binding that WARP frames ride over.
+- The client SHOULD select the lowest-latency candidate.
 
-Before media flows, a client MUST complete a STUN-based handshake against the
-relay candidates carried in the offer's `<destination>` (see
-[call-offer](../signalling/call-offer.md)), establishing the client↔relay binding that WARP frames
-ride over. Candidates are annotated with measured latency so the lowest-latency
-relay can be chosen.
-
-**Findings**
-
-A STUN dialect rather than full ICE; the candidate list and latency hints come
-from the signalling plane.
-
-**Requires:** [`call-offer`](../signalling/call-offer.md)
+Requires: [`call-offer`](../signalling/call-offer.md)  
+Breakdown: [`media-loop`](../relay/media-loop.md), [`relay-candidates`](../relay/relay-candidates.md), [`warp`](../relay/warp.md), [`call-relaylatency`](../signalling/call-relaylatency.md), [`call-transport`](../signalling/call-transport.md), [`flow-outgoing-1to1`](../signalling/flow-outgoing-1to1.md)
 
 **Implemented by**
+- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+- **zapo-caller** — working
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | working |  |
-| [`zapo-caller`](../../flavors.md) | working |  |
-| [`meowcaller`](../../flavors.md) | planned |  |
+Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/relay/stun-relay.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/relay/stun-relay.yaml)
 
 ---
 
-[in the full RFC →](../index.md#stun-relay) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#stun-relay)

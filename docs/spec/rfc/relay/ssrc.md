@@ -2,86 +2,61 @@
 
 # SSRC allocation
 
-**Category:** [Relay](../index.md#relay)  
-**Part id:** `ssrc`
+_Relay · `ssrc`_
 
-**`ssrc`** · status: review · features: audio, video, group, screen-share · since: 0.1.0
+_status: review · audio, video, group, screen-share_
 
-How RTP synchronization-source identifiers (SSRCs) are deterministically derived for each participant and each relay media stream from the call id and the participant LID, and how the nine relay stream slots are ordered.
+RTP SSRCs are deterministically derived per participant and stream slot via HKDF-SHA256 over the call id, participant LID, and slot index.
 
-**Normative**
+Every SSRC is derived deterministically; none are negotiated or random.
 
-SSRCs are not negotiated or randomly chosen: every SSRC is **derived
-deterministically** so that all peers and the relay independently compute the
-same value for a given participant and stream slot.
+**Per-stream SSRC derivation.** Each SSRC MUST be HKDF-SHA256:
 
-**Per-stream SSRC derivation.** Each SSRC MUST be derived with HKDF-SHA256:
-
-    salt = slotWord                   ; the slot index as a little-endian u32 (4 bytes)
-    IKM  = callId                     ; the call id bytes
-    info = participantLID             ; the participant's LID bytes
+    salt = slotWord            ; slot index as little-endian u32 (4 bytes)
+    IKM  = callId              ; call id bytes
+    info = participantLID      ; participant LID bytes
     L    = 4
-    SSRC = u32_from_le_bytes(OKM)     ; the 4-byte OKM read back as a little-endian u32
+    SSRC = u32_from_le_bytes(OKM)   ; 4-byte OKM read as little-endian u32
 
-The `slotWord` is the 4-byte little-endian encoding of the slot index used as
-the HKDF salt. The 4-byte HKDF output MUST be interpreted as a little-endian
-`u32` to obtain the 32-bit SSRC.
-
-**Slot allocation.** A participant occupies a fixed plan of **nine** relay
-stream slots. The slot words, in stream order, MUST be:
+**Slot allocation.** A participant occupies nine relay stream slots. The slot
+words, in stream order, MUST be:
 
     [0, 1, 4, 2, 3, 5, 7, 8, 6]
 
-An implementation that needs all nine of a participant's relay stream SSRCs
-MUST derive them by applying the per-stream derivation above with each of the
-nine slot words in this exact order; the resulting array index is the stream
-index and the value at that index is the slot word fed to HKDF as the salt.
+The array index is the stream index; the value at that index is the slot word
+fed to HKDF as the salt. To derive all nine SSRCs, apply the per-stream
+derivation with each slot word in this exact order.
 
-**Participant mapping.** Because `info = participantLID`, every participant's
-SSRCs are distinct from every other participant's, and because `IKM = callId`,
-SSRCs do not collide across unrelated calls. The same `participantLID` byte
-string MUST be used for SSRC derivation as is used elsewhere as the HKDF
-`info` for that participant (see [srtp-master-key](../crypto/srtp-master-key.md)).
+**Participant mapping.** The same `participantLID` byte string MUST be used
+here as is used for the HKDF `info` elsewhere for that participant (see
+[srtp-master-key](../crypto/srtp-master-key.md)).
 
-**Participant LID formatting.** The participant LID used as `info` is the
-device-qualified LID. A bare `@lid` JID (no device suffix) MUST be qualified
-to device `0` — i.e. `<user>@lid` becomes `<user>:0@lid` — before use. A LID
-that already carries a `:N@lid` device suffix MUST be passed through
-unchanged. JIDs whose domain is not `lid` MUST be passed through unchanged.
-Any resource part (after `/`) MUST be stripped first. On the receive path an
-implementation MAY try the device-qualified `:0@lid` form and the bare
-`@lid` form as candidate `info` values when matching a peer sender.
+**Participant LID formatting.** `info` is the device-qualified LID:
+- Strip any resource part (after `/`) first.
+- A bare `<user>@lid` (no device suffix) MUST be qualified to device `0`:
+  `<user>@lid` becomes `<user>:0@lid`.
+- A LID already carrying a `:N@lid` device suffix MUST pass through unchanged.
+- JIDs whose domain is not `lid` MUST pass through unchanged.
+- On receive, an implementation MAY try both the `:0@lid` and bare `@lid`
+  forms as candidate `info` values when matching a peer sender.
 
-**Findings**
-
-The nine-slot plan and the `[0, 1, 4, 2, 3, 5, 7, 8, 6]` slot-word ordering
-come from the relay's stream-allocate plan: the array index is the position
-in the relay's stream list, and the value is the salt word fed to HKDF, so the
-on-wire stream order is a permutation of the natural slot indices. The
-derivation is keyed only on `callId`, `participantLID`, and the slot word, so
-no round-trip with the relay is required to learn a peer's SSRCs — a receiver
-can precompute every expected SSRC for every known participant.
-
-**Requires:** [`srtp-master-key`](../crypto/srtp-master-key.md)
+Requires: [`srtp-master-key`](../crypto/srtp-master-key.md)  
+Breakdown: [`video-packetization`](../encodings/video-packetization.md), [`media-loop`](../relay/media-loop.md), [`rtcp`](../relay/rtcp.md), [`rtp-framing`](../relay/rtp-framing.md)
 
 **Implemented by**
+- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+- **zapo-caller** — working — original derivation ported from src/media/voip-crypto.ts
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | working |  |
-| [`zapo-caller`](../../flavors.md) | working | original derivation ported from src/media/voip-crypto.ts |
-| [`meowcaller`](../../flavors.md) | planned | relay path is planned |
+Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/relay/ssrc.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/relay/ssrc.yaml)
 
 **Open questions**
-
 - Semantic meaning of each of the nine slots (which slot carries audio vs. video vs. screen-share, and primary vs. RTX/FEC) is not pinned by the source.
 - Whether the slot-word permutation is fixed for all client versions or negotiated/versioned.
 
 **References**
-
 - [RFC 5869 — HKDF](https://www.rfc-editor.org/rfc/rfc5869)
 - [RFC 3550 — RTP (SSRC)](https://www.rfc-editor.org/rfc/rfc3550)
 
 ---
 
-[in the full RFC →](../index.md#ssrc) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#ssrc)

@@ -2,144 +2,116 @@
 
 # MLow LSF and LPC
 
-**Category:** [Encodings](../index.md#encodings)  
-**Part id:** `mlow-lsf-lpc`
+_Encodings · `mlow-lsf-lpc`_
 
-**`mlow-lsf-lpc`** · status: review · features: audio · since: 0.1.0
+_status: review · audio_
 
-How an MLow internal frame's spectral envelope is carried: the range-coded line-spectral-frequency (LSF) indices on the wire, their reconstruction into a quantized NLSF vector, the per-subframe interpolation to LPC coefficients, and the encoder-side LSF vector quantization that selects those indices.
+MLow carries an internal frame's spectral envelope as range-coded LSF indices, reconstructed into an order-16 quantized NLSF vector and interpolated per-subframe to LPC coefficients.
 
-**Normative**
-
-Each MLow internal frame carries its short-term spectral envelope as a set of
-range-coded LSF indices. The decoder MUST read them from the range coder (see
-[mlow-rangecoder](../encodings/mlow-rangecoder.md)) in the following fixed order, then reconstruct
-a quantized normalized-LSF (NLSF) vector of order 16 and interpolate it to LPC
-coefficients for synthesis.
-
-The LSF coding is MLow-specific and is NOT stock SILK codebook coding. The order
-is **16**. All symbols below are read with the cumulative-CDF primitive
-(`decode_cdf`, u16 cumulative tables), not the ICDF path.
+LSF coding is MLow-specific, NOT stock SILK codebook coding. Order is **16**. All
+symbols are read with the cumulative-CDF primitive (`decode_cdf`, u16 cumulative
+tables), not the ICDF path. Symbols are read from the range coder (see
+[mlow-rangecoder](../encodings/mlow-rangecoder.md)).
 
 **Wire read order (per internal frame).**
 
     1. stage-1 selector   ; 1 symbol, CDF = lsf_sel[sel]
     2. stage-1 grid        ; 1 symbol, CDF chosen by (match, stage1)
-    3. stage-2 residuals   ; 16 symbols, coeff k from g_lsf[stage1][config][grid][k]
+    3. stage-2 residuals   ; 16 symbols, coeff k from lsf_stage2[stage1][config][grid][k]
     4. extra               ; 1 symbol, 3-symbol static CDF lsf_extra
 
-**Stage-1 selector.** The selector row index `sel` MUST be chosen as:
+**Stage-1 selector.** Row index `sel`:
 
-    sel = 0                       if intf == 0   (first internal frame)
-    sel = 2                       if prev_stage1 != 0
-    sel = 1                       otherwise
+    sel = 0   if intf == 0          (first internal frame)
+    sel = 2   if prev_stage1 != 0
+    sel = 1   otherwise
 
-where `intf` is the internal-frame index (0,1,2) within the 60 ms packet and
-`prev_stage1` is the stage-1 value decoded for the previous internal frame.
-The decoded value is `stage1`.
+`intf` is the internal-frame index (0,1,2) within the 60 ms packet; `prev_stage1`
+is the stage-1 value of the previous internal frame. Decoded value is `stage1`.
 
-**Match / predictor reset.** A predictor-continuity flag MUST be computed as:
+**Match / predictor reset.**
 
     match = (intf != 0) AND (stage1 == prev_stage1)
 
 When `match` is false, the cross-frame pitch/LTP predictor state (gain index,
 filter index, lag, fractional lag) MUST be reset to -1 before decoding the rest of
-the frame. `prev_stage1` MUST then be updated to the current `stage1`.
+the frame. `prev_stage1` MUST then be set to the current `stage1`.
 
-**Stage-1 grid.** The grid symbol MUST be decoded with the CDF selected as:
+**Stage-1 grid.** CDF selected as:
 
     match  && stage1 != 0   -> lsf_grid.match1
     match  && stage1 == 0   -> lsf_grid.match1_alt
     !match && stage1 != 0   -> lsf_grid.match0_alt
     !match && stage1 == 0   -> lsf_grid.match0
 
-**Stage-2 residuals.** Exactly 16 stage-2 symbols MUST be decoded, coefficient `k`
-using its own CDF `lsf_stage2[stage1][config][grid][k]`, where `config` is the
-MLow config (0/1). For each coefficient the raw-symbol count `nraw` is
-`len(CDF) - 2`.
+**Stage-2 residuals.** Exactly 16 symbols, coefficient `k` using CDF
+`lsf_stage2[stage1][config][grid][k]`, where `config` is the MLow config (0/1). Per
+coefficient, raw-symbol count `nraw = len(CDF) - 2`.
 
-**Extra read.** One final `extra` symbol MUST be decoded from the 3-symbol static
-CDF `lsf_extra`. It always fires on the standard decode path (num_subfr >= 2).
+**Extra read.** One `extra` symbol from the 3-symbol static CDF `lsf_extra`. Always
+fires on the standard decode path (num_subfr >= 2).
 
-**NLSF reconstruction.** The decoded `(stage1, grid, stage2[16])` plus the previous
-internal frame's reconstructed NLSF MUST be mapped to a quantized NLSF vector
-`qlsf[0..16]` (radians, range 0..PI). The wire `grid` is the stage-1 codebook
-index; the value 16 denotes the conditional ("cond") centroid derived from the
-previous frame. Reconstruction is `qlsf = 2*cbhalf[grid] + we^T * qlvls(stage2)`,
-i.e. twice the selected stage-1 half-centroid plus the weighted stage-2
-quantization levels, with conditional prediction from the previous NLSF when the
-cond centroid is selected.
+**NLSF reconstruction.** Map `(stage1, grid, stage2[16])` plus the previous internal
+frame's NLSF to `qlsf[0..16]` (radians, 0..PI). The wire `grid` is the stage-1
+codebook index; value 16 denotes the conditional ("cond") centroid derived from the
+previous frame:
 
-**LSF -> LPC interpolation.** For each of the 4 subframes the decoder MUST form an
-interpolated NLSF between the previous frame's NLSF (`prev`) and the current
-`qlsf`, using the weights for interpolation row 0:
+    qlsf = 2*cbhalf[grid] + we^T * qlvls(stage2)
+
+i.e. twice the selected stage-1 half-centroid plus the weighted stage-2 levels, with
+conditional prediction from the previous NLSF when the cond centroid is selected.
+
+**LSF -> LPC interpolation.** For each of the 4 subframes interpolate between the
+previous frame's NLSF (`prev`) and current `qlsf` using interpolation row 0:
 
     w = [0.55, 0.88, 1.0, 1.0]   (per subframe j)
     ilsf[k] = (1-w[j]) * prev[k] + w[j] * qlsf[k]   ; ilsf = qlsf when w == 1.0
 
-On a reset (no valid previous NLSF) `prev` MUST be initialized from the current
-`qlsf`. Each interpolated NLSF MUST be converted to monic LPC coefficients
-`A[0..16]` (`A[0] = 1`) via the NLSF->A transform, and each subframe's `A` MUST be
-bandwidth-expanded until it forms a stable all-pole filter (chirp factor
-`1 - iter*0.001` per iteration; stability bound `|reflection| <= 0.9995`).
+On reset (no valid previous NLSF) `prev` MUST be initialized from current `qlsf`.
+Each interpolated NLSF MUST be converted to monic LPC coefficients `A[0..16]`
+(`A[0] = 1`) via the NLSF->A transform, then bandwidth-expanded until it forms a
+stable all-pole filter (chirp factor `1 - iter*0.001` per iteration; stability bound
+`|reflection| <= 0.9995`).
 
-**Encoder side (LSF quantization).** An encoder MUST select the wire indices so the
-decoder reconstructs the same `qlsf` it synthesizes with. From the analysis LPC the
-encoder computes the analysis NLSF (forward A->NLSF), then runs the LSF vector
-quantizer:
+**Encoder side (LSF quantization).** Select wire indices so the decoder reconstructs
+the same `qlsf` the encoder synthesizes with. Compute the analysis NLSF (forward
+A->NLSF) from the analysis LPC, then run the LSF vector quantizer:
 
-  - RD weights at each LSF are the inverse spectral-envelope magnitude
+  - RD weights per LSF are the inverse spectral-envelope magnitude
     `1/sqrt(|A(e^jw)|^2 * scale)`, `scale = 1/min`.
   - A Mahalanobis shortlist (`VQ_temp`) over the stage-1 centroids (plus the cond
     centroid for conditional coding) selects `surv` survivors.
-  - For each survivor, stage-2 residuals are computed as
-    `qerr = wie^T*(lsf - 2*cbhalf[qi1]) / qstep`, rounded and per-coefficient
-    clamped to `[min_qi, max_qi]`, then an RD beam refines one coefficient at a
-    time minimizing `0.5*order*log2(werr)*RDw_adj + bits`.
+  - Per survivor, stage-2 residuals `qerr = wie^T*(lsf - 2*cbhalf[qi1]) / qstep`,
+    rounded and per-coefficient clamped to `[min_qi, max_qi]`; an RD beam then
+    refines one coefficient at a time minimizing `0.5*order*log2(werr)*RDw_adj + bits`.
   - Reconstructed LSFs MUST be spaced so consecutive distances exceed the
     per-coefficient `min_dist` table before the RD metric is evaluated.
 
-The chosen `qi[0]` is the wire `grid` (the stage-1 index, or 16 for the cond
-centroid) and `qi[1..16]` are the 16 stage-2 indices.
+The chosen `qi[0]` is the wire `grid` (stage-1 index, or 16 for the cond centroid);
+`qi[1..16]` are the 16 stage-2 indices.
 
-**Findings**
+**Notes.** The selector, grid, and stage-2 CDFs are runtime-built (not static rodata), carried
+as a table blob alongside the decoder; the stage-2 CDF is indexed
+[stage1][config][grid][coeff]. The forward A->NLSF is the fixed-point silk_A2NLSF
+transform (Q16 coefficients -> Q15 NLSF, scaled to radians).
 
-The decode read order, selector/grid/stage-2/extra structure, and the
-prev_stage1-driven CDF selection together define the LSF wire format. The stage-2,
-selector and grid CDFs are runtime-built (not static rodata) and are carried as a
-table blob alongside the decoder; the stage-2 CDF is indexed
-[stage1][config][grid][coeff].
-
-The NLSF reconstruction maps the wire `(grid, stage2)` directly onto the
-quantizer's `(qi[0], qi[1..16])`, with grid value 16 denoting the conditional
-centroid; the decoder rebuilds the same envelope the encoder synthesizes with, so
-no separate synthesis-time NLSF stabilization step is required.
-
-The forward A->NLSF is the fixed-point silk_A2NLSF transform (Q16 coefficients ->
-Q15 NLSF, scaled to radians). The full analysis front end (FFT autocorrelation ->
-reflection coefficients -> A -> bandwidth expansion by 0.9999^i) yields `A` to a
-tight float tolerance (FFT-internal rounding only); the LSF quantizer index
-selection and reconstructed `qlsf` are exact.
-
-**Requires:** [`mlow`](../encodings/mlow.md), [`mlow-rangecoder`](../encodings/mlow-rangecoder.md), [`mlow-frame`](../encodings/mlow-frame.md)
+Parent: [`mlow`](../encodings/mlow.md)  
+Requires: [`mlow`](../encodings/mlow.md), [`mlow-rangecoder`](../encodings/mlow-rangecoder.md), [`mlow-frame`](../encodings/mlow-frame.md)  
+Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-encoder`](../encodings/mlow-encoder.md), [`mlow-excitation`](../encodings/mlow-excitation.md), [`mlow-noise`](../encodings/mlow-noise.md), [`mlow-synthesis`](../encodings/mlow-synthesis.md)
 
 **Implemented by**
+- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+- **meowcaller** — partial — LSF decode/reconstruction KAT-verified; encoder-side LSF VQ not in scope · [commits ↗](https://github.com/purpshell/meowcaller/commits)
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | working |  |
-| [`meowmeow`](../../flavors.md) | working |  |
-| [`meowcaller`](../../flavors.md) | partial | LSF decode/reconstruction KAT-verified; encoder-side LSF VQ not in scope |
+Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-lsf-lpc.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-lsf-lpc.yaml)
 
 **Open questions**
-
 - The selector/grid/stage-2 CDF tables and the stage-1/stage-2 codebooks (cbhalf, we, wie, qstep, min_qi/max_qi, min_dist, means, reg_cond) are carried as opaque table blobs; their generating procedure inside the codec is not specified here.
 - Whether interpolation rows other than row 0 ([0.55,0.88,1.0,1.0]) are ever signalled/used on the decode path, or only chosen encoder-side.
 
 **References**
-
 - [RFC 6716 — Opus (SILK NLSF/LSF background)](https://www.rfc-editor.org/rfc/rfc6716)
 
 ---
 
-[in the full RFC →](../index.md#mlow-lsf-lpc) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#mlow-lsf-lpc)

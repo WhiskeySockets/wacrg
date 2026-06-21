@@ -3,8 +3,6 @@ title: Illustrative outgoing 1:1 audio call offer (synthetic)
 status: draft
 source:
   technique: websocket-capture
-  tools:
-    - baileys
   contributor: purpshell
   captured_at: ""
 stanza_tag: call

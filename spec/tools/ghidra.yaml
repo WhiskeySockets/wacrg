@@ -1,9 +1,0 @@
-id: ghidra
-name: Ghidra
-url: https://ghidra-sre.org/
-techniques:
-  - static-smali-analysis
-  - wasm-analysis
-description: >
-  Software reverse-engineering suite. With the WASM plugin it disassembles and
-  decompiles the WhatsApp Web call module; also used for native library analysis.

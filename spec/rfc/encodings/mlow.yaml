@@ -3,28 +3,29 @@ category: encodings
 title: MLow audio codec
 status: review
 order: 10
-features: [audio]
+features: [ audio ]
 since: "0.1.0"
 summary: >
-  WhatsApp's low-bitrate speech codec (internally "SMPL"): a split-band CELP codec
-  that reuses the Opus/CELT range coder for entropy coding.
+  WhatsApp's low-bitrate split-band CELP speech codec ("SMPL") that reuses the
+  Opus/CELT range coder for entropy coding.
 normative: |
-  An MLow payload MUST be decoded as split-band CELP. The entropy layer is the
-  Opus/CELT range coder verbatim; symbols are read from the front of the buffer and
-  raw bits from the back. The decode schedule MUST run, in order: TOC/frame parse,
-  RED de-packetization, range-coded LSF → LPC, excitation pulses, gains, pitch/LTP,
-  CELP synthesis, the harmonic and HP post-filters, and comfort-noise generation.
-  Decoded output is 16 kHz PCM.
-
-  MLow is one registered decoder alongside Opus; codec selection is signalled in the
-  offer (see [call-offer](call-offer)). The neural companion post-filter is OPTIONAL
-  and not required for intelligible audio.
-findings: |
-  The receive (decode) path is the priority for a working
-  call; the encoder mirrors it plus rate control, DTX, and RED strength.
+  - Decode an MLow payload as split-band CELP. Output is 16 kHz PCM.
+  - Entropy layer is the Opus/CELT range coder verbatim: read symbols from the
+    front of the buffer, raw bits from the back.
+  - Run the decode schedule in this order: TOC/frame parse; RED de-packetization;
+    range-coded LSF -> LPC; excitation pulses; gains; pitch/LTP; CELP synthesis;
+    harmonic and HP post-filters; comfort-noise generation.
+  - MLow is a registered decoder alongside Opus; codec selection is signalled in
+    the offer (see [call-offer](call-offer)).
+  - The neural companion post-filter is OPTIONAL; not required for intelligible audio.
 implementations:
   - { flavor: whatsapp-rust, status: working }
-  - { flavor: meowmeow, status: working }
-  - { flavor: meowcaller, status: partial, note: "receive DSP largely KAT-verified; CELP synth + decoder orchestration in progress" }
+  - {
+      flavor: meowcaller,
+      status: partial,
+      note: "receive DSP largely KAT-verified; CELP synth + decoder orchestration in
+        progress"
+    }
 references:
   - { title: "RFC 6716 — Opus", url: "https://www.rfc-editor.org/rfc/rfc6716" }
+discovered_by: purpshell

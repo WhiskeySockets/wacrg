@@ -63,11 +63,10 @@ nested `children` (recursive, same shape), plus `examples`, `notes`, `open_quest
 Each **attribute** and **child** must carry:
 
 - `confidence` (one of the values above), and
-- `provenance` recording how (`techniques`, subset of the fixed set), with what
-  (`tools`, ids from `spec/tools/`), which independent reimplementations corroborate it
-  (`flavors`, ids from `spec/flavors/`), who (`contributors`, ids from
-  `spec/contributors/`), and proof (`sources`, issue/PR/commit refs like `"#12"`).
-  See [attribution & proof](./docs/attribution.md).
+- `provenance` recording how (`techniques`, subset of the fixed set), which independent
+  reimplementations corroborate it (`flavors`, ids from `spec/flavors/`), who
+  (`contributors`, ids from `spec/contributors/`), and proof (`sources`, issue/PR/commit
+  refs like `"#12"`). See [attribution & proof](./docs/attribution.md).
 
 Attribute `type` is one of `string|int|hex|bytes|bool|jid|timestamp|enum:<enum-id>`. When you use
 `enum:<id>`, that enum must exist as `spec/enums/<id>.yaml`. The validator enforces it.
@@ -85,17 +84,12 @@ real data.
 - **Technique** (`spec/techniques/<id>.yaml`): `id` MUST be from the fixed technique set;
   document `maturity`, `targets`, `strengths`, `limitations`, `tooling`, optional `guide` path.
 - **Contributor** (`spec/contributors/<id>.yaml`): register yourself once with `id` (your
-  GitHub handle), `name`, and the techniques/tools you use. Referenced by `provenance.contributors`.
-- **Tool** (`spec/tools/<id>.yaml`): a concrete tool that *gathers evidence* (warden,
-  ghidra, frida, …) with `id`, `version`, `url`, `techniques` it supports, and
-  `maintainer`. Referenced by `provenance.tools`.
+  GitHub handle), `name`, and the techniques you use. Referenced by `provenance.contributors`.
 - **Flavor** (`spec/flavors/<id>.yaml`): an independent reimplementation (library/port)
   that *realizes the spec in code* — `id`, `language`, `maturity`, `maintainer`, `covers`
   (planes), `basis` (techniques it was reconstructed from), and `derives_from` (flavors it
-  ports, so a port is not counted as independent of its upstream). Referenced by
-  `provenance.flavors`. Optionally ships a `spec/flavors/<id>.map.yaml` implementation map:
-  per spec bit, a code permalink and the vector that validates it — the inverse of a
-  code-to-reference pointer. A flavor is a corroborating source, not an evidence tool.
+  ports, so a port is not counted as independent of its upstream). Each RFC part records
+  its in-the-wild implementation status across flavors. A flavor is a corroborating source.
 - **Glossary** (`spec/glossary.yaml`): shared `terms`.
 
 > When in doubt about a key name, copy an existing file of the same kind and adapt it. The
@@ -114,9 +108,9 @@ These rules are what keep the spec trustworthy. Please follow them strictly.
    defined in [GOVERNANCE.md](./GOVERNANCE.md).
 3. **Always record provenance.** Every attribute/child needs `provenance.techniques` (which
    methods saw it); also record `provenance.contributors` (who: your contributor id),
-   `provenance.tools` (which tools), `provenance.flavors` (which independent
-   reimplementations reproduce it — a corroborating source, not a technique; it does not by
-   itself reach `confirmed`), and `provenance.sources` (where: an issue/PR/commit ref). No
+   `provenance.flavors` (which independent reimplementations reproduce it — a corroborating
+   source, not a technique; it does not by itself reach `confirmed`), and
+   `provenance.sources` (where: an issue/PR/commit ref). No
    orphan facts. See [attribution & proof](./docs/attribution.md).
 4. **Put uncertainty in `open_questions`, not in confidence inflation.** If you're unsure what a
    field means, mark it `speculative` *and* add an open question. Do not round up.
@@ -185,7 +179,7 @@ Before requesting review, confirm:
       `COVERAGE.md`, and `docs/coverage-badge.json`.
 - [ ] `npm run check` is green (no uncommitted generated diffs).
 - [ ] Every new attribute/child/value has confidence and provenance (techniques,
-      tools, contributors, sources).
+      contributors, sources).
 - [ ] Confidence is honest; `confirmed` only with ≥ 2 independent techniques. Uncertainty lives
       in `open_questions`.
 - [ ] Any `enum:<id>` type, flow `stanza`, or `provenance.techniques` value resolves to a

@@ -2,41 +2,33 @@
 
 # SFrame media end-to-end encryption
 
-**Category:** [Crypto](../index.md#crypto)  
-**Part id:** `sframe-media`
+_Crypto · `sframe-media`_
 
-**`sframe-media`** · status: draft · features: audio, video, group · since: 0.1.0
+_status: draft · audio, video, group_
 
-Per-frame end-to-end encryption of media payloads (SFrame-style), applied above the SRTP layers so the relay never sees plaintext media.
+Per-frame end-to-end AEAD sealing of media payloads, applied above SRTP so the relay only forwards ciphertext.
 
-**Normative**
+- Each media frame MUST be sealed with an SFrame-style AEAD before transport.
+- The sealed frame carries an authenticated header (key id + monotonic frame
+  counter) over a payload encrypted under a per-participant SFrame key derived
+  from the call key.
+- The frame counter MUST NOT repeat under a given key.
+- The relay MUST be unable to recover plaintext; it only forwards sealed frames.
+- Group calls use per-sender keys.
 
-Each media frame MUST be sealed end-to-end before transport with an SFrame-style
-AEAD: an authenticated header carrying a key id and a monotonic frame counter,
-with the payload encrypted under a per-participant SFrame key derived from the
-call key. The frame counter MUST NOT repeat under a given key. The relay MUST be
-unable to recover plaintext media; it only forwards sealed frames.
-
-**Findings**
-
-Recovered in the WhatsApp Web engine as `facebook::rtc::e2ee::FrameDataHandler*`
-classes. Group calls extend this with per-sender keys.
-
-**Requires:** [`srtp-master-key`](../crypto/srtp-master-key.md)
+Requires: [`srtp-master-key`](../crypto/srtp-master-key.md)  
+Breakdown: [`call-key`](../crypto/call-key.md), [`group-call-crypto`](../crypto/group-call-crypto.md)
 
 **Implemented by**
+- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+- **zapo-caller** — working
 
-| Flavor | Status | Note |
-| --- | --- | --- |
-| [`whatsapp-rust`](../../flavors.md) | working |  |
-| [`zapo-caller`](../../flavors.md) | working |  |
-| [`meowcaller`](../../flavors.md) | planned |  |
+Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/crypto/sframe-media.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/crypto/sframe-media.yaml)
 
 **Open questions**
-
 - Exact AEAD suite, nonce construction, and header varint layout.
 - Group-call key distribution and rotation.
 
 ---
 
-[in the full RFC →](../index.md#sframe-media) · [RFC contents](../index.md#contents)
+[← in the full RFC](../../../index.md#sframe-media)

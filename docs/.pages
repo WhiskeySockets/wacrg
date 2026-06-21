@@ -1,0 +1,26 @@
+# Top-level navigation order (mkdocs-awesome-pages-plugin).
+# The spec is the product, so it sits at the very top; everything explanatory
+# is grouped under a single "Concepts" section beneath it. 404.md is kept out
+# of the nav via `not_in_nav` in mkdocs.yml.
+nav:
+  - index.md
+  - spec
+  - Concepts:
+      - architecture.md
+      - signaling.md
+      - encryption-keying.md
+      - media-srtp.md
+      - transport-noise.md
+      - ice-and-relays.md
+      - codec
+      - keying
+      - signaling
+      - transport
+      - reconstruction.md
+      - roadmap.md
+      - methodology
+      - techniques
+      - decisions
+      - faq.md
+      - legal-and-ethics.md
+      - attribution.md

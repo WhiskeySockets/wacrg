@@ -24,7 +24,7 @@ Sent by a callee device to decline an offered call before it is answered. The <c
 
 ### `<reject>`
 
-**occurrence:** 1 · **confidence:** probable
+**occurrence:** 1 - **confidence:** probable
 
 Container declining the call. Echoes the session identifiers from the offer and carries a reason drawn from enum:terminate-reasons. Distinguished from terminate by being emitted before any acceptance.
 
@@ -65,4 +65,4 @@ Reject and terminate are closely related; the practical distinction is timing (r
 
 ---
 
-[Back to stanza catalog](./index.md) · [Spec overview](../index.md)
+[Back to stanza catalog](./index.md) - [Spec overview](../index.md)

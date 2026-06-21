@@ -24,7 +24,7 @@ A call-routed stanza carrying ICE/relay transport information used to establish 
 
 ### `<transport>`
 
-**occurrence:** 0..1 · **confidence:** speculative
+**occurrence:** 0..1 - **confidence:** speculative
 
 Wrapper for an in-call transport/ICE update sent outside the initial offer. Carries an updated set of relay/candidate endpoints when the network path changes. We are not yet certain whether updates reuse the <transport> tag or are folded into a fresh <offer>/<destination>; both shapes have been hypothesised.
 
@@ -38,13 +38,13 @@ Wrapper for an in-call transport/ICE update sent outside the initial offer. Carr
 
 #### `<destination>`
 
-**occurrence:** 0..1 · **confidence:** probable
+**occurrence:** 0..1 - **confidence:** probable
 
 Container for one or more candidate transport endpoints describing relay servers the media stream can be sent to.
 
 ##### `<te>`
 
-**occurrence:** 0..n · **confidence:** speculative
+**occurrence:** 0..n - **confidence:** speculative
 
 A single transport-endpoint candidate (abbreviation believed to stand for "transport endpoint"). Encodes a relay host address plus selection metadata. May appear as <te> or as <endpoint>; the two are treated as the same concept here pending confirmation.
 
@@ -60,7 +60,7 @@ A single transport-endpoint candidate (abbreviation believed to stand for "trans
 
 ##### `<endpoint>`
 
-**occurrence:** 0..n · **confidence:** speculative
+**occurrence:** 0..n - **confidence:** speculative
 
 Alternate/observed spelling of a relay candidate entry. Listed separately because some decodes show <endpoint> rather than <te>; they are believed to be the same structure. Resolving which tag is canonical is an open question.
 
@@ -107,4 +107,4 @@ Media itself is SRTP over UDP and never traverses the signaling WebSocket; only 
 
 ---
 
-[Back to stanza catalog](./index.md) · [Spec overview](../index.md)
+[Back to stanza catalog](./index.md) - [Spec overview](../index.md)

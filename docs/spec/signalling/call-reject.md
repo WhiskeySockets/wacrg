@@ -2,9 +2,9 @@
 
 # Call reject stanza
 
-_Signalling · `call-reject`_
+_Signalling - `call-reject`_
 
-`SIG-08` · _status: review · audio, video_
+`SIG-08` - _status: review - audio, video_
 
 The `<reject>` action stanza declines an incoming call offer before the media phase, naming the call by `call-id`/`call-creator` with no child elements.
 
@@ -54,12 +54,12 @@ Breakdown: [`flow-call-rejected`](../signalling/flow-call-rejected.md), [`flow-i
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | ported from zapo-caller signaling.ts |
 
 **Annotation** `wacrg:SIG-08` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/call-reject.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/call-reject.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/call-reject.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/call-reject.yaml)
 
 **Open questions**
 - Whether any client emits an optional <reject> attribute (e.g. a reason or media-type hint) under newer protocol versions; none is observed in the current builders or parser.
@@ -73,4 +73,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#call-reject)
+[Back to the full spec](../../index.md#call-reject)

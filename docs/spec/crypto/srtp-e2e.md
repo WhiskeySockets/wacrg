@@ -2,9 +2,9 @@
 
 # End-to-end SRTP
 
-_Crypto · `srtp-e2e`_
+_Crypto - `srtp-e2e`_
 
-`CRY-05` · _status: review · audio, video_
+`CRY-05` - _status: review - audio, video_
 
 The end-to-end AES-128-CTR SRTP context for 1:1 calls, keyed per participant from the call key and carried unchanged through the relay inside the hop-by-hop SRTP.
 
@@ -75,13 +75,13 @@ Breakdown: [`warp-crypto`](../crypto/warp-crypto.md), [`media-loop`](../relay/me
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/e2e_srtp.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/e2e_srtp.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/e2e_srtp.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/e2e_srtp.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | ported from src/media/e2e-srtp.ts |
 | `meowcaller` | planned | — | — |
 
 **Annotation** `wacrg:CRY-05` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/crypto/srtp-e2e.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/crypto/srtp-e2e.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/crypto/srtp-e2e.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/crypto/srtp-e2e.yaml)
 
 **Open questions**
 - Exact byte layout of participantLID used as HKDF info across client versions (shared with srtp-master-key).
@@ -97,4 +97,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#srtp-e2e)
+[Back to the full spec](../../index.md#srtp-e2e)

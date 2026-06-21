@@ -2,9 +2,9 @@
 
 # Outgoing 1:1 call flow
 
-_Signalling · `flow-outgoing-1to1`_
+_Signalling - `flow-outgoing-1to1`_
 
-`SIG-17` · _status: draft · audio, video_
+`SIG-17` - _status: draft - audio, video_
 
 Caller-side stanza sequence for a 1:1 call: key delivery, offer, ack, receipts, preaccept/accept, transport, media, and terminate, with the ordering and correlation rules between them.
 
@@ -88,12 +88,12 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`call-ack`](../signallin
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | partial | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/src/handlers/call.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/src/handlers/call.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) [`d68af6c`](https://github.com/oxidezap/whatsapp-rust-private/commit/d68af6c608297c864669850b9bc05d4a54410d15) | device discovery, call-key encryption, and the offer/ack/receipt/preaccept/accept signalling are exercised; live caller-side media orchestration is still landing |
+| `whatsapp-rust` | partial | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/src/handlers/call.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/src/handlers/call.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) [`d68af6c`](https://github.com/oxidezap/whatsapp-rust-private/commit/d68af6c608297c864669850b9bc05d4a54410d15) | device discovery, call-key encryption, and the offer/ack/receipt/preaccept/accept signalling are exercised; live caller-side media orchestration is still landing |
 | `zapo-caller` | working | — | outbound caller signalling + relay; not the codec |
 
 **Annotation** `wacrg:SIG-17` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/flow-outgoing-1to1.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/flow-outgoing-1to1.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/flow-outgoing-1to1.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/flow-outgoing-1to1.yaml)
 
 **Open questions**
 - Exact caller-side transport-message-type handshake sequence (which <transport> rounds the caller initiates vs. answers) to converge the media path.
@@ -111,4 +111,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#flow-outgoing-1to1)
+[Back to the full spec](../../index.md#flow-outgoing-1to1)

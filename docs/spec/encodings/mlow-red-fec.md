@@ -2,9 +2,9 @@
 
 # MLow RED and Reed-Solomon FEC
 
-_Encodings · `mlow-red-fec`_
+_Encodings - `mlow-red-fec`_
 
-`ENC-02` · _status: draft · audio_
+`ENC-02` - _status: draft - audio_
 
 The optional "SplitRed" redundancy envelope wrapping an MLow RTP audio payload: one main frame plus zero or more time-shifted redundant copies of earlier frames, recoverable without retransmission.
 
@@ -113,12 +113,12 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md)
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/red.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/red.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | depack_split_red parses the RED envelope; bare-frame streams bypass it |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/red.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/red.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | depack_split_red parses the RED envelope; bare-frame streams bypass it |
 | `meowcaller` | partial | — | codec modules partial |
 
 **Annotation** `wacrg:ENC-02` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-red-fec.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-red-fec.yaml)
+Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-red-fec.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-red-fec.yaml)
 
 **Open questions**
 - On-wire encoding of the Reed-Solomon FEC tier: generator polynomial, symbol/block size, and parity layout.
@@ -134,4 +134,4 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 ---
 
-[← in the full spec](../../index.md#mlow-red-fec)
+[Back to the full spec](../../index.md#mlow-red-fec)

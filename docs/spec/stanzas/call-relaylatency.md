@@ -24,7 +24,7 @@ A call-routed stanza used to probe and report round-trip latency to candidate Wh
 
 ### `<relaylatency>`
 
-**occurrence:** 1 · **confidence:** speculative
+**occurrence:** 1 - **confidence:** speculative
 
 Wrapper carrying one or more relay latency samples. Hypothesised to be emitted periodically while candidates are being evaluated, and again if the active relay degrades mid-call.
 
@@ -36,7 +36,7 @@ Wrapper carrying one or more relay latency samples. Hypothesised to be emitted p
 
 #### `<relay>`
 
-**occurrence:** 1..n · **confidence:** speculative
+**occurrence:** 1..n - **confidence:** speculative
 
 A single relay's latency sample. The element name is uncertain; <relay>, <te>, or a bare latency entry are all plausible.
 
@@ -82,4 +82,4 @@ Latency probing is a transport-layer concern that feeds relay/candidate selectio
 
 ---
 
-[Back to stanza catalog](./index.md) · [Spec overview](../index.md)
+[Back to stanza catalog](./index.md) - [Spec overview](../index.md)

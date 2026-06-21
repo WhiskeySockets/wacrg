@@ -2,9 +2,9 @@
 
 # Call accept stanza
 
-_Signalling · `call-accept`_
+_Signalling - `call-accept`_
 
-`SIG-03` · _status: review · audio, video_
+`SIG-03` - _status: review - audio, video_
 
 The callee answers an offer with a <call> stanza whose <accept> child selects the media format and commits the call to the v2 SRTP key path.
 
@@ -41,12 +41,12 @@ Breakdown: [`call-preaccept`](../signalling/call-preaccept.md), [`flow-call-miss
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | — |
 
 **Annotation** `wacrg:SIG-03` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/call-accept.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/call-accept.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/call-accept.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/call-accept.yaml)
 
 **Open questions**
 - Byte layout and semantics of the <te priority=2> relay transport-endpoint blob.
@@ -61,4 +61,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#call-accept)
+[Back to the full spec](../../index.md#call-accept)

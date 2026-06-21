@@ -2,9 +2,9 @@
 
 # SFrame media end-to-end encryption
 
-_Crypto · `sframe-media`_
+_Crypto - `sframe-media`_
 
-`CRY-04` · _status: draft · audio, video, group_
+`CRY-04` - _status: draft - audio, video, group_
 
 Per-frame end-to-end AEAD sealing of media payloads, applied above SRTP so the relay only forwards ciphertext.
 
@@ -23,12 +23,12 @@ Breakdown: [`call-key`](../crypto/call-key.md), [`group-call-crypto`](../crypto/
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/sframe.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/sframe.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/sframe.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/sframe.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | — |
 
 **Annotation** `wacrg:CRY-04` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/crypto/sframe-media.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/crypto/sframe-media.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/crypto/sframe-media.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/crypto/sframe-media.yaml)
 
 **Open questions**
 - Exact AEAD suite, nonce construction, and header varint layout.
@@ -39,4 +39,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#sframe-media)
+[Back to the full spec](../../index.md#sframe-media)

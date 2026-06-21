@@ -27,7 +27,7 @@ A server-generated acknowledgement confirming receipt of a call stanza. Like the
 
 ### `<error>`
 
-**occurrence:** 0..1 · **confidence:** speculative
+**occurrence:** 0..1 - **confidence:** speculative
 
 Optional error detail when the acknowledged stanza could not be routed/accepted (e.g. callee offline, stanza malformed). Mirrors the <error> child seen on failed message acks. Presence on call acks is unconfirmed.
 
@@ -71,4 +71,4 @@ The ack is the reliability backbone of call signaling: absence of an ack within 
 
 ---
 
-[Back to stanza catalog](./index.md) · [Spec overview](../index.md)
+[Back to stanza catalog](./index.md) - [Spec overview](../index.md)

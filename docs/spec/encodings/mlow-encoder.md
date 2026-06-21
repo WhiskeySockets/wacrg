@@ -2,9 +2,9 @@
 
 # MLow encode pipeline
 
-_Encodings · `mlow-encoder`_
+_Encodings - `mlow-encoder`_
 
-`ENC-09` · _status: draft · audio_
+`ENC-09` - _status: draft - audio_
 
 Encode one 60 ms PCM frame into a wire MLow frame: LPC analysis, bit-exact LSF VQ, voicing classification, CELP excitation, per-subframe rate control, DTX, and range-coder serialization in the inverse of the decoder read order.
 
@@ -140,12 +140,12 @@ Requires: [`mlow`](../encodings/mlow.md), [`mlow-frame`](../encodings/mlow-frame
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/encode.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/encode.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/encode.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/encode.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `meowcaller` | partial | — | encode-path codec modules partial |
 
 **Annotation** `wacrg:ENC-09` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-encoder.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-encoder.yaml)
+Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-encoder.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-encoder.yaml)
 
 **Open questions**
 - The assumed main bitrate (20000 bps) for the active 1:1 config is not recovered from the wire; it drives the per-subframe pulse budget and gain selection, so a different negotiated rate would change the chosen pulse counts and gains.
@@ -161,4 +161,4 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 ---
 
-[← in the full spec](../../index.md#mlow-encoder)
+[Back to the full spec](../../index.md#mlow-encoder)

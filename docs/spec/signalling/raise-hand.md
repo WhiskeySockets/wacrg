@@ -2,9 +2,9 @@
 
 # Raise hand
 
-_Signalling · `raise-hand`_
+_Signalling - `raise-hand`_
 
-`SIG-09` · _status: draft · group, raise-hand_
+`SIG-09` - _status: draft - group, raise-hand_
 
 In-call signal a participant sends to raise or lower their hand in a group call.
 
@@ -25,7 +25,7 @@ Requires: [`group-call`](../signalling/group-call.md)
 
 **Annotation** `wacrg:SIG-09` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/raise-hand.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/raise-hand.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/raise-hand.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/raise-hand.yaml)
 
 **Open questions**
 - Which stanza/attribute carries raise-hand state, and whether it is acked.
@@ -35,4 +35,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#raise-hand)
+[Back to the full spec](../../index.md#raise-hand)

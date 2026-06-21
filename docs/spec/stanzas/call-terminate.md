@@ -24,7 +24,7 @@ Ends an existing call or a still-ringing offer. Either party (or the server on t
 
 ### `<terminate>`
 
-**occurrence:** 1 · **confidence:** probable
+**occurrence:** 1 - **confidence:** probable
 
 Container that ends the session. Carries the call-id and the reason. Some reasons (e.g. accept_elsewhere) are produced by the server during multi-device fork resolution rather than by a peer.
 
@@ -76,4 +76,4 @@ Terminate is the universal shutdown stanza; reject is a more specific pre-answer
 
 ---
 
-[Back to stanza catalog](./index.md) · [Spec overview](../index.md)
+[Back to stanza catalog](./index.md) - [Spec overview](../index.md)

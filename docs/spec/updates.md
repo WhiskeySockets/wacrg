@@ -56,4 +56,4 @@ How libraries follow the spec. **Pull:** poll [`feed.json`](./feed.json) — it 
 - [`ssrc`](../index.md#ssrc) — SSRC allocation (relay, review)
 - [`media-loop`](../index.md#media-loop) — Media loop and session (relay, draft)
 
-[← the spec](../index.md)
+[Back to the spec](../index.md)

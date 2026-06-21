@@ -2,9 +2,9 @@
 
 # Missed / timed-out call flow
 
-_Signalling · `flow-call-missed`_
+_Signalling - `flow-call-missed`_
 
-`SIG-12` · _status: draft · audio, video_
+`SIG-12` - _status: draft - audio, video_
 
 Stanza sequence for a 1:1 call offered but never answered: offer, per-device offer-receipt, no preaccept/accept, then a timeout-driven terminate.
 
@@ -60,12 +60,12 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`call-accept`](../signal
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/d68af6c608297c864669850b9bc05d4a54410d15/src/handlers/call.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/d68af6c608297c864669850b9bc05d4a54410d15/src/handlers/call.rs) · commits [`d68af6c`](https://github.com/oxidezap/whatsapp-rust-private/commit/d68af6c608297c864669850b9bc05d4a54410d15) | Parses inbound <call>/<offer>, auto-emits the <receipt><offer/></receipt> ack, and builds <terminate>; example bot rejects/accepts rather than ringing out, so the timeout-driven terminate is not exercised end-to-end. |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/d68af6c608297c864669850b9bc05d4a54410d15/src/handlers/call.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/d68af6c608297c864669850b9bc05d4a54410d15/src/handlers/call.rs) - commits [`d68af6c`](https://github.com/oxidezap/whatsapp-rust-private/commit/d68af6c608297c864669850b9bc05d4a54410d15) | Parses inbound <call>/<offer>, auto-emits the <receipt><offer/></receipt> ack, and builds <terminate>; example bot rejects/accepts rather than ringing out, so the timeout-driven terminate is not exercised end-to-end. |
 | `zapo-caller` | working | — | Signalling builders (offer/accept/terminate) ported from this flavor's signaling.ts. |
 
 **Annotation** `wacrg:SIG-12` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/flow-call-missed.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/flow-call-missed.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/flow-call-missed.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/flow-call-missed.yaml)
 
 **Open questions**
 - The ring/offer timeout duration and which side (caller, callee, or server) drives the terminate when a call goes unanswered.
@@ -82,4 +82,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#flow-call-missed)
+[Back to the full spec](../../index.md#flow-call-missed)

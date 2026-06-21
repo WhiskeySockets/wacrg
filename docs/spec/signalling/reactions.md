@@ -2,9 +2,9 @@
 
 # In-call emoji reactions
 
-_Signalling · `reactions`_
+_Signalling - `reactions`_
 
-`SIG-10` · _status: draft · reactions, group_
+`SIG-10` - _status: draft - reactions, group_
 
 A participant broadcasts a transient emoji reaction during a call.
 
@@ -22,7 +22,7 @@ Requires: [`group-call`](../signalling/group-call.md)
 
 **Annotation** `wacrg:SIG-10` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/reactions.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/reactions.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/reactions.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/reactions.yaml)
 
 **Open questions**
 - Stanza/attribute and emoji encoding for an in-call reaction; TTL/debounce behaviour.
@@ -32,4 +32,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#reactions)
+[Back to the full spec](../../index.md#reactions)

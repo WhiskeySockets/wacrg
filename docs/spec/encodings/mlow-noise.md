@@ -2,9 +2,9 @@
 
 # MLow comfort noise
 
-_Encodings · `mlow-noise`_
+_Encodings - `mlow-noise`_
 
-`ENC-12` · _status: review · audio_
+`ENC-12` - _status: review - audio_
 
 Per-subframe shaped comfort noise the MLow decoder adds into the LPC excitation before CELP synthesis, with separate voiced/unvoiced branches.
 
@@ -98,12 +98,12 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-synthesis`](..
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_gennoise.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_gennoise.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
-| `meowcaller` | partial | [history ↗](https://github.com/purpshell/meowcaller/commits/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/noise.go) · [blame ↗](https://github.com/purpshell/meowcaller/blame/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/noise.go) · commits [`8cb06a9`](https://github.com/purpshell/meowcaller/commit/8cb06a9cd58dd764fac1ca5c7af07d4738718040) [`42ea850`](https://github.com/purpshell/meowcaller/commit/42ea850d17a1a6895347ef0a595840b6d03a5e9a) | encodings DSP modules are KAT-verified piecewise; full decoder orchestration in progress |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_gennoise.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_gennoise.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `meowcaller` | partial | [:material-github: history](https://github.com/purpshell/meowcaller/commits/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/noise.go) - [:material-github: blame](https://github.com/purpshell/meowcaller/blame/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/noise.go) - commits [`8cb06a9`](https://github.com/purpshell/meowcaller/commit/8cb06a9cd58dd764fac1ca5c7af07d4738718040) [`42ea850`](https://github.com/purpshell/meowcaller/commit/42ea850d17a1a6895347ef0a595840b6d03a5e9a) | encodings DSP modules are KAT-verified piecewise; full decoder orchestration in progress |
 
 **Annotation** `wacrg:ENC-12` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-noise.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-noise.yaml)
+Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-noise.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-noise.yaml)
 
 **Open questions**
 - Exact bit layout and subframe schedule by which num_pulses, nrgres (Q14), fcbg_idx and the LSFs are delivered from the frame to this stage is specified in mlow-frame / mlow-excitation, not here.
@@ -116,4 +116,4 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 ---
 
-[← in the full spec](../../index.md#mlow-noise)
+[Back to the full spec](../../index.md#mlow-noise)

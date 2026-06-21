@@ -2,9 +2,9 @@
 
 # Opus codec
 
-_Encodings · `opus`_
+_Encodings - `opus`_
 
-`ENC-05` · _status: draft · audio_
+`ENC-05` - _status: draft - audio_
 
 Standard Opus and MLow payloads share one RTP audio stream; the receiver routes each frame to a decoder by the top two bits of its first payload byte.
 
@@ -40,7 +40,7 @@ Breakdown: [`mlow-frame`](../encodings/mlow-frame.md), [`media-loop`](../relay/m
 
 **Annotation** `wacrg:ENC-05` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/opus.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/opus.yaml)
+Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/opus.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/opus.yaml)
 
 **Open questions**
 - Conditions under which a sender emits standard-Opus frames instead of MLow on a live 1:1 call (e.g. interop, fallback, or capability gating) are unspecified.
@@ -55,4 +55,4 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 ---
 
-[← in the full spec](../../index.md#opus)
+[Back to the full spec](../../index.md#opus)

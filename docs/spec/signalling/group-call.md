@@ -2,9 +2,9 @@
 
 # Group call setup
 
-_Signalling · `group-call`_
+_Signalling - `group-call`_
 
-`SIG-06` · _status: draft · group, audio, video_
+`SIG-06` - _status: draft - group, audio, video_
 
 A multi-party call extends the 1:1 offer/accept flow with a joinable group session, a participant roster, and per-sender media keying.
 
@@ -27,7 +27,7 @@ Breakdown: [`group-call-crypto`](../crypto/group-call-crypto.md), [`raise-hand`]
 
 **Annotation** `wacrg:SIG-06` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/group-call.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/group-call.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/group-call.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/group-call.yaml)
 
 **Open questions**
 - Group session creation, the participant roster stanza, and join/leave signalling.
@@ -38,4 +38,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#group-call)
+[Back to the full spec](../../index.md#group-call)

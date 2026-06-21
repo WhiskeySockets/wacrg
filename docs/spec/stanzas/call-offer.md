@@ -25,7 +25,7 @@ The opening stanza of a 1:1 call. A caller device emits a top-level <call> node 
 
 ### `<offer>`
 
-**occurrence:** 1 · **confidence:** probable
+**occurrence:** 1 - **confidence:** probable
 
 Container describing the proposed call. Carries the logical call-id and the identity of the call creator, and groups all of the media, network, capability, encryption and transport descriptors.
 
@@ -38,7 +38,7 @@ Container describing the proposed call. Carries the logical call-id and the iden
 
 #### `<audio>`
 
-**occurrence:** 0..1 · **confidence:** probable
+**occurrence:** 0..1 - **confidence:** probable
 
 Audio media descriptor. Present for any call that requests audio, which is effectively all 1:1 calls. Advertises the codec sample rate and an encryption marker.
 
@@ -51,7 +51,7 @@ Audio media descriptor. Present for any call that requests audio, which is effec
 
 #### `<video>`
 
-**occurrence:** 0..1 · **confidence:** speculative
+**occurrence:** 0..1 - **confidence:** speculative
 
 Video media descriptor, present only for video calls. Advertises the video codec and an encryption/orientation marker analogous to <audio>. Shape is inferred and not yet observed in a real capture.
 
@@ -64,7 +64,7 @@ Video media descriptor, present only for video calls. Advertises the video codec
 
 #### `<net>`
 
-**occurrence:** 0..1 · **confidence:** speculative
+**occurrence:** 0..1 - **confidence:** speculative
 
 Network information advertised by the caller (e.g. connection medium and a coarse network identifier). Helps the server and peer choose relay strategy. Both presence and attribute names are speculative.
 
@@ -76,7 +76,7 @@ Network information advertised by the caller (e.g. connection medium and a coars
 
 #### `<capability>`
 
-**occurrence:** 0..1 · **confidence:** probable
+**occurrence:** 0..1 - **confidence:** probable
 
 Device capability descriptor. The payload is commonly an opaque binary blob (a packed bitfield/version structure) rather than readable XML, so captures usually show it as bytes. Advertises which call features the caller's build supports.
 
@@ -88,7 +88,7 @@ Device capability descriptor. The payload is commonly an opaque binary blob (a p
 
 #### `<encopt>`
 
-**occurrence:** 0..1 · **confidence:** probable
+**occurrence:** 0..1 - **confidence:** probable
 
 Encryption options for the call. Notably carries the keygen attribute that indicates which key-generation scheme produced the media key wrapped in the sibling <enc> nodes.
 
@@ -100,7 +100,7 @@ Encryption options for the call. Notably carries the keygen attribute that indic
 
 #### `<enc>`
 
-**occurrence:** 1..n · **confidence:** probable
+**occurrence:** 1..n - **confidence:** probable
 
 The keying payload. One <enc> node per recipient device: the call/media key is encrypted to that device using the existing Signal session, so the ciphertext is a Signal message. With several companion devices an offer carries several <enc> nodes. The child text/byte content is the Signal ciphertext and is never human-readable.
 
@@ -114,13 +114,13 @@ The keying payload. One <enc> node per recipient device: the call/media key is e
 
 #### `<destination>`
 
-**occurrence:** 0..1 · **confidence:** probable
+**occurrence:** 0..1 - **confidence:** probable
 
 Transport candidate list. Wraps one or more endpoint entries (<te> or <endpoint>) describing relay/host candidates the peer can use to reach the caller's media, optionally annotated with measured latency. This is the bridge from signaling into the SRTP-over-UDP media path.
 
 ##### `<te>`
 
-**occurrence:** 0..n · **confidence:** speculative
+**occurrence:** 0..n - **confidence:** speculative
 
 A single transport endpoint candidate (relay or host). Naming is uncertain: captures may use <te>, <endpoint>, or a flat list of attributes on <destination>. Carries an address/port and a latency hint.
 
@@ -196,4 +196,4 @@ The offer simultaneously performs three jobs: it signals intent to call, it deli
 
 ---
 
-[Back to stanza catalog](./index.md) · [Spec overview](../index.md)
+[Back to stanza catalog](./index.md) - [Spec overview](../index.md)

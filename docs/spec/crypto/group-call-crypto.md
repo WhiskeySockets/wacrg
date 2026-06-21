@@ -2,9 +2,9 @@
 
 # Group call crypto
 
-_Crypto · `group-call-crypto`_
+_Crypto - `group-call-crypto`_
 
-`CRY-06` · _status: draft · audio, video, group, screen-share_
+`CRY-06` - _status: draft - audio, video, group, screen-share_
 
 A single 32-byte call key is shared with every group-call participant, and each participant derives one SFrame key per sender keyed by that sender's participant id.
 
@@ -58,7 +58,7 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`group-call`](../signall
 
 **Annotation** `wacrg:CRY-06` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/crypto/group-call-crypto.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/crypto/group-call-crypto.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/crypto/group-call-crypto.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/crypto/group-call-crypto.yaml)
 
 **Open questions**
 - How a new participant joining mid-call obtains the existing callKey, and whether the callKey is rotated on membership change (join/leave).
@@ -74,4 +74,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#group-call-crypto)
+[Back to the full spec](../../index.md#group-call-crypto)

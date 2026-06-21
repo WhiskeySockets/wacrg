@@ -2,9 +2,9 @@
 
 # MLow LSF and LPC
 
-_Encodings · `mlow-lsf-lpc`_
+_Encodings - `mlow-lsf-lpc`_
 
-`ENC-08` · _status: review · audio_
+`ENC-08` - _status: review - audio_
 
 MLow carries an internal frame's spectral envelope as range-coded LSF indices, reconstructed into an order-16 quantized NLSF vector and interpolated per-subframe to LPC coefficients.
 
@@ -103,12 +103,12 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-encoder`](../e
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/ed12f359a086b28e807ba236f0977af1000859fe/wacore/src/voip/mlow/smpl_decode.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/ed12f359a086b28e807ba236f0977af1000859fe/wacore/src/voip/mlow/smpl_decode.rs) · commits [`ed12f35`](https://github.com/oxidezap/whatsapp-rust-private/commit/ed12f359a086b28e807ba236f0977af1000859fe) [`c697c36`](https://github.com/oxidezap/whatsapp-rust-private/commit/c697c36ffa7875c304ceea9154be30b66cada914) [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
-| `meowcaller` | partial | [history ↗](https://github.com/purpshell/meowcaller/commits/011af47d049bb023c6692282176a13079787eff7/mlow/lsf.go) · [blame ↗](https://github.com/purpshell/meowcaller/blame/011af47d049bb023c6692282176a13079787eff7/mlow/lsf.go) · commits [`011af47`](https://github.com/purpshell/meowcaller/commit/011af47d049bb023c6692282176a13079787eff7) [`1c62c52`](https://github.com/purpshell/meowcaller/commit/1c62c52145c12ff9b176c16a74020e3547c1c0d1) [`b0b3263`](https://github.com/purpshell/meowcaller/commit/b0b32639154c13d08c1243bf9b3d609f6f76f1a8) [`d572d2f`](https://github.com/purpshell/meowcaller/commit/d572d2ff2cdc7be35973e59ffcec4e7ca37197d7) [`99c55e2`](https://github.com/purpshell/meowcaller/commit/99c55e20c43e4ffc7f9f7f6097d668e9dfd1cbea) [`5ab3e3d`](https://github.com/purpshell/meowcaller/commit/5ab3e3dbe23da7bbaae007faf8069d55407c99fd) [`0246dbb`](https://github.com/purpshell/meowcaller/commit/0246dbb0eaab40e16a58e0d479254134f0932735) [`d88663a`](https://github.com/purpshell/meowcaller/commit/d88663a7dbb3b07ca438ef9cf91fc98d2746d61f) [`b0fe93c`](https://github.com/purpshell/meowcaller/commit/b0fe93c61ea77c36eaacaf67450e2f844c489889) [`e362783`](https://github.com/purpshell/meowcaller/commit/e362783d5f8988607d5b12fd419710fb275ea9e4) | LSF decode/reconstruction KAT-verified; encoder-side LSF VQ not in scope |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/ed12f359a086b28e807ba236f0977af1000859fe/wacore/src/voip/mlow/smpl_decode.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/ed12f359a086b28e807ba236f0977af1000859fe/wacore/src/voip/mlow/smpl_decode.rs) - commits [`ed12f35`](https://github.com/oxidezap/whatsapp-rust-private/commit/ed12f359a086b28e807ba236f0977af1000859fe) [`c697c36`](https://github.com/oxidezap/whatsapp-rust-private/commit/c697c36ffa7875c304ceea9154be30b66cada914) [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `meowcaller` | partial | [:material-github: history](https://github.com/purpshell/meowcaller/commits/011af47d049bb023c6692282176a13079787eff7/mlow/lsf.go) - [:material-github: blame](https://github.com/purpshell/meowcaller/blame/011af47d049bb023c6692282176a13079787eff7/mlow/lsf.go) - commits [`011af47`](https://github.com/purpshell/meowcaller/commit/011af47d049bb023c6692282176a13079787eff7) [`1c62c52`](https://github.com/purpshell/meowcaller/commit/1c62c52145c12ff9b176c16a74020e3547c1c0d1) [`b0b3263`](https://github.com/purpshell/meowcaller/commit/b0b32639154c13d08c1243bf9b3d609f6f76f1a8) [`d572d2f`](https://github.com/purpshell/meowcaller/commit/d572d2ff2cdc7be35973e59ffcec4e7ca37197d7) [`99c55e2`](https://github.com/purpshell/meowcaller/commit/99c55e20c43e4ffc7f9f7f6097d668e9dfd1cbea) [`5ab3e3d`](https://github.com/purpshell/meowcaller/commit/5ab3e3dbe23da7bbaae007faf8069d55407c99fd) [`0246dbb`](https://github.com/purpshell/meowcaller/commit/0246dbb0eaab40e16a58e0d479254134f0932735) [`d88663a`](https://github.com/purpshell/meowcaller/commit/d88663a7dbb3b07ca438ef9cf91fc98d2746d61f) [`b0fe93c`](https://github.com/purpshell/meowcaller/commit/b0fe93c61ea77c36eaacaf67450e2f844c489889) [`e362783`](https://github.com/purpshell/meowcaller/commit/e362783d5f8988607d5b12fd419710fb275ea9e4) | LSF decode/reconstruction KAT-verified; encoder-side LSF VQ not in scope |
 
 **Annotation** `wacrg:ENC-08` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-lsf-lpc.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-lsf-lpc.yaml)
+Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-lsf-lpc.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-lsf-lpc.yaml)
 
 **Open questions**
 - The selector/grid/stage-2 CDF tables and the stage-1/stage-2 codebooks (cbhalf, we, wie, qstep, min_qi/max_qi, min_dist, means, reg_cond) are carried as opaque table blobs; their generating procedure inside the codec is not specified here.
@@ -122,4 +122,4 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 ---
 
-[← in the full spec](../../index.md#mlow-lsf-lpc)
+[Back to the full spec](../../index.md#mlow-lsf-lpc)

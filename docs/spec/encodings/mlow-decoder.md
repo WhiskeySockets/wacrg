@@ -2,9 +2,9 @@
 
 # MLow decode pipeline
 
-_Encodings · `mlow-decoder`_
+_Encodings - `mlow-decoder`_
 
-`ENC-11` · _status: draft · audio_
+`ENC-11` - _status: draft - audio_
 
 Decode one RTP MLow payload into a 16 kHz PCM frame: strip RED, route on the TOC byte, and for an active frame run three chained 20 ms internal frames through a per-packet harmonic post-filter while carrying predictor and synthesis state.
 
@@ -106,12 +106,12 @@ Breakdown: [`mlow-encoder`](../encodings/mlow-encoder.md)
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/decoder.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/decoder.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | pure-Rust stateful MlowDecoder; e2e decode matches the smpl_opus useSmpl reference at lag 0 |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/decoder.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/decoder.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | pure-Rust stateful MlowDecoder; e2e decode matches the smpl_opus useSmpl reference at lag 0 |
 | `meowcaller` | partial | — | codec modules partial; full decode orchestration in progress |
 
 **Annotation** `wacrg:ENC-11` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-decoder.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-decoder.yaml)
+Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-decoder.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-decoder.yaml)
 
 **Open questions**
 - Whether the 32 kHz internal rate and the 10/20/120 ms active frame sizes ever drive the active-frame decode in live calls, or only 16 kHz / 60 ms frames occur (only the latter is seen in capture).
@@ -126,4 +126,4 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 ---
 
-[← in the full spec](../../index.md#mlow-decoder)
+[Back to the full spec](../../index.md#mlow-decoder)

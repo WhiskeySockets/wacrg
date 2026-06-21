@@ -24,7 +24,7 @@ A call-routed stanza that communicates in-call media state changes between peers
 
 ### `<mute>`
 
-**occurrence:** 0..1 · **confidence:** speculative
+**occurrence:** 0..1 - **confidence:** speculative
 
 Indicates the sender muted (or, paired with a value attribute, unmuted) a media track. We are unsure whether mute/unmute are distinct tags or a single tag with a boolean attribute; both are represented here as hypotheses.
 
@@ -39,7 +39,7 @@ Indicates the sender muted (or, paired with a value attribute, unmuted) a media 
 
 ### `<video>`
 
-**occurrence:** 0..1 · **confidence:** speculative
+**occurrence:** 0..1 - **confidence:** speculative
 
 Toggles the outgoing video track on/off, or requests an audio-to-video upgrade. Likely shares the call-id/call-creator keying of other in-call updates.
 
@@ -85,4 +85,4 @@ Categorised as media because it concerns the audio/video tracks, though it is de
 
 ---
 
-[Back to stanza catalog](./index.md) · [Spec overview](../index.md)
+[Back to stanza catalog](./index.md) - [Spec overview](../index.md)

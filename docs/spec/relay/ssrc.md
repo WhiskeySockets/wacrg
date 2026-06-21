@@ -2,9 +2,9 @@
 
 # SSRC allocation
 
-_Relay · `ssrc`_
+_Relay - `ssrc`_
 
-`REL-06` · _status: review · audio, video, group, screen-share_
+`REL-06` - _status: review - audio, video, group, screen-share_
 
 RTP SSRCs are deterministically derived per participant and stream slot via HKDF-SHA256 over the call id, participant LID, and slot index.
 
@@ -47,12 +47,12 @@ Breakdown: [`video-packetization`](../encodings/video-packetization.md), [`media
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/ssrc.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/ssrc.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/ssrc.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/ssrc.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | original derivation ported from src/media/voip-crypto.ts |
 
 **Annotation** `wacrg:REL-06` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/ssrc.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/ssrc.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/ssrc.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/ssrc.yaml)
 
 **Open questions**
 - Semantic meaning of each of the nine slots (which slot carries audio vs. video vs. screen-share, and primary vs. RTX/FEC) is not pinned by the source.
@@ -67,4 +67,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#ssrc)
+[Back to the full spec](../../index.md#ssrc)

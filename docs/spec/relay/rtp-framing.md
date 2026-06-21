@@ -2,9 +2,9 @@
 
 # RTP framing
 
-_Relay · `rtp-framing`_
+_Relay - `rtp-framing`_
 
-`REL-05` · _status: review · audio, video_
+`REL-05` - _status: review - audio, video_
 
 RTP framing for SRTP-protected Opus media: the 16-byte speech and 20-byte DTX/piggyback headers (ext profile 0xdebe), payload classification, and send-side sequencing.
 
@@ -79,12 +79,12 @@ Breakdown: [`video-packetization`](../encodings/video-packetization.md), [`media
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/rtp.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/rtp.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/rtp.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/rtp.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | ported to whatsapp-rust from the zapo-caller src/media/rtp.ts framing |
 
 **Annotation** `wacrg:REL-05` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/rtp-framing.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/rtp-framing.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/rtp-framing.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/rtp-framing.yaml)
 
 **Open questions**
 - Whether payload type 121 is used for a distinct media variant or is only accepted on receive.
@@ -99,4 +99,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#rtp-framing)
+[Back to the full spec](../../index.md#rtp-framing)

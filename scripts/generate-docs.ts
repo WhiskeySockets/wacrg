@@ -131,7 +131,7 @@ function childSection(child: Child, depth: number): string {
   const meta: string[] = [];
   if (child.occurrence) meta.push(`**occurrence:** ${cell(child.occurrence)}`);
   if (child.confidence) meta.push(`**confidence:** ${cell(child.confidence)}`);
-  if (meta.length) parts.push(meta.join(' · '));
+  if (meta.length) parts.push(meta.join(' - '));
   if (child.description) parts.push(cell(child.description));
   if (child.attributes?.length) {
     parts.push('**Attributes**');
@@ -207,7 +207,7 @@ function renderStanza(stanza: Stanza): string {
   }
 
   out.push('---');
-  out.push('[Back to stanza catalog](./index.md) · [Spec overview](../index.md)');
+  out.push('[Back to stanza catalog](./index.md) - [Spec overview](../index.md)');
 
   return out.join('\n\n');
 }
@@ -320,7 +320,7 @@ function renderFlow(flow: Flow): string {
   }
 
   out.push('---');
-  out.push('[Back to flow catalog](./index.md) · [Spec overview](../index.md)');
+  out.push('[Back to flow catalog](./index.md) - [Spec overview](../index.md)');
   return out.join('\n\n');
 }
 
@@ -585,7 +585,7 @@ function specBitLabel(spec: FlavorMapEntry['spec'] | undefined): string {
   if (spec.stanza) return `stanza [\`${spec.stanza}\`](./stanzas/${spec.stanza}.md)`;
   if (spec.flow) return `flow [\`${spec.flow}\`](./flows/${spec.flow}.md)`;
   if (spec.enum) return `enum \`${spec.enum}\``;
-  if (spec.module) return `${spec.area ? spec.area + ' · ' : ''}\`${spec.module}\``;
+  if (spec.module) return `${spec.area ? spec.area + ' - ' : ''}\`${spec.module}\``;
   if (spec.label) return spec.label;
   if (spec.area) return spec.area;
   return '-';
@@ -705,7 +705,7 @@ function specLogic(
   const out: string[] = [];
   const meta = [`status: ${part.status ?? 'draft'}`];
   if (part.features?.length) meta.push(part.features.join(', '));
-  out.push(`\`${part.code}\` · _${meta.join(' · ')}_`);
+  out.push(`\`${part.code}\` - _${meta.join(' - ')}_`);
   out.push(fold(ref(part.summary.trim())));
   if (part.normative?.trim()) out.push(fold(ref(part.normative.trimEnd())));
   return out.join('\n\n');
@@ -740,13 +740,13 @@ function specDetails(
       // Per-implementation history + blame, pinned to the latest commit so they
       // resolve regardless of the flavor's default branch.
       if (url && i.path && ref) {
-        links.push(`[history ↗](${url}/commits/${ref}/${i.path})`);
-        links.push(`[blame ↗](${url}/blame/${ref}/${i.path})`);
+        links.push(`[:material-github: history](${url}/commits/${ref}/${i.path})`);
+        links.push(`[:material-github: blame](${url}/blame/${ref}/${i.path})`);
       }
       if (url && i.commits?.length) {
         links.push('commits ' + i.commits.map((sha) => `[\`${sha.slice(0, 7)}\`](${url}/commit/${sha})`).join(' '));
       }
-      const source = links.length ? links.join(' · ') : '—';
+      const source = links.length ? links.join(' - ') : '—';
       return `| \`${cell(i.flavor)}\` | ${cell(i.status)} | ${source} | ${i.note ? cell(i.note) : '—'} |`;
     });
     out.push('**Implemented by**\n\n' + [head, ...rows].join('\n'));
@@ -759,9 +759,9 @@ function specDetails(
   const file = `spec/${part.category}/${part.id}.yaml`;
   const history: string[] = [];
   if (part.discovered_by) history.push(`Discovered by ${ctx.contributorName(part.discovered_by)}`);
-  history.push(`[protocol history / diff ↗](${WACRG_REPO}/commits/main/${file})`);
-  history.push(`[blame ↗](${WACRG_REPO}/blame/main/${file})`);
-  out.push(history.join(' · '));
+  history.push(`[:material-github: protocol history / diff](${WACRG_REPO}/commits/main/${file})`);
+  history.push(`[:material-github: blame](${WACRG_REPO}/blame/main/${file})`);
+  out.push(history.join(' - '));
   if (part.open_questions?.length) out.push('**Open questions**\n' + list(part.open_questions));
   if (part.references?.length) {
     out.push(
@@ -773,7 +773,7 @@ function specDetails(
     out.push(
       '## Changelog\n' +
         part.changelog
-          .map((c) => `- **${c.date}**${c.version ? ` · WA Web \`${cell(c.version)}\`` : ''} — ${cell(c.note)}`)
+          .map((c) => `- **${c.date}**${c.version ? ` - WA Web \`${cell(c.version)}\`` : ''} — ${cell(c.note)}`)
           .join('\n'),
     );
   }
@@ -816,7 +816,7 @@ function renderSpecIndex(
       `details page. Libraries follow changes via the [feed](${ctx.feed}) ` +
       `([updates](${ctx.updates})).`,
   );
-  out.push(cats.map((c) => `[${SPEC_CATEGORY_META[c].label}](#${c})`).join(' · '));
+  out.push(cats.map((c) => `[${SPEC_CATEGORY_META[c].label}](#${c})`).join(' - '));
 
   for (const cat of cats) {
     const ps = byCat.get(cat)!;
@@ -840,12 +840,12 @@ function renderSpecIndex(
       const n = i + 1;
       out.push(`<a id="${p.id}"></a>`);
       out.push(`### ${n}. ${cell(p.title)}`);
-      out.push(`[View details →](${ctx.partLink(p.category, p.id)})`);
+      out.push(`[View details](${ctx.partLink(p.category, p.id)})`);
       out.push(specLogic(p, lctx));
       childrenOf(p.id).forEach((ch, j) => {
         out.push(`<a id="${ch.id}"></a>`);
         out.push(`#### ${n}.${j + 1} ${cell(ch.title)}`);
-        out.push(`[View details →](${ctx.partLink(ch.category, ch.id)})`);
+        out.push(`[View details](${ctx.partLink(ch.category, ch.id)})`);
         out.push(specLogic(ch, lctx));
       });
       out.push('---');
@@ -862,7 +862,7 @@ function renderSpecIndex(
       .slice()
       .sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id))
       .map((c) => (c.github ? `[${c.name ?? c.id}](https://github.com/${c.github})` : c.name ?? c.id))
-      .join(' · '),
+      .join(' - '),
   );
   return out.join('\n\n');
 }
@@ -875,7 +875,7 @@ function renderSpecPartPage(
 ): string {
   const out: string[] = [];
   out.push(`# ${part.title}`);
-  out.push(`_${SPEC_CATEGORY_META[part.category]?.label ?? part.category} · \`${part.id}\`_`);
+  out.push(`_${SPEC_CATEGORY_META[part.category]?.label ?? part.category} - \`${part.id}\`_`);
   out.push(
     specDetails(part, {
       partIds: new Set(partById.keys()),
@@ -889,7 +889,7 @@ function renderSpecPartPage(
     }),
   );
   out.push('---');
-  out.push(`[← in the full spec](../../index.md#${part.id})`);
+  out.push(`[Back to the full spec](../../index.md#${part.id})`);
   return out.join('\n\n');
 }
 
@@ -956,7 +956,7 @@ function renderSpecUpdates(parts: ReturnType<typeof loadSpecParts>): string {
         .join('\n'),
     );
   }
-  out.push('[← the spec](../index.md)');
+  out.push('[Back to the spec](../index.md)');
   return out.join('\n\n');
 }
 

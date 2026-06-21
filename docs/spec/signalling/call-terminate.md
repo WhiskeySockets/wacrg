@@ -2,9 +2,9 @@
 
 # Call terminate stanza
 
-_Signalling · `call-terminate`_
+_Signalling - `call-terminate`_
 
-`SIG-14` · _status: draft · audio, video, group_
+`SIG-14` - _status: draft - audio, video, group_
 
 The <terminate> action stanza that ends a call, its reason attribute, destination fan-out, and inbound duration counters.
 
@@ -60,12 +60,12 @@ Breakdown: [`flow-call-missed`](../signalling/flow-call-missed.md), [`flow-call-
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | build_terminate emits the action; the inbound parser decodes duration/audio_duration. |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | build_terminate emits the action; the inbound parser decodes duration/audio_duration. |
 | `zapo-caller` | working | — | signalling builder ported from this flavor's signaling.ts. |
 
 **Annotation** `wacrg:SIG-14` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/call-terminate.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/call-terminate.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/call-terminate.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/call-terminate.yaml)
 
 **Open questions**
 - Full enumeration of reason values the server and clients emit; only accepted_elsewhere is confirmed from source.
@@ -81,4 +81,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#call-terminate)
+[Back to the full spec](../../index.md#call-terminate)

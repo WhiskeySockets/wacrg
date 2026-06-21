@@ -2,9 +2,9 @@
 
 # MLow frame and TOC
 
-_Encodings · `mlow-frame`_
+_Encodings - `mlow-frame`_
 
-`ENC-03` · _status: review · audio_
+`ENC-03` - _status: review - audio_
 
 The leading "smpl" TOC byte of an MLow payload routes the frame (standard Opus vs. MLow), carries DTX/VAD flags, internal sample rate, and frame duration, and governs the three-chained-20 ms-subframe layout of an active MLow frame.
 
@@ -75,12 +75,12 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-encoder`](../e
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/toc.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/toc.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
-| `meowcaller` | partial | [history ↗](https://github.com/purpshell/meowcaller/commits/b0fe93c61ea77c36eaacaf67450e2f844c489889/mlow/toc.go) · [blame ↗](https://github.com/purpshell/meowcaller/blame/b0fe93c61ea77c36eaacaf67450e2f844c489889/mlow/toc.go) · commits [`b0fe93c`](https://github.com/purpshell/meowcaller/commit/b0fe93c61ea77c36eaacaf67450e2f844c489889) [`e362783`](https://github.com/purpshell/meowcaller/commit/e362783d5f8988607d5b12fd419710fb275ea9e4) [`7ff050a`](https://github.com/purpshell/meowcaller/commit/7ff050af9b194a7d2914ab950a9e64f9bbc5253f) [`2a4cd7c`](https://github.com/purpshell/meowcaller/commit/2a4cd7c00d02c36f89ccdc801684f9bcd2157f3c) | TOC parse + routing present; active-frame orchestration in progress |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/toc.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/toc.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `meowcaller` | partial | [:material-github: history](https://github.com/purpshell/meowcaller/commits/b0fe93c61ea77c36eaacaf67450e2f844c489889/mlow/toc.go) - [:material-github: blame](https://github.com/purpshell/meowcaller/blame/b0fe93c61ea77c36eaacaf67450e2f844c489889/mlow/toc.go) - commits [`b0fe93c`](https://github.com/purpshell/meowcaller/commit/b0fe93c61ea77c36eaacaf67450e2f844c489889) [`e362783`](https://github.com/purpshell/meowcaller/commit/e362783d5f8988607d5b12fd419710fb275ea9e4) [`7ff050a`](https://github.com/purpshell/meowcaller/commit/7ff050af9b194a7d2914ab950a9e64f9bbc5253f) [`2a4cd7c`](https://github.com/purpshell/meowcaller/commit/2a4cd7c00d02c36f89ccdc801684f9bcd2157f3c) | TOC parse + routing present; active-frame orchestration in progress |
 
 **Annotation** `wacrg:ENC-03` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-frame.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-frame.yaml)
+Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-frame.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-frame.yaml)
 
 **Open questions**
 - Semantics of flag0 (bit 0) — present in the TOC but not consumed by the decode path.
@@ -95,4 +95,4 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 ---
 
-[← in the full spec](../../index.md#mlow-frame)
+[Back to the full spec](../../index.md#mlow-frame)

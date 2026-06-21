@@ -2,9 +2,9 @@
 
 # MLow post-filters
 
-_Encodings · `mlow-postfilter`_
+_Encodings - `mlow-postfilter`_
 
-`ENC-13` · _status: draft · audio_
+`ENC-13` - _status: draft - audio_
 
 The three deterministic decoder-side DSP post-filters MLow runs after range decoding: excitation harmonic comb, HP pitch comb, and harmonic post-filter.
 
@@ -142,12 +142,12 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-synthesis`](..
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_postfilter.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_postfilter.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | all three filters ported and validated against the live WASM decoder and the C decoder dumps |
-| `meowcaller` | partial | [history ↗](https://github.com/purpshell/meowcaller/commits/4323881f1cd6be77ad3db800e8546c1cc7805413/mlow/postfilter.go) · [blame ↗](https://github.com/purpshell/meowcaller/blame/4323881f1cd6be77ad3db800e8546c1cc7805413/mlow/postfilter.go) · commits [`4323881`](https://github.com/purpshell/meowcaller/commit/4323881f1cd6be77ad3db800e8546c1cc7805413) [`5b8d5a5`](https://github.com/purpshell/meowcaller/commit/5b8d5a5245a965b74e7a559819adf9bf457c2572) | encodings codec modules are partial |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_postfilter.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_postfilter.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | all three filters ported and validated against the live WASM decoder and the C decoder dumps |
+| `meowcaller` | partial | [:material-github: history](https://github.com/purpshell/meowcaller/commits/4323881f1cd6be77ad3db800e8546c1cc7805413/mlow/postfilter.go) - [:material-github: blame](https://github.com/purpshell/meowcaller/blame/4323881f1cd6be77ad3db800e8546c1cc7805413/mlow/postfilter.go) - commits [`4323881`](https://github.com/purpshell/meowcaller/commit/4323881f1cd6be77ad3db800e8546c1cc7805413) [`5b8d5a5`](https://github.com/purpshell/meowcaller/commit/5b8d5a5245a965b74e7a559819adf9bf457c2572) | encodings codec modules are partial |
 
 **Annotation** `wacrg:ENC-13` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-postfilter.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-postfilter.yaml)
+Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-postfilter.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-postfilter.yaml)
 
 **Open questions**
 - The excitation comb carries a single unresolved 8/7 output scalar; its exact value is not yet pinned down.
@@ -161,4 +161,4 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 ---
 
-[← in the full spec](../../index.md#mlow-postfilter)
+[Back to the full spec](../../index.md#mlow-postfilter)

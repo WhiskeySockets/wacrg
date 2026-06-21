@@ -2,9 +2,9 @@
 
 # MLow CELP excitation
 
-_Encodings · `mlow-excitation`_
+_Encodings - `mlow-excitation`_
 
-`ENC-10` · _status: draft · audio_
+`ENC-10` - _status: draft - audio_
 
 Decode the range-coded CELP excitation of one MLow internal frame: per-subframe pulse counts and positions/signs, plus the gains block (unvoiced) or pitch/LTP block (voiced).
 
@@ -109,12 +109,12 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-noise`](../enc
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_pulse.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_pulse.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
-| `meowcaller` | partial | [history ↗](https://github.com/purpshell/meowcaller/commits/45efc4c352b60517541977a4cb6219f7b57bb7d4/mlow/pulse.go) · [blame ↗](https://github.com/purpshell/meowcaller/blame/45efc4c352b60517541977a4cb6219f7b57bb7d4/mlow/pulse.go) · commits [`45efc4c`](https://github.com/purpshell/meowcaller/commit/45efc4c352b60517541977a4cb6219f7b57bb7d4) [`011af47`](https://github.com/purpshell/meowcaller/commit/011af47d049bb023c6692282176a13079787eff7) [`2d36efc`](https://github.com/purpshell/meowcaller/commit/2d36efc56b8aee88ec14affa776accb9dbd98eab) [`81bebc0`](https://github.com/purpshell/meowcaller/commit/81bebc080070b23b8dd620ad4ffc86004f54a115) [`a239706`](https://github.com/purpshell/meowcaller/commit/a2397064c51db24e7349b94d832e05614328b723) [`8e4f5c8`](https://github.com/purpshell/meowcaller/commit/8e4f5c80e9818e26b82b11e28e5773d99da3cdb8) [`d8dfcac`](https://github.com/purpshell/meowcaller/commit/d8dfcacc9e53f5fef3594de275c46ba6d8957e64) | excitation decode KAT-verified against the Go reference; CELP synthesis wiring in progress |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_pulse.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_pulse.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `meowcaller` | partial | [:material-github: history](https://github.com/purpshell/meowcaller/commits/45efc4c352b60517541977a4cb6219f7b57bb7d4/mlow/pulse.go) - [:material-github: blame](https://github.com/purpshell/meowcaller/blame/45efc4c352b60517541977a4cb6219f7b57bb7d4/mlow/pulse.go) - commits [`45efc4c`](https://github.com/purpshell/meowcaller/commit/45efc4c352b60517541977a4cb6219f7b57bb7d4) [`011af47`](https://github.com/purpshell/meowcaller/commit/011af47d049bb023c6692282176a13079787eff7) [`2d36efc`](https://github.com/purpshell/meowcaller/commit/2d36efc56b8aee88ec14affa776accb9dbd98eab) [`81bebc0`](https://github.com/purpshell/meowcaller/commit/81bebc080070b23b8dd620ad4ffc86004f54a115) [`a239706`](https://github.com/purpshell/meowcaller/commit/a2397064c51db24e7349b94d832e05614328b723) [`8e4f5c8`](https://github.com/purpshell/meowcaller/commit/8e4f5c80e9818e26b82b11e28e5773d99da3cdb8) [`d8dfcac`](https://github.com/purpshell/meowcaller/commit/d8dfcacc9e53f5fef3594de275c46ba6d8957e64) | excitation decode KAT-verified against the Go reference; CELP synthesis wiring in progress |
 
 **Annotation** `wacrg:ENC-10` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-excitation.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-excitation.yaml)
+Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-excitation.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-excitation.yaml)
 
 **Open questions**
 - Wideband (config != 0) total-pulse-count CDF table location is referenced but the active captures are all narrowband, so the WB path is not exercised by vectors.
@@ -129,4 +129,4 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 ---
 
-[← in the full spec](../../index.md#mlow-excitation)
+[Back to the full spec](../../index.md#mlow-excitation)

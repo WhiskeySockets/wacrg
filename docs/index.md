@@ -4,7 +4,7 @@
 
 The normative spec of the WhatsApp 1:1 and group call stack. Implement to these sections to interoperate; each is citable by its stable id and has its own details page. Libraries follow changes via the [feed](spec/feed.json) ([updates](spec/updates.md)).
 
-[Signalling](#signalling) · [Encodings](#encodings) · [Crypto](#crypto) · [Relay](#relay)
+[Signalling](#signalling) - [Encodings](#encodings) - [Crypto](#crypto) - [Relay](#relay)
 
 <a id="signalling"></a>
 
@@ -34,9 +34,9 @@ Call control over the WABinary/XMPP transport: the <call> stanza family and feat
 
 ### 1. Call offer stanza
 
-[View details →](spec/signalling/call-offer.md)
+[View details](spec/signalling/call-offer.md)
 
-`SIG-01` · _status: review · audio, video_
+`SIG-01` - _status: review - audio, video_
 
 A caller opens a 1:1 call with a <call> stanza whose <offer> child proposes the session, carries per-device media keys, and seeds transport negotiation.
 
@@ -64,9 +64,9 @@ rejected by the server with error **439**:
 
 ### 2. Video call negotiation
 
-[View details →](spec/signalling/video-call.md)
+[View details](spec/signalling/video-call.md)
 
-`SIG-02` · _status: draft · audio, video_
+`SIG-02` - _status: draft - audio, video_
 
 A call is video-capable iff its `<offer>` carries a `<video>` child; the group fan-out notice signals video via `media="video"`.
 
@@ -103,9 +103,9 @@ No video-specific child in `<accept>` is required to accept the audio portion.
 
 ### 3. Call accept stanza
 
-[View details →](spec/signalling/call-accept.md)
+[View details](spec/signalling/call-accept.md)
 
-`SIG-03` · _status: review · audio, video_
+`SIG-03` - _status: review - audio, video_
 
 The callee answers an offer with a <call> stanza whose <accept> child selects the media format and commits the call to the v2 SRTP key path.
 
@@ -141,9 +141,9 @@ Optional children:
 
 ### 4. Call pre-accept (ringing)
 
-[View details →](spec/signalling/call-preaccept.md)
+[View details](spec/signalling/call-preaccept.md)
 
-`SIG-04` · _status: review · audio, video_
+`SIG-04` - _status: review - audio, video_
 
 Optional <preaccept> stanza a callee sends to signal "ringing" before answering with <accept>.
 
@@ -184,9 +184,9 @@ Wire format — top-level `<call>` wrapper with a `<preaccept>` action child:
 
 ### 5. Transport stanza
 
-[View details →](spec/signalling/call-transport.md)
+[View details](spec/signalling/call-transport.md)
 
-`SIG-05` · _status: review · audio, video_
+`SIG-05` - _status: review - audio, video_
 
 The <transport> action of the <call> stanza negotiates ICE/relay candidates after the offer, carrying the relay token and network medium.
 
@@ -237,9 +237,9 @@ future transport-message-type values).
 
 ### 6. Group call setup
 
-[View details →](spec/signalling/group-call.md)
+[View details](spec/signalling/group-call.md)
 
-`SIG-06` · _status: draft · group, audio, video_
+`SIG-06` - _status: draft - group, audio, video_
 
 A multi-party call extends the 1:1 offer/accept flow with a joinable group session, a participant roster, and per-sender media keying.
 
@@ -255,9 +255,9 @@ TODO — not yet fully specified.
 
 #### 6.1 Raise hand
 
-[View details →](spec/signalling/raise-hand.md)
+[View details](spec/signalling/raise-hand.md)
 
-`SIG-09` · _status: draft · group, raise-hand_
+`SIG-09` - _status: draft - group, raise-hand_
 
 In-call signal a participant sends to raise or lower their hand in a group call.
 
@@ -271,9 +271,9 @@ is not yet specified.
 
 #### 6.2 In-call emoji reactions
 
-[View details →](spec/signalling/reactions.md)
+[View details](spec/signalling/reactions.md)
 
-`SIG-10` · _status: draft · reactions, group_
+`SIG-10` - _status: draft - reactions, group_
 
 A participant broadcasts a transient emoji reaction during a call.
 
@@ -284,9 +284,9 @@ unknown (not reverse-engineered to wire level).
 
 #### 6.3 Screen sharing
 
-[View details →](spec/signalling/screen-share.md)
+[View details](spec/signalling/screen-share.md)
 
-`SIG-11` · _status: draft · screen-share, video, group_
+`SIG-11` - _status: draft - screen-share, video, group_
 
 Start and stop a screen-share track within a call.
 
@@ -300,9 +300,9 @@ track flag and start/stop stanzas are not yet specified.
 
 ### 7. Call stanza acknowledgement
 
-[View details →](spec/signalling/call-ack.md)
+[View details](spec/signalling/call-ack.md)
 
-`SIG-07` · _status: review · audio, video, group_
+`SIG-07` - _status: review - audio, video, group_
 
 Acknowledging an inbound `<call>` stanza: a generic `<ack>` for every `<call>`, plus an `<offer>`-only `<receipt><offer/></receipt>`.
 
@@ -342,9 +342,9 @@ receipt; it gets the Level-1 ack only.
 
 ### 8. Call reject stanza
 
-[View details →](spec/signalling/call-reject.md)
+[View details](spec/signalling/call-reject.md)
 
-`SIG-08` · _status: review · audio, video_
+`SIG-08` - _status: review - audio, video_
 
 The `<reject>` action stanza declines an incoming call offer before the media phase, naming the call by `call-id`/`call-creator` with no child elements.
 
@@ -393,9 +393,9 @@ Unlike `<terminate>`, `<reject>` carries no `reason`, `duration`, or
 
 ### 9. Missed / timed-out call flow
 
-[View details →](spec/signalling/flow-call-missed.md)
+[View details](spec/signalling/flow-call-missed.md)
 
-`SIG-12` · _status: draft · audio, video_
+`SIG-12` - _status: draft - audio, video_
 
 Stanza sequence for a 1:1 call offered but never answered: offer, per-device offer-receipt, no preaccept/accept, then a timeout-driven terminate.
 
@@ -451,9 +451,9 @@ stanza rather than error.
 
 ### 10. Mute signalling
 
-[View details →](spec/signalling/call-mute.md)
+[View details](spec/signalling/call-mute.md)
 
-`SIG-13` · _status: draft · audio, video_
+`SIG-13` - _status: draft - audio, video_
 
 A participant signals an in-call mute state change by sending a `<call>` stanza wrapping a `<mute_v2>` action.
 
@@ -487,9 +487,9 @@ On a local microphone mute state change, a participant MUST send:
 
 ### 11. Call terminate stanza
 
-[View details →](spec/signalling/call-terminate.md)
+[View details](spec/signalling/call-terminate.md)
 
-`SIG-14` · _status: draft · audio, video, group_
+`SIG-14` - _status: draft - audio, video, group_
 
 The <terminate> action stanza that ends a call, its reason attribute, destination fan-out, and inbound duration counters.
 
@@ -541,9 +541,9 @@ stanza rather than error.
 
 ### 12. Relay latency reporting
 
-[View details →](spec/signalling/call-relaylatency.md)
+[View details](spec/signalling/call-relaylatency.md)
 
-`SIG-15` · _status: draft · audio, video, group_
+`SIG-15` - _status: draft - audio, video, group_
 
 A client reports a measured relay round-trip time via a `<relaylatency>` call action whose `<te>` element names the relay and carries an offset-encoded latency.
 
@@ -590,9 +590,9 @@ reject the signalling when the action carries no `<te>` or `<destination>` child
 
 ### 13. Incoming 1:1 call flow
 
-[View details →](spec/signalling/flow-incoming-1to1.md)
+[View details](spec/signalling/flow-incoming-1to1.md)
 
-`SIG-16` · _status: review · audio, video_
+`SIG-16` - _status: review - audio, video_
 
 Receiver-side stanza sequence for an incoming 1:1 call: parse `<call><offer>`, send an offer receipt, then either ring-and-accept (`<preaccept>` then `<accept>`) or `<reject>`, all addressed to the caller.
 
@@ -706,9 +706,9 @@ See [call-preaccept](#call-preaccept) and [call-accept](#call-accept).
 
 ### 14. Outgoing 1:1 call flow
 
-[View details →](spec/signalling/flow-outgoing-1to1.md)
+[View details](spec/signalling/flow-outgoing-1to1.md)
 
-`SIG-17` · _status: draft · audio, video_
+`SIG-17` - _status: draft - audio, video_
 
 Caller-side stanza sequence for a 1:1 call: key delivery, offer, ack, receipts, preaccept/accept, transport, media, and terminate, with the ordering and correlation rules between them.
 
@@ -792,9 +792,9 @@ stanza `id`; `accept`, `transport`, `relaylatency`, and `terminate` correlate on
 
 ### 15. Rejected call flow
 
-[View details →](spec/signalling/flow-call-rejected.md)
+[View details](spec/signalling/flow-call-rejected.md)
 
-`SIG-18` · _status: draft · audio, video_
+`SIG-18` - _status: draft - audio, video_
 
 Callee-decline flow: acknowledge the `<offer>`, then emit a single `<reject>` without entering preaccept, accept, media-keying, relay, or transport.
 
@@ -856,9 +856,9 @@ Media codecs and payload formats: MLow, Opus, and video.
 
 ### 1. MLow audio codec
 
-[View details →](spec/encodings/mlow.md)
+[View details](spec/encodings/mlow.md)
 
-`ENC-01` · _status: review · audio_
+`ENC-01` - _status: review - audio_
 
 WhatsApp's low-bitrate split-band CELP speech codec ("SMPL") that reuses the Opus/CELT range coder for entropy coding.
 
@@ -876,9 +876,9 @@ WhatsApp's low-bitrate split-band CELP speech codec ("SMPL") that reuses the Opu
 
 #### 1.1 MLow RED and Reed-Solomon FEC
 
-[View details →](spec/encodings/mlow-red-fec.md)
+[View details](spec/encodings/mlow-red-fec.md)
 
-`ENC-02` · _status: draft · audio_
+`ENC-02` - _status: draft - audio_
 
 The optional "SplitRed" redundancy envelope wrapping an MLow RTP audio payload: one main frame plus zero or more time-shifted redundant copies of earlier frames, recoverable without retransmission.
 
@@ -963,9 +963,9 @@ here.
 
 #### 1.2 MLow frame and TOC
 
-[View details →](spec/encodings/mlow-frame.md)
+[View details](spec/encodings/mlow-frame.md)
 
-`ENC-03` · _status: review · audio_
+`ENC-03` - _status: review - audio_
 
 The leading "smpl" TOC byte of an MLow payload routes the frame (standard Opus vs. MLow), carries DTX/VAD flags, internal sample rate, and frame duration, and governs the three-chained-20 ms-subframe layout of an active MLow frame.
 
@@ -1026,9 +1026,9 @@ continuous); a decoder MUST reset this state only at a stream discontinuity.
 
 #### 1.3 MLow range coder
 
-[View details →](spec/encodings/mlow-rangecoder.md)
+[View details](spec/encodings/mlow-rangecoder.md)
 
-`ENC-04` · _status: review · audio_
+`ENC-04` - _status: review - audio_
 
 The Opus/CELT range entropy coder (RFC 6716 §4.1), reused verbatim by MLow: range-coded symbols packed from the buffer front, raw uniform bits from the back, sharing one byte buffer.
 
@@ -1332,9 +1332,9 @@ MUST be discarded.
 
 #### 1.4 MLow LSF and LPC
 
-[View details →](spec/encodings/mlow-lsf-lpc.md)
+[View details](spec/encodings/mlow-lsf-lpc.md)
 
-`ENC-08` · _status: review · audio_
+`ENC-08` - _status: review - audio_
 
 MLow carries an internal frame's spectral envelope as range-coded LSF indices, reconstructed into an order-16 quantized NLSF vector and interpolated per-subframe to LPC coefficients.
 
@@ -1424,9 +1424,9 @@ The chosen `qi[0]` is the wire `grid` (stage-1 index, or 16 for the cond centroi
 
 #### 1.5 MLow encode pipeline
 
-[View details →](spec/encodings/mlow-encoder.md)
+[View details](spec/encodings/mlow-encoder.md)
 
-`ENC-09` · _status: draft · audio_
+`ENC-09` - _status: draft - audio_
 
 Encode one 60 ms PCM frame into a wire MLow frame: LPC analysis, bit-exact LSF VQ, voicing classification, CELP excitation, per-subframe rate control, DTX, and range-coder serialization in the inverse of the decoder read order.
 
@@ -1552,9 +1552,9 @@ range-coder buffer overflow as an encode error.
 
 #### 1.6 MLow CELP excitation
 
-[View details →](spec/encodings/mlow-excitation.md)
+[View details](spec/encodings/mlow-excitation.md)
 
-`ENC-10` · _status: draft · audio_
+`ENC-10` - _status: draft - audio_
 
 Decode the range-coded CELP excitation of one MLow internal frame: per-subframe pulse counts and positions/signs, plus the gains block (unvoiced) or pitch/LTP block (voiced).
 
@@ -1655,9 +1655,9 @@ previous gain index, filter index, integer lag, and fractional lag.
 
 #### 1.7 MLow decode pipeline
 
-[View details →](spec/encodings/mlow-decoder.md)
+[View details](spec/encodings/mlow-decoder.md)
 
-`ENC-11` · _status: draft · audio_
+`ENC-11` - _status: draft - audio_
 
 Decode one RTP MLow payload into a 16 kHz PCM frame: strip RED, route on the TOC byte, and for an active frame run three chained 20 ms internal frames through a per-packet harmonic post-filter while carrying predictor and synthesis state.
 
@@ -1748,9 +1748,9 @@ desync; a decoder SHOULD surface it (it does not change emitted samples).
 
 #### 1.8 MLow comfort noise
 
-[View details →](spec/encodings/mlow-noise.md)
+[View details](spec/encodings/mlow-noise.md)
 
-`ENC-12` · _status: review · audio_
+`ENC-12` - _status: review - audio_
 
 Per-subframe shaped comfort noise the MLow decoder adds into the LPC excitation before CELP synthesis, with separate voiced/unvoiced branches.
 
@@ -1840,9 +1840,9 @@ reset it to `0` on an unvoiced subframe.
 
 #### 1.9 MLow post-filters
 
-[View details →](spec/encodings/mlow-postfilter.md)
+[View details](spec/encodings/mlow-postfilter.md)
 
-`ENC-13` · _status: draft · audio_
+`ENC-13` - _status: draft - audio_
 
 The three deterministic decoder-side DSP post-filters MLow runs after range decoding: excitation harmonic comb, HP pitch comb, and harmonic post-filter.
 
@@ -1971,9 +1971,9 @@ processing, StateComb is shifted left by the packet length. Block lag for iterat
 
 #### 1.10 MLow CELP synthesis
 
-[View details →](spec/encodings/mlow-synthesis.md)
+[View details](spec/encodings/mlow-synthesis.md)
 
-`ENC-14` · _status: draft · audio_
+`ENC-14` - _status: draft - audio_
 
 Synthesize one MLow 20 ms internal frame from its decoded parameters into excitation and run the order-16 CELP synthesis filter to produce 16 kHz PCM.
 
@@ -2113,9 +2113,9 @@ its comb lag is the energy-weighted mean of the eight per-40-block pitch lags
 
 #### 1.11 MLow voice activity detection
 
-[View details →](spec/encodings/mlow-vad.md)
+[View details](spec/encodings/mlow-vad.md)
 
-`ENC-15` · _status: draft · audio_
+`ENC-15` - _status: draft - audio_
 
 Fixed-point SILK VAD over a four-band allpass filterbank that produces a per-internal-frame speech-activity probability and a packet-level coded_as_active_voice flag.
 
@@ -2206,9 +2206,9 @@ SNR pass is not consumed downstream in this configuration.
 
 ### 2. Opus codec
 
-[View details →](spec/encodings/opus.md)
+[View details](spec/encodings/opus.md)
 
-`ENC-05` · _status: draft · audio_
+`ENC-05` - _status: draft - audio_
 
 Standard Opus and MLow payloads share one RTP audio stream; the receiver routes each frame to a decoder by the top two bits of its first payload byte.
 
@@ -2238,9 +2238,9 @@ For a standard Opus packet, read frame duration from `config = firstByte >> 3`
 
 ### 3. Video codec
 
-[View details →](spec/encodings/video.md)
+[View details](spec/encodings/video.md)
 
-`ENC-06` · _status: draft · video, screen-share_
+`ENC-06` - _status: draft - video, screen-share_
 
 Video and screen-share tracks are carried as H.264; profile/level negotiation and packetization mode are not yet specified.
 
@@ -2255,9 +2255,9 @@ screen-content track is distinguished from a camera track.
 
 #### 3.1 Video packetization
 
-[View details →](spec/encodings/video-packetization.md)
+[View details](spec/encodings/video-packetization.md)
 
-`ENC-07` · _status: draft · video, screen-share_
+`ENC-07` - _status: draft - video, screen-share_
 
 Signals, keys, and carries an H.264 video track over the call's RTP transport, mapping each access unit onto RFC 6184 NAL-unit RTP payloads.
 
@@ -2319,9 +2319,9 @@ Keying and media protection: SRTP (hop-by-hop and end-to-end), SFrame, WARP, gro
 
 ### 1. Call key establishment
 
-[View details →](spec/crypto/call-key.md)
+[View details](spec/crypto/call-key.md)
 
-`CRY-01` · _status: draft · audio, video, group_
+`CRY-01` - _status: draft - audio, video, group_
 
 The 32-byte call key is the root secret for all per-call media keying, delivered to each recipient device inside the offer's per-device Signal-encrypted <enc> payload.
 
@@ -2362,9 +2362,9 @@ keygen=2, the `raw_e2e` material). Its serialization is not pinned by this secti
 
 ### 2. SRTP master key and salt derivation
 
-[View details →](spec/crypto/srtp-master-key.md)
+[View details](spec/crypto/srtp-master-key.md)
 
-`CRY-02` · _status: review · audio, video, group_
+`CRY-02` - _status: review - audio, video, group_
 
 Derive the per-participant SRTP master key/salt from the call key, then expand the six SRTP/SRTCP session keys.
 
@@ -2398,9 +2398,9 @@ relay supplies 30 bytes of `masterKey || masterSalt` directly; apply only Layer 
 
 #### 2.1 Hop-by-hop SRTP
 
-[View details →](spec/crypto/srtp-hop-by-hop.md)
+[View details](spec/crypto/srtp-hop-by-hop.md)
 
-`CRY-03` · _status: draft · audio, video, group_
+`CRY-03` - _status: draft - audio, video, group_
 
 Relay-facing SRTP layer protecting each client↔relay hop, independent of the end-to-end layer.
 
@@ -2414,9 +2414,9 @@ Relay-facing SRTP layer protecting each client↔relay hop, independent of the e
 
 #### 2.2 End-to-end SRTP
 
-[View details →](spec/crypto/srtp-e2e.md)
+[View details](spec/crypto/srtp-e2e.md)
 
-`CRY-05` · _status: review · audio, video_
+`CRY-05` - _status: review - audio, video_
 
 The end-to-end AES-128-CTR SRTP context for 1:1 calls, keyed per participant from the call key and carried unchanged through the relay inside the hop-by-hop SRTP.
 
@@ -2480,9 +2480,9 @@ the contexts differ in KDF, IV layout (E2E XORs a 48-bit packet index into
 
 ### 3. SFrame media end-to-end encryption
 
-[View details →](spec/crypto/sframe-media.md)
+[View details](spec/crypto/sframe-media.md)
 
-`CRY-04` · _status: draft · audio, video, group_
+`CRY-04` - _status: draft - audio, video, group_
 
 Per-frame end-to-end AEAD sealing of media payloads, applied above SRTP so the relay only forwards ciphertext.
 
@@ -2500,9 +2500,9 @@ Per-frame end-to-end AEAD sealing of media payloads, applied above SRTP so the r
 
 ### 4. Group call crypto
 
-[View details →](spec/crypto/group-call-crypto.md)
+[View details](spec/crypto/group-call-crypto.md)
 
-`CRY-06` · _status: draft · audio, video, group, screen-share_
+`CRY-06` - _status: draft - audio, video, group, screen-share_
 
 A single 32-byte call key is shared with every group-call participant, and each participant derives one SFrame key per sender keyed by that sender's participant id.
 
@@ -2546,9 +2546,9 @@ NOT repeat under a given sender key.
 
 ### 5. WARP key wrap
 
-[View details →](spec/crypto/warp-crypto.md)
+[View details](spec/crypto/warp-crypto.md)
 
-`CRY-07` · _status: review · audio, video_
+`CRY-07` - _status: review - audio, video_
 
 WARP adds a per-call authentication key and a truncated per-packet MESSAGE-INTEGRITY tag, carried by the audio-piggyback RTP extension word.
 
@@ -2607,9 +2607,9 @@ The media transport and relay stack: STUN, the relay handshake, RTP/RTCP framing
 
 ### 1. Transport candidates
 
-[View details →](spec/relay/relay-candidates.md)
+[View details](spec/relay/relay-candidates.md)
 
-`REL-01` · _status: draft · audio, video, group_
+`REL-01` - _status: draft - audio, video, group_
 
 Parse the `<relay>` block of a call ack into relay endpoints (`<te2>` packed addresses), keying material, and indexed token tables, then select which endpoint to probe for latency versus connect media to.
 
@@ -2703,9 +2703,9 @@ pwd = base64 of the decoded relay key. An empty token or key yields an empty str
 
 ### 2. STUN relay handshake
 
-[View details →](spec/relay/stun-relay.md)
+[View details](spec/relay/stun-relay.md)
 
-`REL-02` · _status: draft · audio, video, group_
+`REL-02` - _status: draft - audio, video, group_
 
 A STUN-dialect handshake binds the client to a relay candidate before WARP media frames flow.
 
@@ -2719,9 +2719,9 @@ A STUN-dialect handshake binds the client to a relay candidate before WARP media
 
 #### 2.1 WARP relay framing
 
-[View details →](spec/relay/warp.md)
+[View details](spec/relay/warp.md)
 
-`REL-03` · _status: draft · audio, video, group_
+`REL-03` - _status: draft - audio, video, group_
 
 WARP frames wrap SRTP-protected RTP for forwarding through the relay.
 
@@ -2739,9 +2739,9 @@ carried in WARP frames between client and relay.
 
 ### 3. RTCP control
 
-[View details →](spec/relay/rtcp.md)
+[View details](spec/relay/rtcp.md)
 
-`REL-04` · _status: review · audio, video_
+`REL-04` - _status: review - audio, video_
 
 RTCP feedback/control packets on the call media path: a standard Sender Report (PT 200) plus two WhatsApp compact reports (PT 208, PT 209), and the rule for classifying a received packet as RTP or RTCP on a shared port.
 
@@ -2836,9 +2836,9 @@ bytes 4..8.
 
 ### 4. RTP framing
 
-[View details →](spec/relay/rtp-framing.md)
+[View details](spec/relay/rtp-framing.md)
 
-`REL-05` · _status: review · audio, video_
+`REL-05` - _status: review - audio, video_
 
 RTP framing for SRTP-protected Opus media: the 16-byte speech and 20-byte DTX/piggyback headers (ext profile 0xdebe), payload classification, and send-side sequencing.
 
@@ -2905,9 +2905,9 @@ short 4-byte tag for DTX and short speech packets (priming frames or payloads
 
 ### 5. SSRC allocation
 
-[View details →](spec/relay/ssrc.md)
+[View details](spec/relay/ssrc.md)
 
-`REL-06` · _status: review · audio, video, group, screen-share_
+`REL-06` - _status: review - audio, video, group, screen-share_
 
 RTP SSRCs are deterministically derived per participant and stream slot via HKDF-SHA256 over the call id, participant LID, and slot index.
 
@@ -2949,9 +2949,9 @@ here as is used for the HKDF `info` elsewhere for that participant (see
 
 ### 6. Media loop and session
 
-[View details →](spec/relay/media-loop.md)
+[View details](spec/relay/media-loop.md)
 
-`REL-07` · _status: draft · audio, video_
+`REL-07` - _status: draft - audio, video_
 
 Per-call session state machine plus the outbound (protect) and inbound (unprotect) audio frame pipelines: RTP framing, E2E-SRTP, and WARP tagging.
 
@@ -3029,4 +3029,4 @@ fixed constant payloads and MUST bypass the encoder (see [rtp-framing](#rtp-fram
 
 This spec exists because of the people who reverse-engineered, implemented, and documented the WhatsApp call stack. Thank you:
 
-[Auties](https://github.com/Auties00) · [Edgard](https://github.com/edgardmessias) · [João Lucas](https://github.com/jlucaso1) · [Rajeh Taher](https://github.com/purpshell) · [Shelltear](https://github.com/sheiitear) · [Vini](https://github.com/vinikjkkj)
+[Auties](https://github.com/Auties00) - [Edgard](https://github.com/edgardmessias) - [João Lucas](https://github.com/jlucaso1) - [Rajeh Taher](https://github.com/purpshell) - [Shelltear](https://github.com/sheiitear) - [Vini](https://github.com/vinikjkkj)

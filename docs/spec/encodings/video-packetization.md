@@ -2,9 +2,9 @@
 
 # Video packetization
 
-_Encodings · `video-packetization`_
+_Encodings - `video-packetization`_
 
-`ENC-07` · _status: draft · video, screen-share_
+`ENC-07` - _status: draft - video, screen-share_
 
 Signals, keys, and carries an H.264 video track over the call's RTP transport, mapping each access unit onto RFC 6184 NAL-unit RTP payloads.
 
@@ -62,7 +62,7 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`video`](../encodings/vi
 
 **Annotation** `wacrg:ENC-07` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/video-packetization.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/video-packetization.yaml)
+Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/video-packetization.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/video-packetization.yaml)
 
 **Open questions**
 - The concrete RTP payload type assigned to the H.264 video track.
@@ -80,4 +80,4 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 ---
 
-[← in the full spec](../../index.md#video-packetization)
+[Back to the full spec](../../index.md#video-packetization)

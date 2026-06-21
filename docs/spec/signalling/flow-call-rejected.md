@@ -2,9 +2,9 @@
 
 # Rejected call flow
 
-_Signalling · `flow-call-rejected`_
+_Signalling - `flow-call-rejected`_
 
-`SIG-18` · _status: draft · audio, video_
+`SIG-18` - _status: draft - audio, video_
 
 Callee-decline flow: acknowledge the `<offer>`, then emit a single `<reject>` without entering preaccept, accept, media-keying, relay, or transport.
 
@@ -54,12 +54,12 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`call-ack`](../signallin
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/d68af6c608297c864669850b9bc05d4a54410d15/src/handlers/call.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/d68af6c608297c864669850b9bc05d4a54410d15/src/handlers/call.rs) · commits [`d68af6c`](https://github.com/oxidezap/whatsapp-rust-private/commit/d68af6c608297c864669850b9bc05d4a54410d15) | listen mode default-rejects: acks the offer, then sends <reject> with no media work |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/d68af6c608297c864669850b9bc05d4a54410d15/src/handlers/call.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/d68af6c608297c864669850b9bc05d4a54410d15/src/handlers/call.rs) - commits [`d68af6c`](https://github.com/oxidezap/whatsapp-rust-private/commit/d68af6c608297c864669850b9bc05d4a54410d15) | listen mode default-rejects: acks the offer, then sends <reject> with no media work |
 | `zapo-caller` | working | — | reject builder ported from zapo-caller signaling.ts |
 
 **Annotation** `wacrg:SIG-18` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/flow-call-rejected.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/flow-call-rejected.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/flow-call-rejected.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/flow-call-rejected.yaml)
 
 **Open questions**
 - Whether the caller emits a terminate or notice to the callee's sibling devices once one device rejects, or whether each device rejects independently with no cross-device fan-out.
@@ -74,4 +74,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#flow-call-rejected)
+[Back to the full spec](../../index.md#flow-call-rejected)

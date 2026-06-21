@@ -2,9 +2,9 @@
 
 # WARP relay framing
 
-_Relay · `warp`_
+_Relay - `warp`_
 
-`REL-03` · _status: draft · audio, video, group_
+`REL-03` - _status: draft - audio, video, group_
 
 WARP frames wrap SRTP-protected RTP for forwarding through the relay.
 
@@ -24,12 +24,12 @@ Breakdown: [`call-key`](../crypto/call-key.md), [`media-loop`](../relay/media-lo
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/warp.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/warp.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/warp.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/warp.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | — |
 
 **Annotation** `wacrg:REL-03` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/warp.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/warp.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/warp.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/warp.yaml)
 
 **Open questions**
 - WARP header field widths, endianness, and the relay control messages.
@@ -39,4 +39,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#warp)
+[Back to the full spec](../../index.md#warp)

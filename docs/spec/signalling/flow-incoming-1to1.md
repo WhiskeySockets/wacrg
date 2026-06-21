@@ -2,9 +2,9 @@
 
 # Incoming 1:1 call flow
 
-_Signalling · `flow-incoming-1to1`_
+_Signalling - `flow-incoming-1to1`_
 
-`SIG-16` · _status: review · audio, video_
+`SIG-16` - _status: review - audio, video_
 
 Receiver-side stanza sequence for an incoming 1:1 call: parse `<call><offer>`, send an offer receipt, then either ring-and-accept (`<preaccept>` then `<accept>`) or `<reject>`, all addressed to the caller.
 
@@ -122,12 +122,12 @@ Breakdown: [`flow-call-missed`](../signalling/flow-call-missed.md), [`flow-call-
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/src/handlers/call.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/src/handlers/call.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) [`d68af6c`](https://github.com/oxidezap/whatsapp-rust-private/commit/d68af6c608297c864669850b9bc05d4a54410d15) | parses <call><offer>, sends the <receipt><offer/></receipt> ack, and drives preaccept→accept / reject |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/src/handlers/call.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/src/handlers/call.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) [`d68af6c`](https://github.com/oxidezap/whatsapp-rust-private/commit/d68af6c608297c864669850b9bc05d4a54410d15) | parses <call><offer>, sends the <receipt><offer/></receipt> ack, and drives preaccept→accept / reject |
 | `zapo-caller` | working | — | signalling answer sequence implemented |
 
 **Annotation** `wacrg:SIG-16` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/flow-incoming-1to1.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/flow-incoming-1to1.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/flow-incoming-1to1.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/flow-incoming-1to1.yaml)
 
 **Open questions**
 - Whether a 1:1 receiver ever omits <preaccept> and answers with <accept> alone (e.g. auto-answer), or always rings first.
@@ -142,4 +142,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#flow-incoming-1to1)
+[Back to the full spec](../../index.md#flow-incoming-1to1)

@@ -24,7 +24,7 @@ An early-acknowledgement stanza emitted by a callee device after it has received
 
 ### `<preaccept>`
 
-**occurrence:** 1 · **confidence:** probable
+**occurrence:** 1 - **confidence:** probable
 
 Container marking the call as received-and-ringing. Echoes the session identifiers. It may optionally carry early transport candidates so the relay handshake can begin while the phone rings, but it carries no acceptance.
 
@@ -37,13 +37,13 @@ Container marking the call as received-and-ringing. Echoes the session identifie
 
 #### `<destination>`
 
-**occurrence:** 0..1 · **confidence:** speculative
+**occurrence:** 0..1 - **confidence:** speculative
 
 Optional early transport candidates, allowing relay warm-up before the user answers. Whether pre-accept carries these or they wait for <accept> is unconfirmed.
 
 ##### `<te>`
 
-**occurrence:** 0..n · **confidence:** speculative
+**occurrence:** 0..n - **confidence:** speculative
 
 A transport endpoint candidate advertised early by the ringing device.
 
@@ -83,4 +83,4 @@ Pre-accept is the protocol's analogue of an SIP 180 Ringing: it confirms deliver
 
 ---
 
-[Back to stanza catalog](./index.md) · [Spec overview](../index.md)
+[Back to stanza catalog](./index.md) - [Spec overview](../index.md)

@@ -2,9 +2,9 @@
 
 # Call stanza acknowledgement
 
-_Signalling · `call-ack`_
+_Signalling - `call-ack`_
 
-`SIG-07` · _status: review · audio, video, group_
+`SIG-07` - _status: review - audio, video, group_
 
 Acknowledging an inbound `<call>` stanza: a generic `<ack>` for every `<call>`, plus an `<offer>`-only `<receipt><offer/></receipt>`.
 
@@ -50,12 +50,12 @@ Breakdown: [`flow-call-rejected`](../signalling/flow-call-rejected.md), [`flow-i
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | signalling layer consumes/produces the offer receipt |
 
 **Annotation** `wacrg:SIG-07` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/call-ack.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/call-ack.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/call-ack.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/call-ack.yaml)
 
 **Open questions**
 - Whether the server expects (or rejects) an offer receipt that omits the `from` attribute when an own addressable id exists.
@@ -69,4 +69,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#call-ack)
+[Back to the full spec](../../index.md#call-ack)

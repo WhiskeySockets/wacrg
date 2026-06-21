@@ -24,7 +24,7 @@ Sent by the callee device when the user answers the call. The <call> node wraps 
 
 ### `<accept>`
 
-**occurrence:** 1 · **confidence:** probable
+**occurrence:** 1 - **confidence:** probable
 
 Container confirming the call. Echoes the session identifiers from the offer and, in most call designs, carries the callee's keying contribution and its own transport endpoints so the SRTP session can be completed.
 
@@ -37,7 +37,7 @@ Container confirming the call. Echoes the session identifiers from the offer and
 
 #### `<enc>`
 
-**occurrence:** 0..n · **confidence:** speculative
+**occurrence:** 0..n - **confidence:** speculative
 
 Optional keying payload from the callee back to the caller's device(s), again wrapped in the Signal session. Whether the callee re-sends keying on accept (versus the offer's key being authoritative) is unconfirmed; some designs use the accept purely as a confirmation and rely on the offer key.
 
@@ -50,13 +50,13 @@ Optional keying payload from the callee back to the caller's device(s), again wr
 
 #### `<destination>`
 
-**occurrence:** 0..1 · **confidence:** speculative
+**occurrence:** 0..1 - **confidence:** speculative
 
 The callee's chosen/advertised transport endpoints, mirroring the offer's <destination>. Lets both sides converge on a relay for the SRTP-over-UDP media path.
 
 ##### `<te>`
 
-**occurrence:** 0..n · **confidence:** speculative
+**occurrence:** 0..n - **confidence:** speculative
 
 A transport endpoint candidate advertised by the callee.
 
@@ -101,4 +101,4 @@ Acceptance flips the session from "ringing" to "connected". The other companion 
 
 ---
 
-[Back to stanza catalog](./index.md) · [Spec overview](../index.md)
+[Back to stanza catalog](./index.md) - [Spec overview](../index.md)

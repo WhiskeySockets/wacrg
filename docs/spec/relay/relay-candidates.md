@@ -2,9 +2,9 @@
 
 # Transport candidates
 
-_Relay · `relay-candidates`_
+_Relay - `relay-candidates`_
 
-`REL-01` · _status: draft · audio, video, group_
+`REL-01` - _status: draft - audio, video, group_
 
 Parse the `<relay>` block of a call ack into relay endpoints (`<te2>` packed addresses), keying material, and indexed token tables, then select which endpoint to probe for latency versus connect media to.
 
@@ -98,12 +98,12 @@ Requires: [`call-relaylatency`](../signalling/call-relaylatency.md), [`srtp-hop-
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/relay_parse.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/relay_parse.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/relay_parse.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/relay_parse.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | origin of the parser (src/relay/parse.ts) |
 
 **Annotation** `wacrg:REL-01` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/relay-candidates.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/relay-candidates.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/relay-candidates.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/relay-candidates.yaml)
 
 **Open questions**
 - Full semantics of the relay key vs hbh_key roles beyond STUN MI and hop-by-hop SRTP keying.
@@ -118,4 +118,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#relay-candidates)
+[Back to the full spec](../../index.md#relay-candidates)

@@ -2,9 +2,9 @@
 
 # MLow voice activity detection
 
-_Encodings · `mlow-vad`_
+_Encodings - `mlow-vad`_
 
-`ENC-15` · _status: draft · audio_
+`ENC-15` - _status: draft - audio_
 
 Fixed-point SILK VAD over a four-band allpass filterbank that produces a per-internal-frame speech-activity probability and a packet-level coded_as_active_voice flag.
 
@@ -101,12 +101,12 @@ Breakdown: [`mlow-encoder`](../encodings/mlow-encoder.md), [`mlow-noise`](../enc
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_vad.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_vad.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_vad.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_vad.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `meowcaller` | partial | — | encoding codec modules are partial |
 
 **Annotation** `wacrg:ENC-15` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-vad.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-vad.yaml)
+Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/mlow-vad.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/mlow-vad.yaml)
 
 **Open questions**
 - Whether non-default VAD tuning (noise_lvl_update_speed, non_binariness, highpass_sharpness) is ever negotiated on the wire, or always left at 0.
@@ -121,4 +121,4 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 ---
 
-[← in the full spec](../../index.md#mlow-vad)
+[Back to the full spec](../../index.md#mlow-vad)

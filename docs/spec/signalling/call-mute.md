@@ -2,9 +2,9 @@
 
 # Mute signalling
 
-_Signalling · `call-mute`_
+_Signalling - `call-mute`_
 
-`SIG-13` · _status: draft · audio, video_
+`SIG-13` - _status: draft - audio, video_
 
 A participant signals an in-call mute state change by sending a `<call>` stanza wrapping a `<mute_v2>` action.
 
@@ -38,12 +38,12 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`call-transport`](../sig
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | build_mute_v2 in wacore/src/voip/stanza.rs constructs the outbound stanza; no inbound parser yet (mute_v2 is not in the <call> action allow-list). |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | build_mute_v2 in wacore/src/voip/stanza.rs constructs the outbound stanza; no inbound parser yet (mute_v2 is not in the <call> action allow-list). |
 | `zapo-caller` | planned | — | — |
 
 **Annotation** `wacrg:SIG-13` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/call-mute.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/call-mute.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/signalling/call-mute.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/signalling/call-mute.yaml)
 
 **Open questions**
 - The set of valid mute-state values is not pinned by the source; the builder accepts an arbitrary string. The on-wire encoding (e.g. "muted"/"unmuted" vs a numeric flag) is unconfirmed.
@@ -59,4 +59,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#call-mute)
+[Back to the full spec](../../index.md#call-mute)

@@ -2,9 +2,9 @@
 
 # Media loop and session
 
-_Relay · `media-loop`_
+_Relay - `media-loop`_
 
-`REL-07` · _status: draft · audio, video_
+`REL-07` - _status: draft - audio, video_
 
 Per-call session state machine plus the outbound (protect) and inbound (unprotect) audio frame pipelines: RTP framing, E2E-SRTP, and WARP tagging.
 
@@ -86,12 +86,12 @@ Requires: [`srtp-master-key`](../crypto/srtp-master-key.md), [`srtp-e2e`](../cry
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/src/voip/session.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/src/voip/session.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | session state machine and protect/unprotect pipeline composition; live relay flow over the channel is deferred |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/src/voip/session.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/src/voip/session.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | session state machine and protect/unprotect pipeline composition; live relay flow over the channel is deferred |
 | `zapo-caller` | working | — | signalling + crypto + relay loop |
 
 **Annotation** `wacrg:REL-07` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/media-loop.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/media-loop.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/media-loop.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/media-loop.yaml)
 
 **Open questions**
 - Full inbound ROC-recovery (rollover) algorithm for out-of-order and wrapped sequence numbers.
@@ -109,4 +109,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#media-loop)
+[Back to the full spec](../../index.md#media-loop)

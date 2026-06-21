@@ -2,9 +2,9 @@
 
 # Call key establishment
 
-_Crypto · `call-key`_
+_Crypto - `call-key`_
 
-`CRY-01` · _status: draft · audio, video, group_
+`CRY-01` - _status: draft - audio, video, group_
 
 The 32-byte call key is the root secret for all per-call media keying, delivered to each recipient device inside the offer's per-device Signal-encrypted <enc> payload.
 
@@ -46,13 +46,13 @@ Breakdown: [`srtp-e2e`](../crypto/srtp-e2e.md)
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/sframe.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/sframe.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/sframe.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/sframe.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | — |
 | `meowcaller` | planned | — | — |
 
 **Annotation** `wacrg:CRY-01` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/crypto/call-key.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/crypto/call-key.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/crypto/call-key.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/crypto/call-key.yaml)
 
 **Open questions**
 - How the caller generates the 32-byte call key (CSPRNG source / any structure) is not revealed by the keying code, which only consumes it.
@@ -68,4 +68,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#call-key)
+[Back to the full spec](../../index.md#call-key)

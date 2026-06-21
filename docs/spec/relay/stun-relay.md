@@ -2,9 +2,9 @@
 
 # STUN relay handshake
 
-_Relay · `stun-relay`_
+_Relay - `stun-relay`_
 
-`REL-02` · _status: draft · audio, video, group_
+`REL-02` - _status: draft - audio, video, group_
 
 A STUN-dialect handshake binds the client to a relay candidate before WARP media frames flow.
 
@@ -21,16 +21,16 @@ Breakdown: [`media-loop`](../relay/media-loop.md), [`relay-candidates`](../relay
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stun.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stun.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stun.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stun.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | — |
 
 **Annotation** `wacrg:REL-02` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/stun-relay.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/stun-relay.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/stun-relay.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/stun-relay.yaml)
 
 ## Changelog
 - **2026-06-21** — Initial spec entry.
 
 ---
 
-[← in the full spec](../../index.md#stun-relay)
+[Back to the full spec](../../index.md#stun-relay)

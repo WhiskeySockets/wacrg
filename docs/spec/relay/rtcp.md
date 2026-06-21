@@ -2,9 +2,9 @@
 
 # RTCP control
 
-_Relay · `rtcp`_
+_Relay - `rtcp`_
 
-`REL-04` · _status: review · audio, video_
+`REL-04` - _status: review - audio, video_
 
 RTCP feedback/control packets on the call media path: a standard Sender Report (PT 200) plus two WhatsApp compact reports (PT 208, PT 209), and the rule for classifying a received packet as RTP or RTCP on a shared port.
 
@@ -99,12 +99,12 @@ Requires: [`srtp-hop-by-hop`](../crypto/srtp-hop-by-hop.md), [`ssrc`](../relay/s
 
 | Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/rtcp.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/rtcp.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [:material-github: history](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/rtcp.rs) - [:material-github: blame](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/rtcp.rs) - commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | origin of the rtcp.ts implementation this is ported from |
 
 **Annotation** `wacrg:REL-04` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/rtcp.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/rtcp.yaml)
+Discovered by Vini - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/rtcp.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/rtcp.yaml)
 
 **Open questions**
 - Trigger conditions and cadence for emitting PT 208 vs PT 209, and how often Sender Reports are sent.
@@ -119,4 +119,4 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 ---
 
-[← in the full spec](../../index.md#rtcp)
+[Back to the full spec](../../index.md#rtcp)

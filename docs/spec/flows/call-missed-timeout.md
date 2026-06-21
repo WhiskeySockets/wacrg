@@ -57,4 +57,4 @@ sequenceDiagram
 
 ---
 
-[Back to flow catalog](./index.md) · [Spec overview](../index.md)
+[Back to flow catalog](./index.md) - [Spec overview](../index.md)

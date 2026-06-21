@@ -2,9 +2,9 @@
 
 # Video codec
 
-_Encodings · `video`_
+_Encodings - `video`_
 
-`ENC-06` · _status: draft · video, screen-share_
+`ENC-06` - _status: draft - video, screen-share_
 
 Video and screen-share tracks are carried as H.264; profile/level negotiation and packetization mode are not yet specified.
 
@@ -28,7 +28,7 @@ Breakdown: [`video-packetization`](../encodings/video-packetization.md)
 
 **Annotation** `wacrg:ENC-06` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
-Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/video.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/video.yaml)
+Discovered by Rajeh Taher - [:material-github: protocol history / diff](https://github.com/WhiskeySockets/wacrg/commits/main/spec/encodings/video.yaml) - [:material-github: blame](https://github.com/WhiskeySockets/wacrg/blame/main/spec/encodings/video.yaml)
 
 **Open questions**
 - H.264 profile/level negotiation and packetization mode.
@@ -39,4 +39,4 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 ---
 
-[← in the full spec](../../index.md#video)
+[Back to the full spec](../../index.md#video)

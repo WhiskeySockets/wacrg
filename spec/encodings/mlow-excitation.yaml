@@ -107,7 +107,8 @@ implementations:
   - {
       flavor: whatsapp-rust,
       status: working,
-      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ],
+      path: wacore/src/voip/mlow/smpl_pulse.rs
     }
   - {
       flavor: meowcaller,
@@ -123,7 +124,8 @@ implementations:
           a2397064c51db24e7349b94d832e05614328b723,
           8e4f5c80e9818e26b82b11e28e5773d99da3cdb8,
           d8dfcacc9e53f5fef3594de275c46ba6d8957e64
-        ]
+        ],
+      path: mlow/pulse.go
     }
 open_questions:
   - "Wideband (config != 0) total-pulse-count CDF table location is referenced
@@ -143,3 +145,7 @@ references:
 parent: mlow
 discovered_by: purpshell
 code: ENC-10
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

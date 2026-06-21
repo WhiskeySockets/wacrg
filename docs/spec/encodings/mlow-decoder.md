@@ -104,9 +104,9 @@ Breakdown: [`mlow-encoder`](../encodings/mlow-encoder.md)
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | pure-Rust stateful MlowDecoder; e2e decode matches the smpl_opus useSmpl reference at lag 0 |
+| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/decoder.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/decoder.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | pure-Rust stateful MlowDecoder; e2e decode matches the smpl_opus useSmpl reference at lag 0 |
 | `meowcaller` | partial | — | codec modules partial; full decode orchestration in progress |
 
 **Annotation** `wacrg:ENC-11` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
@@ -120,6 +120,9 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 **References**
 - [RFC 6716 — Opus](https://www.rfc-editor.org/rfc/rfc6716)
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

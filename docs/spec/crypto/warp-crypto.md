@@ -49,9 +49,9 @@ Requires: [`srtp-e2e`](../crypto/srtp-e2e.md), [`call-offer`](../signalling/call
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/warp.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/warp.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | — |
 | `meowcaller` | planned | — | — |
 
@@ -68,6 +68,9 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 - [RFC 2104 — HMAC](https://www.rfc-editor.org/rfc/rfc2104)
 - [RFC 5869 — HKDF](https://www.rfc-editor.org/rfc/rfc5869)
 - [RFC 8285 — A General Mechanism for RTP Header Extensions](https://www.rfc-editor.org/rfc/rfc8285)
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

@@ -58,9 +58,9 @@ Breakdown: [`flow-call-missed`](../signalling/flow-call-missed.md), [`flow-call-
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | build_terminate emits the action; the inbound parser decodes duration/audio_duration. |
+| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | build_terminate emits the action; the inbound parser decodes duration/audio_duration. |
 | `zapo-caller` | working | — | signalling builder ported from this flavor's signaling.ts. |
 
 **Annotation** `wacrg:SIG-14` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
@@ -75,6 +75,9 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 **References**
 - wacore voip signaling builders (build_terminate)
 - wacore call stanza parser (terminate action)
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

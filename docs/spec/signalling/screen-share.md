@@ -20,7 +20,7 @@ Requires: [`group-call`](../signalling/group-call.md)
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
 | `whatsapp-rust` | unknown | — | — |
 
@@ -30,6 +30,9 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 **Open questions**
 - How a screen-share track is flagged in signalling and in the RTP/encoding plane.
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

@@ -25,3 +25,7 @@ open_questions:
   - "Per-sender SFrame key distribution and rotation on join/leave."
 discovered_by: vinikjkkj
 code: SIG-06
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

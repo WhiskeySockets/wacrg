@@ -16,7 +16,7 @@ Requires: [`group-call`](../signalling/group-call.md)
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
 | `whatsapp-rust` | unknown | — | — |
 
@@ -26,6 +26,9 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 **Open questions**
 - Stanza/attribute and emoji encoding for an in-call reaction; TTL/debounce behaviour.
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

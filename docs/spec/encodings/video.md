@@ -22,7 +22,7 @@ Breakdown: [`video-packetization`](../encodings/video-packetization.md)
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
 | `whatsapp-rust` | unknown | — | — |
 
@@ -33,6 +33,9 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 **Open questions**
 - H.264 profile/level negotiation and packetization mode.
 - Whether other video codecs are supported.
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

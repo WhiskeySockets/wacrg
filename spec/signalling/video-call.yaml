@@ -42,7 +42,8 @@ implementations:
       status: working,
       note: "Parses the <video> child (is_video) on <offer> and media=\"video\" on
         <offer_notice>; inbound recognition.",
-      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ],
+      path: wacore/src/voip/stanza.rs
     }
   - {
       flavor: zapo-caller,
@@ -62,3 +63,7 @@ references:
   - { title: "RFC 3711 — SRTP", url: "https://www.rfc-editor.org/rfc/rfc3711" }
 discovered_by: vinikjkkj
 code: SIG-02
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

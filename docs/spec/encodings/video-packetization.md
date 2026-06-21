@@ -55,7 +55,7 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`video`](../encodings/vi
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
 | `whatsapp-rust` | unknown | — | Audio media path is implemented; the H.264 video packetizer is not yet present. |
 | `meowcaller` | planned | — | Encodings modules are partial; video packetization is a planned module. |
@@ -74,6 +74,9 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 **References**
 - [RFC 6184 — RTP Payload Format for H.264 Video](https://www.rfc-editor.org/rfc/rfc6184)
 - [RFC 3550 — RTP: A Transport Protocol for Real-Time Applications](https://www.rfc-editor.org/rfc/rfc3550)
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

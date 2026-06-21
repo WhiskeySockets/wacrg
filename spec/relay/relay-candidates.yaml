@@ -98,7 +98,8 @@ implementations:
   - {
       flavor: whatsapp-rust,
       status: working,
-      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ],
+      path: wacore/src/voip/relay_parse.rs
     }
   - {
       flavor: zapo-caller,
@@ -116,3 +117,7 @@ references:
   - { title: "RFC 5389 — STUN", url: "https://www.rfc-editor.org/rfc/rfc5389" }
 discovered_by: vinikjkkj
 code: REL-01
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

@@ -70,7 +70,8 @@ implementations:
         ack, and builds <terminate>; example bot rejects/accepts rather than
         ringing out, so the timeout-driven terminate is not exercised
         end-to-end.",
-      commits: [ d68af6c608297c864669850b9bc05d4a54410d15 ]
+      commits: [ d68af6c608297c864669850b9bc05d4a54410d15 ],
+      path: src/handlers/call.rs
     }
   - {
       flavor: zapo-caller,
@@ -97,3 +98,7 @@ references:
   - { title: "wacore call stanza parser and build_offer_ack_receipt", url: "" }
 discovered_by: vinikjkkj
 code: SIG-12
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

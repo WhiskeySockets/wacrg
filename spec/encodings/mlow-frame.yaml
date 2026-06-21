@@ -73,7 +73,8 @@ implementations:
   - {
       flavor: whatsapp-rust,
       status: working,
-      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ],
+      path: wacore/src/voip/mlow/toc.rs
     }
   - {
       flavor: meowcaller,
@@ -85,7 +86,8 @@ implementations:
           e362783d5f8988607d5b12fd419710fb275ea9e4,
           7ff050af9b194a7d2914ab950a9e64f9bbc5253f,
           2a4cd7c00d02c36f89ccdc801684f9bcd2157f3c
-        ]
+        ],
+      path: mlow/toc.go
     }
 references:
   - {
@@ -103,3 +105,7 @@ open_questions:
 parent: mlow
 discovered_by: purpshell
 code: ENC-03
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

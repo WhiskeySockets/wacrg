@@ -96,9 +96,9 @@ Requires: [`call-relaylatency`](../signalling/call-relaylatency.md), [`srtp-hop-
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/relay_parse.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/relay_parse.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | origin of the parser (src/relay/parse.ts) |
 
 **Annotation** `wacrg:REL-01` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
@@ -112,6 +112,9 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 **References**
 - [RFC 5389 — STUN](https://www.rfc-editor.org/rfc/rfc5389)
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

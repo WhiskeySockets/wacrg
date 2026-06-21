@@ -139,7 +139,8 @@ implementations:
   - {
       flavor: whatsapp-rust,
       status: working,
-      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ],
+      path: wacore/src/voip/mlow/encode.rs
     }
   - {
       flavor: meowcaller,
@@ -168,3 +169,7 @@ references:
 parent: mlow
 discovered_by: purpshell
 code: ENC-09
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

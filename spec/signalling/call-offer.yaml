@@ -31,7 +31,8 @@ implementations:
   - {
       flavor: whatsapp-rust,
       status: working,
-      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ],
+      path: wacore/src/voip/stanza.rs
     }
   - { flavor: zapo-caller, status: working }
 references:
@@ -45,3 +46,7 @@ open_questions:
     from the Signal plaintext."
 discovered_by: vinikjkkj
 code: SIG-01
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

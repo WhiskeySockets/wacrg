@@ -96,10 +96,10 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-synthesis`](..
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
-| `meowcaller` | partial | [`8cb06a9`](https://github.com/purpshell/meowcaller/commit/8cb06a9cd58dd764fac1ca5c7af07d4738718040) [`42ea850`](https://github.com/purpshell/meowcaller/commit/42ea850d17a1a6895347ef0a595840b6d03a5e9a) | encodings DSP modules are KAT-verified piecewise; full decoder orchestration in progress |
+| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_gennoise.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_gennoise.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `meowcaller` | partial | [history ↗](https://github.com/purpshell/meowcaller/commits/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/noise.go) · [blame ↗](https://github.com/purpshell/meowcaller/blame/8cb06a9cd58dd764fac1ca5c7af07d4738718040/mlow/noise.go) · commits [`8cb06a9`](https://github.com/purpshell/meowcaller/commit/8cb06a9cd58dd764fac1ca5c7af07d4738718040) [`42ea850`](https://github.com/purpshell/meowcaller/commit/42ea850d17a1a6895347ef0a595840b6d03a5e9a) | encodings DSP modules are KAT-verified piecewise; full decoder orchestration in progress |
 
 **Annotation** `wacrg:ENC-12` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
@@ -110,6 +110,9 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 **References**
 - [RFC 6716 — Opus (CELT range coder reused by MLow)](https://www.rfc-editor.org/rfc/rfc6716)
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

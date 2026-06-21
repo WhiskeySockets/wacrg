@@ -104,7 +104,8 @@ implementations:
         [
           674e85164b35ca19115dfebcf605708d15951ee7,
           d68af6c608297c864669850b9bc05d4a54410d15
-        ]
+        ],
+      path: src/handlers/call.rs
     }
   - {
       flavor: zapo-caller,
@@ -131,3 +132,7 @@ references:
   - { title: "RFC 8445 — ICE", url: "https://www.rfc-editor.org/rfc/rfc8445" }
 discovered_by: vinikjkkj
 code: SIG-17
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

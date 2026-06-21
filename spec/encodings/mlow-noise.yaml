@@ -103,7 +103,8 @@ implementations:
   - {
       flavor: whatsapp-rust,
       status: working,
-      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ],
+      path: wacore/src/voip/mlow/smpl_gennoise.rs
     }
   - {
       flavor: meowcaller,
@@ -114,7 +115,8 @@ implementations:
         [
           8cb06a9cd58dd764fac1ca5c7af07d4738718040,
           42ea850d17a1a6895347ef0a595840b6d03a5e9a
-        ]
+        ],
+      path: mlow/noise.go
     }
 open_questions:
   - "Exact bit layout and subframe schedule by which num_pulses, nrgres (Q14),
@@ -128,3 +130,7 @@ references:
 parent: mlow
 discovered_by: purpshell
 code: ENC-12
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

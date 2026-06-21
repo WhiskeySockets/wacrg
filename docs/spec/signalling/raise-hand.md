@@ -19,7 +19,7 @@ Requires: [`group-call`](../signalling/group-call.md)
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
 | `whatsapp-rust` | unknown | — | — |
 
@@ -29,6 +29,9 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 **Open questions**
 - Which stanza/attribute carries raise-hand state, and whether it is acked.
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

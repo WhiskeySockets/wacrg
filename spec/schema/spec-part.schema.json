@@ -84,6 +84,11 @@
     "references": {
       "type": "array",
       "items": { "$ref": "#/$defs/reference" }
+    },
+    "changelog": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/change" },
+      "description": "Dated (and optionally version-stamped) changelog entries for this part, newest first."
     }
   },
   "$defs": {
@@ -95,11 +100,25 @@
         "flavor": { "type": "string", "description": "A spec/flavors/<id> id." },
         "status": { "type": "string", "enum": ["working", "partial", "planned", "unknown"] },
         "note": { "type": "string" },
+        "path": {
+          "type": "string",
+          "description": "Primary source file in the flavor's repo implementing this part; drives the per-implementation history/blame links."
+        },
         "commits": {
           "type": "array",
           "items": { "type": "string" },
           "description": "Commit SHAs in the flavor's repo that implement/changed this part. Each renders as its own commit link."
         }
+      }
+    },
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["date", "note"],
+      "properties": {
+        "date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+        "version": { "type": "string" },
+        "note": { "type": "string", "minLength": 1 }
       }
     },
     "reference": {

@@ -73,7 +73,8 @@ implementations:
   - {
       flavor: whatsapp-rust,
       status: working,
-      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ],
+      path: wacore/src/voip/e2e_srtp.rs
     }
   - {
       flavor: zapo-caller,
@@ -94,3 +95,7 @@ references:
 parent: srtp-master-key
 discovered_by: vinikjkkj
 code: CRY-05
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

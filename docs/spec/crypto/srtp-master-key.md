@@ -39,9 +39,9 @@ Breakdown: [`call-key`](../crypto/call-key.md), [`group-call-crypto`](../crypto/
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/e2e_srtp.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/e2e_srtp.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | — |
 | `meowcaller` | planned | — | util/hkdf + srtp/e2e are planned modules |
 
@@ -55,6 +55,9 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 **References**
 - [RFC 3711 — SRTP](https://www.rfc-editor.org/rfc/rfc3711)
 - [RFC 5869 — HKDF](https://www.rfc-editor.org/rfc/rfc5869)
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

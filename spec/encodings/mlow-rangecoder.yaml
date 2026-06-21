@@ -315,7 +315,8 @@ implementations:
       flavor: whatsapp-rust,
       status: working,
       note: "full ec_dec + ec_enc port; round-trip vectors pass",
-      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ],
+      path: wacore/src/voip/mlow/rangecoder.rs
     }
   - {
       flavor: meowcaller,
@@ -328,7 +329,8 @@ implementations:
           8cbef547c2603f0cc60b03e4cde13bc6786927a6,
           bb84ff7c0fd7c750b461e0934e0471b32566fd7d,
           335a0abce6206bb175b0a9f3c72f904a3dacbbfe
-        ]
+        ],
+      path: mlow/rangecoder.go
     }
 references:
   - {
@@ -346,3 +348,7 @@ open_questions:
 parent: mlow
 discovered_by: purpshell
 code: ENC-04
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

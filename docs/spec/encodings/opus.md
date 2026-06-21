@@ -33,7 +33,7 @@ Breakdown: [`mlow-frame`](../encodings/mlow-frame.md), [`media-loop`](../relay/m
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | — | — |
 | `meowcaller` | partial | — | codec modules partial; first-byte routing present, Opus decode delegated to a stock libopus binding |
@@ -49,6 +49,9 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 **References**
 - [RFC 6716 — Definition of the Opus Audio Codec](https://www.rfc-editor.org/rfc/rfc6716)
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

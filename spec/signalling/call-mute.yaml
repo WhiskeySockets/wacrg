@@ -40,7 +40,8 @@ implementations:
       note: "build_mute_v2 in wacore/src/voip/stanza.rs constructs the outbound
         stanza; no inbound parser yet (mute_v2 is not in the <call> action
         allow-list).",
-      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ],
+      path: wacore/src/voip/stanza.rs
     }
   - { flavor: zapo-caller, status: planned }
 open_questions:
@@ -61,3 +62,7 @@ references:
     }
 discovered_by: vinikjkkj
 code: SIG-13
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

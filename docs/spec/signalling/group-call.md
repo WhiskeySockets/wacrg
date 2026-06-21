@@ -21,7 +21,7 @@ Breakdown: [`group-call-crypto`](../crypto/group-call-crypto.md), [`raise-hand`]
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
 | `whatsapp-rust` | unknown | — | — |
 
@@ -32,6 +32,9 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 **Open questions**
 - Group session creation, the participant roster stanza, and join/leave signalling.
 - Per-sender SFrame key distribution and rotation on join/leave.
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

@@ -314,10 +314,10 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-encoder`](../e
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | full ec_dec + ec_enc port; round-trip vectors pass |
-| `meowcaller` | partial | [`b0fe93c`](https://github.com/purpshell/meowcaller/commit/b0fe93c61ea77c36eaacaf67450e2f844c489889) [`e362783`](https://github.com/purpshell/meowcaller/commit/e362783d5f8988607d5b12fd419710fb275ea9e4) [`8cbef54`](https://github.com/purpshell/meowcaller/commit/8cbef547c2603f0cc60b03e4cde13bc6786927a6) [`bb84ff7`](https://github.com/purpshell/meowcaller/commit/bb84ff7c0fd7c750b461e0934e0471b32566fd7d) [`335a0ab`](https://github.com/purpshell/meowcaller/commit/335a0abce6206bb175b0a9f3c72f904a3dacbbfe) | encodings codec modules are partial |
+| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/rangecoder.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/rangecoder.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | full ec_dec + ec_enc port; round-trip vectors pass |
+| `meowcaller` | partial | [history ↗](https://github.com/purpshell/meowcaller/commits/b0fe93c61ea77c36eaacaf67450e2f844c489889/mlow/rangecoder.go) · [blame ↗](https://github.com/purpshell/meowcaller/blame/b0fe93c61ea77c36eaacaf67450e2f844c489889/mlow/rangecoder.go) · commits [`b0fe93c`](https://github.com/purpshell/meowcaller/commit/b0fe93c61ea77c36eaacaf67450e2f844c489889) [`e362783`](https://github.com/purpshell/meowcaller/commit/e362783d5f8988607d5b12fd419710fb275ea9e4) [`8cbef54`](https://github.com/purpshell/meowcaller/commit/8cbef547c2603f0cc60b03e4cde13bc6786927a6) [`bb84ff7`](https://github.com/purpshell/meowcaller/commit/bb84ff7c0fd7c750b461e0934e0471b32566fd7d) [`335a0ab`](https://github.com/purpshell/meowcaller/commit/335a0abce6206bb175b0a9f3c72f904a3dacbbfe) | encodings codec modules are partial |
 
 **Annotation** `wacrg:ENC-04` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
@@ -329,6 +329,9 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 **References**
 - [RFC 6716 — Definition of the Opus Audio Codec, §4.1 (Range Decoder)](https://www.rfc-editor.org/rfc/rfc6716#section-4.1)
 - [libopus — celt/entdec.c / celt/entenc.c](https://github.com/xiph/opus/blob/main/celt/entdec.c)
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

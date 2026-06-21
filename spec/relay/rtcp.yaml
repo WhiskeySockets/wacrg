@@ -99,7 +99,8 @@ implementations:
   - {
       flavor: whatsapp-rust,
       status: working,
-      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ],
+      path: wacore/src/voip/rtcp.rs
     }
   - {
       flavor: zapo-caller,
@@ -119,3 +120,7 @@ open_questions:
     beyond the SSRC binding."
 discovered_by: vinikjkkj
 code: REL-04
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

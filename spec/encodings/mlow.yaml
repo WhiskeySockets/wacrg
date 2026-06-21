@@ -22,7 +22,8 @@ implementations:
   - {
       flavor: whatsapp-rust,
       status: working,
-      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ],
+      path: wacore/src/voip/mlow/mod.rs
     }
   - {
       flavor: meowcaller,
@@ -37,9 +38,14 @@ implementations:
           e362783d5f8988607d5b12fd419710fb275ea9e4,
           8b5ad0b00fecd944a053cbc2e5dbf9a9541b6661,
           72d8a03dbd47a5ff0b362647129a80c8edf5a820
-        ]
+        ],
+      path: mlow/mem.go
     }
 references:
   - { title: "RFC 6716 — Opus", url: "https://www.rfc-editor.org/rfc/rfc6716" }
 discovered_by: purpshell
 code: ENC-01
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

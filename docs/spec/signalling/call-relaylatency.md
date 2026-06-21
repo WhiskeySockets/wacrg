@@ -54,9 +54,9 @@ Breakdown: [`relay-candidates`](../relay/relay-candidates.md), [`flow-outgoing-1
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | build_relay_latency + encode_latency in wacore voip::stanza; parsed as CallAction::RelayLatency |
+| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | build_relay_latency + encode_latency in wacore voip::stanza; parsed as CallAction::RelayLatency |
 | `zapo-caller` | working | — | ported from src/signaling.ts; relay path covered |
 
 **Annotation** `wacrg:SIG-15` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
@@ -71,6 +71,9 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 
 **References**
 - [RFC 5245 — ICE (relay/RTT context)](https://www.rfc-editor.org/rfc/rfc5245)
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

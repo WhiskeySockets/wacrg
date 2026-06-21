@@ -57,7 +57,8 @@ implementations:
       status: working,
       note: "build_relay_latency + encode_latency in wacore voip::stanza; parsed as
         CallAction::RelayLatency",
-      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ],
+      path: wacore/src/voip/stanza.rs
     }
   - {
       flavor: zapo-caller,
@@ -80,3 +81,7 @@ references:
     }
 discovered_by: vinikjkkj
 code: SIG-15
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

@@ -159,7 +159,8 @@ implementations:
         [
           ed12f359a086b28e807ba236f0977af1000859fe,
           674e85164b35ca19115dfebcf605708d15951ee7
-        ]
+        ],
+      path: wacore/src/voip/mlow/smpl_synth.rs
     }
   - {
       flavor: meowcaller,
@@ -173,7 +174,8 @@ implementations:
           e341ca85462633a46b60954a0aad1d92cc3d7fb3,
           011af47d049bb023c6692282176a13079787eff7,
           713655129150b0b42ca9e2c15686aa894687127b
-        ]
+        ],
+      path: mlow/synth.go
     }
 
 open_questions:
@@ -190,3 +192,7 @@ references:
 parent: mlow
 discovered_by: purpshell
 code: ENC-14
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

@@ -127,7 +127,8 @@ implementations:
         [
           674e85164b35ca19115dfebcf605708d15951ee7,
           d68af6c608297c864669850b9bc05d4a54410d15
-        ]
+        ],
+      path: src/handlers/call.rs
     }
   - {
       flavor: zapo-caller,
@@ -145,3 +146,7 @@ references:
   - { title: "RFC 3711 — SRTP", url: "https://www.rfc-editor.org/rfc/rfc3711" }
 discovered_by: vinikjkkj
 code: SIG-16
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

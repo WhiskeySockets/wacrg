@@ -138,9 +138,9 @@ Requires: [`mlow`](../encodings/mlow.md), [`mlow-frame`](../encodings/mlow-frame
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/encode.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/encode.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `meowcaller` | partial | — | encode-path codec modules partial |
 
 **Annotation** `wacrg:ENC-09` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
@@ -155,6 +155,9 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 **References**
 - [RFC 6716 — Opus (SILK LPC/LSF, LTP, pitch background)](https://www.rfc-editor.org/rfc/rfc6716)
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

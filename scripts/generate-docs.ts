@@ -732,14 +732,22 @@ function specDetails(
   if (ctx.breakdown?.length) nav.push('Breakdown: ' + ctx.breakdown.map(link).join(', '));
   if (nav.length) out.push(nav.join('  \n'));
   if (part.implementations?.length) {
-    const head = '| Flavor | Status | Commits | Notes |\n| --- | --- | --- | --- |';
+    const head = '| Flavor | Status | Source | Notes |\n| --- | --- | --- | --- |';
     const rows = part.implementations.map((i) => {
       const url = ctx.flavorUrl(i.flavor);
-      const commits =
-        url && i.commits?.length
-          ? i.commits.map((sha) => `[\`${sha.slice(0, 7)}\`](${url}/commit/${sha})`).join(' ')
-          : '—';
-      return `| \`${cell(i.flavor)}\` | ${cell(i.status)} | ${commits} | ${i.note ? cell(i.note) : '—'} |`;
+      const ref = i.commits?.[0];
+      const links: string[] = [];
+      // Per-implementation history + blame, pinned to the latest commit so they
+      // resolve regardless of the flavor's default branch.
+      if (url && i.path && ref) {
+        links.push(`[history ↗](${url}/commits/${ref}/${i.path})`);
+        links.push(`[blame ↗](${url}/blame/${ref}/${i.path})`);
+      }
+      if (url && i.commits?.length) {
+        links.push('commits ' + i.commits.map((sha) => `[\`${sha.slice(0, 7)}\`](${url}/commit/${sha})`).join(' '));
+      }
+      const source = links.length ? links.join(' · ') : '—';
+      return `| \`${cell(i.flavor)}\` | ${cell(i.status)} | ${source} | ${i.note ? cell(i.note) : '—'} |`;
     });
     out.push('**Implemented by**\n\n' + [head, ...rows].join('\n'));
   }
@@ -759,6 +767,14 @@ function specDetails(
     out.push(
       '**References**\n' +
         part.references.map((r) => (r.url ? `- [${r.title ?? r.url}](${r.url})` : `- ${r.title ?? ''}`)).join('\n'),
+    );
+  }
+  if (part.changelog?.length) {
+    out.push(
+      '## Changelog\n' +
+        part.changelog
+          .map((c) => `- **${c.date}**${c.version ? ` · v${c.version}` : ''} — ${cell(c.note)}`)
+          .join('\n'),
     );
   }
   return out.join('\n\n');

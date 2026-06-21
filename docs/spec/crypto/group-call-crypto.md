@@ -50,7 +50,7 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`group-call`](../signall
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
 | `whatsapp-rust` | working | — | — |
 | `zapo-caller` | working | — | — |
@@ -68,6 +68,9 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 **References**
 - [RFC 5869 — HKDF](https://www.rfc-editor.org/rfc/rfc5869)
 - [RFC 9605 — SFrame](https://www.rfc-editor.org/rfc/rfc9605)
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

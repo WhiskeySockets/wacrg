@@ -145,7 +145,8 @@ implementations:
       status: working,
       note: "all three filters ported and validated against the live WASM decoder and
         the C decoder dumps",
-      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ],
+      path: wacore/src/voip/mlow/smpl_postfilter.rs
     }
   - {
       flavor: meowcaller,
@@ -155,7 +156,8 @@ implementations:
         [
           4323881f1cd6be77ad3db800e8546c1cc7805413,
           5b8d5a5245a965b74e7a559819adf9bf457c2572
-        ]
+        ],
+      path: mlow/postfilter.go
     }
 
 open_questions:
@@ -173,3 +175,7 @@ references:
 parent: mlow
 discovered_by: purpshell
 code: ENC-13
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

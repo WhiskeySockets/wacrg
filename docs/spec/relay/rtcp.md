@@ -97,9 +97,9 @@ Requires: [`srtp-hop-by-hop`](../crypto/srtp-hop-by-hop.md), [`ssrc`](../relay/s
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/rtcp.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/rtcp.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | origin of the rtcp.ts implementation this is ported from |
 
 **Annotation** `wacrg:REL-04` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
@@ -113,6 +113,9 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 **References**
 - [RFC 3550 — RTP/RTCP](https://www.rfc-editor.org/rfc/rfc3550)
 - [RFC 3711 — SRTP/SRTCP](https://www.rfc-editor.org/rfc/rfc3711)
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

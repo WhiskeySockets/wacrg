@@ -252,8 +252,17 @@ export interface SpecImplementation {
   flavor: string;
   status: 'working' | 'partial' | 'planned' | 'unknown';
   note?: string;
+  /** Primary source file in the flavor's repo (drives per-implementation history/blame links). */
+  path?: string;
   /** Commit SHAs in the flavor's repo that implement/changed this part. */
   commits?: string[];
+}
+
+/** A dated (optionally version-stamped) changelog entry for a spec part. */
+export interface SpecChange {
+  date: string;
+  version?: string;
+  note: string;
 }
 
 /**
@@ -282,6 +291,8 @@ export interface SpecPart {
   since?: string;
   open_questions?: string[];
   references?: Reference[];
+  /** Dated changelog entries, newest first. */
+  changelog?: SpecChange[];
 }
 
 export interface GlossaryTerm {

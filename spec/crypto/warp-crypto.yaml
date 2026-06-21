@@ -50,7 +50,8 @@ implementations:
   - {
       flavor: whatsapp-rust,
       status: working,
-      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ],
+      path: wacore/src/voip/warp.rs
     }
   - { flavor: zapo-caller, status: working }
   - { flavor: meowcaller, status: planned }
@@ -71,3 +72,7 @@ open_questions:
     fixed on the wire or negotiable."
 discovered_by: vinikjkkj
 code: CRY-07
+changelog:
+  - date: 2026-06-21
+    version: 0.1.0
+    note: Initial spec entry.

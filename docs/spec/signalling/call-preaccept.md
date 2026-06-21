@@ -44,9 +44,9 @@ Breakdown: [`call-accept`](../signalling/call-accept.md), [`flow-call-missed`](.
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
+| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/stanza.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | — |
 | `zapo-caller` | working | — | — |
 
 **Annotation** `wacrg:SIG-04` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
@@ -57,6 +57,9 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 - Whether the server or peer behaves differently when <preaccept> is omitted versus sent (e.g. caller-side ringing UI/timeout), and whether it is ever mandatory.
 - Whether <preaccept> may carry additional children (e.g. <video>, <net>) for video calls, as its <audio>-only shape is observed for audio calls.
 - Full meaning of the packed <capability> bitfield and the significance of the differing final byte.
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

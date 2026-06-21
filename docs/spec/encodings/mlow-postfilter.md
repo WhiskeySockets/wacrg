@@ -140,10 +140,10 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-synthesis`](..
 
 **Implemented by**
 
-| Flavor | Status | Commits | Notes |
+| Flavor | Status | Source | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | all three filters ported and validated against the live WASM decoder and the C decoder dumps |
-| `meowcaller` | partial | [`4323881`](https://github.com/purpshell/meowcaller/commit/4323881f1cd6be77ad3db800e8546c1cc7805413) [`5b8d5a5`](https://github.com/purpshell/meowcaller/commit/5b8d5a5245a965b74e7a559819adf9bf457c2572) | encodings codec modules are partial |
+| `whatsapp-rust` | working | [history ↗](https://github.com/oxidezap/whatsapp-rust-private/commits/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_postfilter.rs) · [blame ↗](https://github.com/oxidezap/whatsapp-rust-private/blame/674e85164b35ca19115dfebcf605708d15951ee7/wacore/src/voip/mlow/smpl_postfilter.rs) · commits [`674e851`](https://github.com/oxidezap/whatsapp-rust-private/commit/674e85164b35ca19115dfebcf605708d15951ee7) | all three filters ported and validated against the live WASM decoder and the C decoder dumps |
+| `meowcaller` | partial | [history ↗](https://github.com/purpshell/meowcaller/commits/4323881f1cd6be77ad3db800e8546c1cc7805413/mlow/postfilter.go) · [blame ↗](https://github.com/purpshell/meowcaller/blame/4323881f1cd6be77ad3db800e8546c1cc7805413/mlow/postfilter.go) · commits [`4323881`](https://github.com/purpshell/meowcaller/commit/4323881f1cd6be77ad3db800e8546c1cc7805413) [`5b8d5a5`](https://github.com/purpshell/meowcaller/commit/5b8d5a5245a965b74e7a559819adf9bf457c2572) | encodings codec modules are partial |
 
 **Annotation** `wacrg:ENC-13` — a flavor marks its implementation site in source with this comment; a script clones the source, finds it, and attaches the commit blame/permalink.
 
@@ -155,6 +155,9 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 
 **References**
 - [MLow: WhatsApp's low-bitrate speech codec (engineering blog)](https://engineering.fb.com/2024/06/13/web/mlow-metas-low-bitrate-audio-codec/)
+
+## Changelog
+- **2026-06-21** · v0.1.0 — Initial spec entry.
 
 ---
 

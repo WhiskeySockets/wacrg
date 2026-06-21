@@ -86,7 +86,7 @@ Requires: [`srtp-master-key`](../crypto/srtp-master-key.md), [`srtp-e2e`](../cry
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | session state machine and protect/unprotect pipeline composition; live relay flow over the channel is deferred |
+| `whatsapp-rust` | working | — | session state machine and protect/unprotect pipeline composition; live relay flow over the channel is deferred |
 | `zapo-caller` | working | — | signalling + crypto + relay loop |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/relay/media-loop.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/relay/media-loop.yaml)

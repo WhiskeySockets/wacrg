@@ -149,7 +149,12 @@ implementations:
   - {
       flavor: meowcaller,
       status: partial,
-      note: "encodings codec modules are partial"
+      note: "encodings codec modules are partial",
+      commits:
+        [
+          4323881f1cd6be77ad3db800e8546c1cc7805413,
+          5b8d5a5245a965b74e7a559819adf9bf457c2572
+        ]
     }
 
 open_questions:

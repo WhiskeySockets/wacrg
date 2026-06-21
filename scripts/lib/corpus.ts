@@ -252,6 +252,8 @@ export interface RfcImplementation {
   flavor: string;
   status: 'working' | 'partial' | 'planned' | 'unknown';
   note?: string;
+  /** Commit SHAs in the flavor's repo that implement/changed this part. */
+  commits?: string[];
 }
 
 /**

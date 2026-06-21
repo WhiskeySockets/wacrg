@@ -89,7 +89,12 @@
       "properties": {
         "flavor": { "type": "string", "description": "A spec/flavors/<id> id." },
         "status": { "type": "string", "enum": ["working", "partial", "planned", "unknown"] },
-        "note": { "type": "string" }
+        "note": { "type": "string" },
+        "commits": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Commit SHAs in the flavor's repo that implement/changed this part. Each renders as its own commit link."
+        }
       }
     },
     "reference": {

@@ -109,8 +109,8 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-noise`](../enc
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
-| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | excitation decode KAT-verified against the Go reference; CELP synthesis wiring in progress |
+| `whatsapp-rust` | working | — | — |
+| `meowcaller` | partial | [`45efc4c`](https://github.com/purpshell/meowcaller/commit/45efc4c352b60517541977a4cb6219f7b57bb7d4) [`011af47`](https://github.com/purpshell/meowcaller/commit/011af47d049bb023c6692282176a13079787eff7) [`2d36efc`](https://github.com/purpshell/meowcaller/commit/2d36efc56b8aee88ec14affa776accb9dbd98eab) [`81bebc0`](https://github.com/purpshell/meowcaller/commit/81bebc080070b23b8dd620ad4ffc86004f54a115) [`a239706`](https://github.com/purpshell/meowcaller/commit/a2397064c51db24e7349b94d832e05614328b723) [`8e4f5c8`](https://github.com/purpshell/meowcaller/commit/8e4f5c80e9818e26b82b11e28e5773d99da3cdb8) [`d8dfcac`](https://github.com/purpshell/meowcaller/commit/d8dfcacc9e53f5fef3594de275c46ba6d8957e64) | excitation decode KAT-verified against the Go reference; CELP synthesis wiring in progress |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-excitation.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-excitation.yaml)
 

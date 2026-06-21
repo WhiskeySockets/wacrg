@@ -54,7 +54,7 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`call-ack`](../signallin
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | listen mode default-rejects: acks the offer, then sends <reject> with no media work |
+| `whatsapp-rust` | working | — | listen mode default-rejects: acks the offer, then sends <reject> with no media work |
 | `zapo-caller` | working | — | reject builder ported from zapo-caller signaling.ts |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/flow-call-rejected.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/flow-call-rejected.yaml)

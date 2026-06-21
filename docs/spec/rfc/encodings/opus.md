@@ -35,8 +35,8 @@ Breakdown: [`mlow-frame`](../encodings/mlow-frame.md), [`media-loop`](../relay/m
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
-| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | codec modules partial; first-byte routing present, Opus decode delegated to a stock libopus binding |
+| `whatsapp-rust` | working | — | — |
+| `meowcaller` | partial | — | codec modules partial; first-byte routing present, Opus decode delegated to a stock libopus binding |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/opus.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/opus.yaml)
 

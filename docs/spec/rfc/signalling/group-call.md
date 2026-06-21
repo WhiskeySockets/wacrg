@@ -23,7 +23,7 @@ Breakdown: [`group-call-crypto`](../crypto/group-call-crypto.md), [`raise-hand`]
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | unknown | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `whatsapp-rust` | unknown | — | — |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/group-call.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/group-call.yaml)
 

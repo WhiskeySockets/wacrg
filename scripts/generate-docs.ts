@@ -728,7 +728,10 @@ function rfcDetails(
     const head = '| Flavor | Status | Commits | Notes |\n| --- | --- | --- | --- |';
     const rows = part.implementations.map((i) => {
       const url = ctx.flavorUrl(i.flavor);
-      const commits = url ? `[commits ↗](${url}/commits)` : '—';
+      const commits =
+        url && i.commits?.length
+          ? i.commits.map((sha) => `[\`${sha.slice(0, 7)}\`](${url}/commit/${sha})`).join(' ')
+          : '—';
       return `| \`${cell(i.flavor)}\` | ${cell(i.status)} | ${commits} | ${i.note ? cell(i.note) : '—'} |`;
     });
     out.push('**Implemented by**\n\n' + [head, ...rows].join('\n'));

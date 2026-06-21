@@ -98,8 +98,8 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-synthesis`](..
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
-| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | encodings DSP modules are KAT-verified piecewise; full decoder orchestration in progress |
+| `whatsapp-rust` | working | — | — |
+| `meowcaller` | partial | [`8cb06a9`](https://github.com/purpshell/meowcaller/commit/8cb06a9cd58dd764fac1ca5c7af07d4738718040) [`42ea850`](https://github.com/purpshell/meowcaller/commit/42ea850d17a1a6895347ef0a595840b6d03a5e9a) | encodings DSP modules are KAT-verified piecewise; full decoder orchestration in progress |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-noise.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-noise.yaml)
 

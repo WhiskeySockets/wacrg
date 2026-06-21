@@ -142,8 +142,8 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-synthesis`](..
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | all three filters ported and validated against the live WASM decoder and the C decoder dumps |
-| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | encodings codec modules are partial |
+| `whatsapp-rust` | working | — | all three filters ported and validated against the live WASM decoder and the C decoder dumps |
+| `meowcaller` | partial | [`4323881`](https://github.com/purpshell/meowcaller/commit/4323881f1cd6be77ad3db800e8546c1cc7805413) [`5b8d5a5`](https://github.com/purpshell/meowcaller/commit/5b8d5a5245a965b74e7a559819adf9bf457c2572) | encodings codec modules are partial |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-postfilter.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-postfilter.yaml)
 

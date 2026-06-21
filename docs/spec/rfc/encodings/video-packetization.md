@@ -57,8 +57,8 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`video`](../encodings/vi
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | unknown | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | Audio media path is implemented; the H.264 video packetizer is not yet present. |
-| `meowcaller` | planned | [commits ↗](https://github.com/purpshell/meowcaller/commits) | Encodings modules are partial; video packetization is a planned module. |
+| `whatsapp-rust` | unknown | — | Audio media path is implemented; the H.264 video packetizer is not yet present. |
+| `meowcaller` | planned | — | Encodings modules are partial; video packetization is a planned module. |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/video-packetization.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/video-packetization.yaml)
 

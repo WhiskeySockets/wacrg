@@ -52,9 +52,9 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`group-call`](../signall
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `whatsapp-rust` | working | — | — |
 | `zapo-caller` | working | — | — |
-| `meowcaller` | planned | [commits ↗](https://github.com/purpshell/meowcaller/commits) | — |
+| `meowcaller` | planned | — | — |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/crypto/group-call-crypto.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/crypto/group-call-crypto.yaml)
 

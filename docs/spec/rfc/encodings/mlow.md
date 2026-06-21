@@ -24,8 +24,8 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-encoder`](../e
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
-| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | receive DSP largely KAT-verified; CELP synth + decoder orchestration in progress |
+| `whatsapp-rust` | working | — | — |
+| `meowcaller` | partial | [`70af250`](https://github.com/purpshell/meowcaller/commit/70af2501dbc1b29be8f8e2ead92d117b7ed000a4) [`f7103c5`](https://github.com/purpshell/meowcaller/commit/f7103c5a6084f5e95e94e0bc0a3ba237e83088cc) [`b0fe93c`](https://github.com/purpshell/meowcaller/commit/b0fe93c61ea77c36eaacaf67450e2f844c489889) [`e362783`](https://github.com/purpshell/meowcaller/commit/e362783d5f8988607d5b12fd419710fb275ea9e4) [`8b5ad0b`](https://github.com/purpshell/meowcaller/commit/8b5ad0b00fecd944a053cbc2e5dbf9a9541b6661) [`72d8a03`](https://github.com/purpshell/meowcaller/commit/72d8a03dbd47a5ff0b362647129a80c8edf5a820) | receive DSP largely KAT-verified; CELP synth + decoder orchestration in progress |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow.yaml)
 

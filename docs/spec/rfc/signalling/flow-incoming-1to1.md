@@ -122,7 +122,7 @@ Breakdown: [`flow-call-missed`](../signalling/flow-call-missed.md), [`flow-call-
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | parses <call><offer>, sends the <receipt><offer/></receipt> ack, and drives preaccept→accept / reject |
+| `whatsapp-rust` | working | — | parses <call><offer>, sends the <receipt><offer/></receipt> ack, and drives preaccept→accept / reject |
 | `zapo-caller` | working | — | signalling answer sequence implemented |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/flow-incoming-1to1.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/flow-incoming-1to1.yaml)

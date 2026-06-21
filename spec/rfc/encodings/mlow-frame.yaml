@@ -74,7 +74,14 @@ implementations:
   - {
       flavor: meowcaller,
       status: partial,
-      note: "TOC parse + routing present; active-frame orchestration in progress"
+      note: "TOC parse + routing present; active-frame orchestration in progress",
+      commits:
+        [
+          b0fe93c61ea77c36eaacaf67450e2f844c489889,
+          e362783d5f8988607d5b12fd419710fb275ea9e4,
+          7ff050af9b194a7d2914ab950a9e64f9bbc5253f,
+          2a4cd7c00d02c36f89ccdc801684f9bcd2157f3c
+        ]
     }
 references:
   - {

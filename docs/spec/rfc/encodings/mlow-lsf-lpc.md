@@ -103,8 +103,8 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-encoder`](../e
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
-| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | LSF decode/reconstruction KAT-verified; encoder-side LSF VQ not in scope |
+| `whatsapp-rust` | working | — | — |
+| `meowcaller` | partial | [`011af47`](https://github.com/purpshell/meowcaller/commit/011af47d049bb023c6692282176a13079787eff7) [`1c62c52`](https://github.com/purpshell/meowcaller/commit/1c62c52145c12ff9b176c16a74020e3547c1c0d1) [`b0b3263`](https://github.com/purpshell/meowcaller/commit/b0b32639154c13d08c1243bf9b3d609f6f76f1a8) [`d572d2f`](https://github.com/purpshell/meowcaller/commit/d572d2ff2cdc7be35973e59ffcec4e7ca37197d7) [`99c55e2`](https://github.com/purpshell/meowcaller/commit/99c55e20c43e4ffc7f9f7f6097d668e9dfd1cbea) [`5ab3e3d`](https://github.com/purpshell/meowcaller/commit/5ab3e3dbe23da7bbaae007faf8069d55407c99fd) [`0246dbb`](https://github.com/purpshell/meowcaller/commit/0246dbb0eaab40e16a58e0d479254134f0932735) [`d88663a`](https://github.com/purpshell/meowcaller/commit/d88663a7dbb3b07ca438ef9cf91fc98d2746d61f) [`b0fe93c`](https://github.com/purpshell/meowcaller/commit/b0fe93c61ea77c36eaacaf67450e2f844c489889) [`e362783`](https://github.com/purpshell/meowcaller/commit/e362783d5f8988607d5b12fd419710fb275ea9e4) | LSF decode/reconstruction KAT-verified; encoder-side LSF VQ not in scope |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-lsf-lpc.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-lsf-lpc.yaml)
 

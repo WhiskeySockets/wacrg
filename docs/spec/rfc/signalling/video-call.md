@@ -41,7 +41,7 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`group-call`](../signall
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | Parses the <video> child (is_video) on <offer> and media="video" on <offer_notice>; inbound recognition. |
+| `whatsapp-rust` | working | — | Parses the <video> child (is_video) on <offer> and media="video" on <offer_notice>; inbound recognition. |
 | `zapo-caller` | partial | — | Signalling/relay stack present; video-offer construction not covered. |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/video-call.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/video-call.yaml)

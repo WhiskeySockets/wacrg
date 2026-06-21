@@ -50,7 +50,7 @@ Breakdown: [`flow-call-rejected`](../signalling/flow-call-rejected.md), [`flow-i
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `whatsapp-rust` | working | — | — |
 | `zapo-caller` | working | — | signalling layer consumes/produces the offer receipt |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/call-ack.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/call-ack.yaml)

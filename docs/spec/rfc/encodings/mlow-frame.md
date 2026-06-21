@@ -75,8 +75,8 @@ Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-encoder`](../e
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
-| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | TOC parse + routing present; active-frame orchestration in progress |
+| `whatsapp-rust` | working | — | — |
+| `meowcaller` | partial | [`b0fe93c`](https://github.com/purpshell/meowcaller/commit/b0fe93c61ea77c36eaacaf67450e2f844c489889) [`e362783`](https://github.com/purpshell/meowcaller/commit/e362783d5f8988607d5b12fd419710fb275ea9e4) [`7ff050a`](https://github.com/purpshell/meowcaller/commit/7ff050af9b194a7d2914ab950a9e64f9bbc5253f) [`2a4cd7c`](https://github.com/purpshell/meowcaller/commit/2a4cd7c00d02c36f89ccdc801684f9bcd2157f3c) | TOC parse + routing present; active-frame orchestration in progress |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-frame.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-frame.yaml)
 

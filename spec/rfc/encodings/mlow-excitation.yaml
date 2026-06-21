@@ -109,7 +109,17 @@ implementations:
       flavor: meowcaller,
       status: partial,
       note: "excitation decode KAT-verified against the Go reference; CELP synthesis
-        wiring in progress"
+        wiring in progress",
+      commits:
+        [
+          45efc4c352b60517541977a4cb6219f7b57bb7d4,
+          011af47d049bb023c6692282176a13079787eff7,
+          2d36efc56b8aee88ec14affa776accb9dbd98eab,
+          81bebc080070b23b8dd620ad4ffc86004f54a115,
+          a2397064c51db24e7349b94d832e05614328b723,
+          8e4f5c80e9818e26b82b11e28e5773d99da3cdb8,
+          d8dfcacc9e53f5fef3594de275c46ba6d8957e64
+        ]
     }
 open_questions:
   - "Wideband (config != 0) total-pulse-count CDF table location is referenced

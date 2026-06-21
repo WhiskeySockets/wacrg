@@ -102,7 +102,20 @@ implementations:
   - {
       flavor: meowcaller,
       status: partial,
-      note: "LSF decode/reconstruction KAT-verified; encoder-side LSF VQ not in scope"
+      note: "LSF decode/reconstruction KAT-verified; encoder-side LSF VQ not in scope",
+      commits:
+        [
+          011af47d049bb023c6692282176a13079787eff7,
+          1c62c52145c12ff9b176c16a74020e3547c1c0d1,
+          b0b32639154c13d08c1243bf9b3d609f6f76f1a8,
+          d572d2ff2cdc7be35973e59ffcec4e7ca37197d7,
+          99c55e20c43e4ffc7f9f7f6097d668e9dfd1cbea,
+          5ab3e3dbe23da7bbaae007faf8069d55407c99fd,
+          0246dbb0eaab40e16a58e0d479254134f0932735,
+          d88663a7dbb3b07ca438ef9cf91fc98d2746d61f,
+          b0fe93c61ea77c36eaacaf67450e2f844c489889,
+          e362783d5f8988607d5b12fd419710fb275ea9e4
+        ]
     }
 open_questions:
   - "The selector/grid/stage-2 CDF tables and the stage-1/stage-2 codebooks

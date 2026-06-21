@@ -88,7 +88,7 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`call-ack`](../signallin
 
 | Flavor | Status | Commits | Notes |
 | --- | --- | --- | --- |
-| `whatsapp-rust` | partial | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | device discovery, call-key encryption, and the offer/ack/receipt/preaccept/accept signalling are exercised; live caller-side media orchestration is still landing |
+| `whatsapp-rust` | partial | — | device discovery, call-key encryption, and the offer/ack/receipt/preaccept/accept signalling are exercised; live caller-side media orchestration is still landing |
 | `zapo-caller` | working | — | outbound caller signalling + relay; not the codec |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/flow-outgoing-1to1.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/flow-outgoing-1to1.yaml)

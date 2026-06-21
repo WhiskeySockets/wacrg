@@ -105,7 +105,12 @@ implementations:
       flavor: meowcaller,
       status: partial,
       note: "encodings DSP modules are KAT-verified piecewise; full decoder
-        orchestration in progress"
+        orchestration in progress",
+      commits:
+        [
+          8cb06a9cd58dd764fac1ca5c7af07d4738718040,
+          42ea850d17a1a6895347ef0a595840b6d03a5e9a
+        ]
     }
 open_questions:
   - "Exact bit layout and subframe schedule by which num_pulses, nrgres (Q14),

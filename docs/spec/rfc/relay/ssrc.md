@@ -44,8 +44,11 @@ Requires: [`srtp-master-key`](../crypto/srtp-master-key.md)
 Breakdown: [`video-packetization`](../encodings/video-packetization.md), [`media-loop`](../relay/media-loop.md), [`rtcp`](../relay/rtcp.md), [`rtp-framing`](../relay/rtp-framing.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — working — original derivation ported from src/media/voip-crypto.ts
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `zapo-caller` | working | — | original derivation ported from src/media/voip-crypto.ts |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/relay/ssrc.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/relay/ssrc.yaml)
 

@@ -43,9 +43,12 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`srtp-master-key`](../cr
 Breakdown: [`srtp-e2e`](../crypto/srtp-e2e.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — working
-- **meowcaller** — planned · [commits ↗](https://github.com/purpshell/meowcaller/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `zapo-caller` | working | — | — |
+| `meowcaller` | planned | [commits ↗](https://github.com/purpshell/meowcaller/commits) | — |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/crypto/call-key.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/crypto/call-key.yaml)
 

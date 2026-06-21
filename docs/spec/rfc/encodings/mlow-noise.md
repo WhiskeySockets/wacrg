@@ -95,8 +95,11 @@ Requires: [`mlow`](../encodings/mlow.md), [`mlow-frame`](../encodings/mlow-frame
 Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-synthesis`](../encodings/mlow-synthesis.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **meowcaller** — partial — encodings DSP modules are KAT-verified piecewise; full decoder orchestration in progress · [commits ↗](https://github.com/purpshell/meowcaller/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | encodings DSP modules are KAT-verified piecewise; full decoder orchestration in progress |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-noise.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-noise.yaml)
 

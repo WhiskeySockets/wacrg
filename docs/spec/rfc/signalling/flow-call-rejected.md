@@ -51,8 +51,11 @@ unspecified.
 Requires: [`call-offer`](../signalling/call-offer.md), [`call-ack`](../signalling/call-ack.md), [`call-reject`](../signalling/call-reject.md), [`call-preaccept`](../signalling/call-preaccept.md), [`call-accept`](../signalling/call-accept.md), [`call-terminate`](../signalling/call-terminate.md), [`flow-incoming-1to1`](../signalling/flow-incoming-1to1.md)
 
 **Implemented by**
-- **whatsapp-rust** — working — listen mode default-rejects: acks the offer, then sends <reject> with no media work · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — working — reject builder ported from zapo-caller signaling.ts
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | listen mode default-rejects: acks the offer, then sends <reject> with no media work |
+| `zapo-caller` | working | — | reject builder ported from zapo-caller signaling.ts |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/flow-call-rejected.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/flow-call-rejected.yaml)
 

@@ -19,8 +19,11 @@ Requires: [`srtp-master-key`](../crypto/srtp-master-key.md)
 Breakdown: [`srtp-e2e`](../crypto/srtp-e2e.md), [`video-packetization`](../encodings/video-packetization.md), [`relay-candidates`](../relay/relay-candidates.md), [`rtcp`](../relay/rtcp.md), [`rtp-framing`](../relay/rtp-framing.md), [`warp`](../relay/warp.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — working
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `zapo-caller` | working | — | — |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/crypto/srtp-hop-by-hop.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/crypto/srtp-hop-by-hop.yaml)
 

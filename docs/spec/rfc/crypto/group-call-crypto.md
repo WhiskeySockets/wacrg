@@ -49,9 +49,12 @@ SFrame uses AES-128-GCM with a 16-byte nonce (E2E-SRTP uses AES-128-CTR).
 Requires: [`call-offer`](../signalling/call-offer.md), [`group-call`](../signalling/group-call.md), [`srtp-master-key`](../crypto/srtp-master-key.md), [`sframe-media`](../crypto/sframe-media.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — working
-- **meowcaller** — planned · [commits ↗](https://github.com/purpshell/meowcaller/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `zapo-caller` | working | — | — |
+| `meowcaller` | planned | [commits ↗](https://github.com/purpshell/meowcaller/commits) | — |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/crypto/group-call-crypto.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/crypto/group-call-crypto.yaml)
 

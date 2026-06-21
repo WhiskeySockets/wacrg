@@ -151,8 +151,11 @@ Requires: [`mlow-lsf-lpc`](../encodings/mlow-lsf-lpc.md), [`mlow-excitation`](..
 Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-excitation`](../encodings/mlow-excitation.md), [`mlow-noise`](../encodings/mlow-noise.md), [`mlow-postfilter`](../encodings/mlow-postfilter.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **meowcaller** — partial — CELP synth in progress; excitation/LPC modules partially wired · [commits ↗](https://github.com/purpshell/meowcaller/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | CELP synth in progress; excitation/LPC modules partially wired |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-synthesis.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-synthesis.yaml)
 

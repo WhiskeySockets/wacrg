@@ -21,7 +21,10 @@ H.264 NAL handling (likely inputs to screen-content track distinction).
 Breakdown: [`video-packetization`](../encodings/video-packetization.md)
 
 **Implemented by**
-- **whatsapp-rust** — unknown · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | unknown | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/video.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/video.yaml)
 

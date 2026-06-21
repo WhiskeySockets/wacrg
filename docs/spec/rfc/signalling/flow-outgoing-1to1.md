@@ -85,8 +85,11 @@ stanza `id`; `accept`, `transport`, `relaylatency`, and `terminate` correlate on
 Requires: [`call-offer`](../signalling/call-offer.md), [`call-ack`](../signalling/call-ack.md), [`call-preaccept`](../signalling/call-preaccept.md), [`call-accept`](../signalling/call-accept.md), [`call-transport`](../signalling/call-transport.md), [`call-relaylatency`](../signalling/call-relaylatency.md), [`call-terminate`](../signalling/call-terminate.md), [`stun-relay`](../relay/stun-relay.md), [`srtp-master-key`](../crypto/srtp-master-key.md)
 
 **Implemented by**
-- **whatsapp-rust** — partial — device discovery, call-key encryption, and the offer/ack/receipt/preaccept/accept signalling are exercised; live caller-side media orchestration is still landing · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — working — outbound caller signalling + relay; not the codec
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | partial | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | device discovery, call-key encryption, and the offer/ack/receipt/preaccept/accept signalling are exercised; live caller-side media orchestration is still landing |
+| `zapo-caller` | working | — | outbound caller signalling + relay; not the codec |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/flow-outgoing-1to1.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/flow-outgoing-1to1.yaml)
 

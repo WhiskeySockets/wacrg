@@ -725,13 +725,13 @@ function rfcDetails(
   if (ctx.breakdown?.length) nav.push('Breakdown: ' + ctx.breakdown.map(link).join(', '));
   if (nav.length) out.push(nav.join('  \n'));
   if (part.implementations?.length) {
+    const head = '| Flavor | Status | Commits | Notes |\n| --- | --- | --- | --- |';
     const rows = part.implementations.map((i) => {
       const url = ctx.flavorUrl(i.flavor);
-      const commits = url ? ` · [commits ↗](${url}/commits)` : '';
-      const note = i.note ? ` — ${cell(i.note)}` : '';
-      return `- **${i.flavor}** — ${i.status}${note}${commits}`;
+      const commits = url ? `[commits ↗](${url}/commits)` : '—';
+      return `| \`${cell(i.flavor)}\` | ${cell(i.status)} | ${commits} | ${i.note ? cell(i.note) : '—'} |`;
     });
-    out.push('**Implemented by**\n' + rows.join('\n'));
+    out.push('**Implemented by**\n\n' + [head, ...rows].join('\n'));
   }
   const file = `spec/rfc/${part.category}/${part.id}.yaml`;
   const history: string[] = [];

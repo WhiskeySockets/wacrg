@@ -57,8 +57,11 @@ Requires: [`call-offer`](../signalling/call-offer.md)
 Breakdown: [`flow-call-missed`](../signalling/flow-call-missed.md), [`flow-call-rejected`](../signalling/flow-call-rejected.md), [`flow-outgoing-1to1`](../signalling/flow-outgoing-1to1.md)
 
 **Implemented by**
-- **whatsapp-rust** — working — build_terminate emits the action; the inbound parser decodes duration/audio_duration. · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — working — signalling builder ported from this flavor's signaling.ts.
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | build_terminate emits the action; the inbound parser decodes duration/audio_duration. |
+| `zapo-caller` | working | — | signalling builder ported from this flavor's signaling.ts. |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/call-terminate.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/call-terminate.yaml)
 

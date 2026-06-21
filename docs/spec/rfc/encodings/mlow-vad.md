@@ -98,8 +98,11 @@ Requires: [`mlow`](../encodings/mlow.md), [`mlow-frame`](../encodings/mlow-frame
 Breakdown: [`mlow-encoder`](../encodings/mlow-encoder.md), [`mlow-noise`](../encodings/mlow-noise.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **meowcaller** — partial — encoding codec modules are partial · [commits ↗](https://github.com/purpshell/meowcaller/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | encoding codec modules are partial |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-vad.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-vad.yaml)
 

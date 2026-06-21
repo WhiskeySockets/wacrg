@@ -20,7 +20,10 @@ Requires: [`call-offer`](../signalling/call-offer.md)
 Breakdown: [`group-call-crypto`](../crypto/group-call-crypto.md), [`raise-hand`](../signalling/raise-hand.md), [`reactions`](../signalling/reactions.md), [`screen-share`](../signalling/screen-share.md), [`video-call`](../signalling/video-call.md)
 
 **Implemented by**
-- **whatsapp-rust** — unknown · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | unknown | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/group-call.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/group-call.yaml)
 

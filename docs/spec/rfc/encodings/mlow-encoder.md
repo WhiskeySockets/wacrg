@@ -137,8 +137,11 @@ Parent: [`mlow`](../encodings/mlow.md)
 Requires: [`mlow`](../encodings/mlow.md), [`mlow-frame`](../encodings/mlow-frame.md), [`mlow-rangecoder`](../encodings/mlow-rangecoder.md), [`mlow-lsf-lpc`](../encodings/mlow-lsf-lpc.md), [`mlow-vad`](../encodings/mlow-vad.md), [`mlow-decoder`](../encodings/mlow-decoder.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **meowcaller** — partial — encode-path codec modules partial · [commits ↗](https://github.com/purpshell/meowcaller/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | encode-path codec modules partial |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-encoder.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-encoder.yaml)
 

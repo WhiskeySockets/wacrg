@@ -100,8 +100,11 @@ Requires: [`mlow`](../encodings/mlow.md), [`mlow-rangecoder`](../encodings/mlow-
 Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-encoder`](../encodings/mlow-encoder.md), [`mlow-excitation`](../encodings/mlow-excitation.md), [`mlow-noise`](../encodings/mlow-noise.md), [`mlow-synthesis`](../encodings/mlow-synthesis.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **meowcaller** — partial — LSF decode/reconstruction KAT-verified; encoder-side LSF VQ not in scope · [commits ↗](https://github.com/purpshell/meowcaller/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | LSF decode/reconstruction KAT-verified; encoder-side LSF VQ not in scope |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-lsf-lpc.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-lsf-lpc.yaml)
 

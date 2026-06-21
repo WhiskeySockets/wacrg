@@ -38,9 +38,12 @@ Requires: [`call-offer`](../signalling/call-offer.md)
 Breakdown: [`call-key`](../crypto/call-key.md), [`group-call-crypto`](../crypto/group-call-crypto.md), [`sframe-media`](../crypto/sframe-media.md), [`srtp-e2e`](../crypto/srtp-e2e.md), [`srtp-hop-by-hop`](../crypto/srtp-hop-by-hop.md), [`video-packetization`](../encodings/video-packetization.md), [`media-loop`](../relay/media-loop.md), [`ssrc`](../relay/ssrc.md), [`call-accept`](../signalling/call-accept.md), [`flow-outgoing-1to1`](../signalling/flow-outgoing-1to1.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — working
-- **meowcaller** — planned — util/hkdf + srtp/e2e are planned modules · [commits ↗](https://github.com/purpshell/meowcaller/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `zapo-caller` | working | — | — |
+| `meowcaller` | planned | [commits ↗](https://github.com/purpshell/meowcaller/commits) | util/hkdf + srtp/e2e are planned modules |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/crypto/srtp-master-key.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/crypto/srtp-master-key.yaml)
 

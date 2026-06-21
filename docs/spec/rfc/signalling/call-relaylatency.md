@@ -53,8 +53,11 @@ Requires: [`call-offer`](../signalling/call-offer.md), [`stun-relay`](../relay/s
 Breakdown: [`relay-candidates`](../relay/relay-candidates.md), [`flow-outgoing-1to1`](../signalling/flow-outgoing-1to1.md)
 
 **Implemented by**
-- **whatsapp-rust** — working — build_relay_latency + encode_latency in wacore voip::stanza; parsed as CallAction::RelayLatency · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — working — ported from src/signaling.ts; relay path covered
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | build_relay_latency + encode_latency in wacore voip::stanza; parsed as CallAction::RelayLatency |
+| `zapo-caller` | working | — | ported from src/signaling.ts; relay path covered |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/call-relaylatency.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/call-relaylatency.yaml)
 

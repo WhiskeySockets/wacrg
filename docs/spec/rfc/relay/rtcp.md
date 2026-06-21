@@ -96,8 +96,11 @@ bytes 4..8.
 Requires: [`srtp-hop-by-hop`](../crypto/srtp-hop-by-hop.md), [`ssrc`](../relay/ssrc.md), [`rtp-framing`](../relay/rtp-framing.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — working — origin of the rtcp.ts implementation this is ported from
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `zapo-caller` | working | — | origin of the rtcp.ts implementation this is ported from |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/relay/rtcp.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/relay/rtcp.yaml)
 

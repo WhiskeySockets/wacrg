@@ -313,8 +313,11 @@ Requires: [`mlow`](../encodings/mlow.md)
 Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-encoder`](../encodings/mlow-encoder.md), [`mlow-excitation`](../encodings/mlow-excitation.md), [`mlow-frame`](../encodings/mlow-frame.md), [`mlow-lsf-lpc`](../encodings/mlow-lsf-lpc.md)
 
 **Implemented by**
-- **whatsapp-rust** — working — full ec_dec + ec_enc port; round-trip vectors pass · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **meowcaller** — partial — encodings codec modules are partial · [commits ↗](https://github.com/purpshell/meowcaller/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | full ec_dec + ec_enc port; round-trip vectors pass |
+| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | encodings codec modules are partial |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-rangecoder.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-rangecoder.yaml)
 

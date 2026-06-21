@@ -110,8 +110,11 @@ Requires: [`mlow`](../encodings/mlow.md), [`mlow-frame`](../encodings/mlow-frame
 Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md)
 
 **Implemented by**
-- **whatsapp-rust** — working — depack_split_red parses the RED envelope; bare-frame streams bypass it · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **meowcaller** — partial — codec modules partial · [commits ↗](https://github.com/purpshell/meowcaller/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | depack_split_red parses the RED envelope; bare-frame streams bypass it |
+| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | codec modules partial |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-red-fec.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-red-fec.yaml)
 

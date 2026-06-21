@@ -18,8 +18,11 @@ Requires: [`call-offer`](../signalling/call-offer.md)
 Breakdown: [`media-loop`](../relay/media-loop.md), [`relay-candidates`](../relay/relay-candidates.md), [`warp`](../relay/warp.md), [`call-relaylatency`](../signalling/call-relaylatency.md), [`call-transport`](../signalling/call-transport.md), [`flow-outgoing-1to1`](../signalling/flow-outgoing-1to1.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — working
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `zapo-caller` | working | — | — |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/relay/stun-relay.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/relay/stun-relay.yaml)
 

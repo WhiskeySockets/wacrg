@@ -72,9 +72,12 @@ Requires: [`call-key`](../crypto/call-key.md), [`srtp-master-key`](../crypto/srt
 Breakdown: [`warp-crypto`](../crypto/warp-crypto.md), [`media-loop`](../relay/media-loop.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — working — ported from src/media/e2e-srtp.ts
-- **meowcaller** — planned · [commits ↗](https://github.com/purpshell/meowcaller/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `zapo-caller` | working | — | ported from src/media/e2e-srtp.ts |
+| `meowcaller` | planned | [commits ↗](https://github.com/purpshell/meowcaller/commits) | — |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/crypto/srtp-e2e.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/crypto/srtp-e2e.yaml)
 

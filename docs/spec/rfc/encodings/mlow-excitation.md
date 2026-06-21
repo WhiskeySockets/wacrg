@@ -106,8 +106,11 @@ Requires: [`mlow`](../encodings/mlow.md), [`mlow-rangecoder`](../encodings/mlow-
 Breakdown: [`mlow-decoder`](../encodings/mlow-decoder.md), [`mlow-noise`](../encodings/mlow-noise.md), [`mlow-postfilter`](../encodings/mlow-postfilter.md), [`mlow-synthesis`](../encodings/mlow-synthesis.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **meowcaller** — partial — excitation decode KAT-verified against the Go reference; CELP synthesis wiring in progress · [commits ↗](https://github.com/purpshell/meowcaller/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | excitation decode KAT-verified against the Go reference; CELP synthesis wiring in progress |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-excitation.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-excitation.yaml)
 

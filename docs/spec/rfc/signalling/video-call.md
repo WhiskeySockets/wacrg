@@ -38,8 +38,11 @@ No video-specific child in `<accept>` is required to accept the audio portion.
 Requires: [`call-offer`](../signalling/call-offer.md), [`group-call`](../signalling/group-call.md), [`call-accept`](../signalling/call-accept.md), [`call-preaccept`](../signalling/call-preaccept.md)
 
 **Implemented by**
-- **whatsapp-rust** — working — Parses the <video> child (is_video) on <offer> and media="video" on <offer_notice>; inbound recognition. · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — partial — Signalling/relay stack present; video-offer construction not covered.
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | Parses the <video> child (is_video) on <offer> and media="video" on <offer_notice>; inbound recognition. |
+| `zapo-caller` | partial | — | Signalling/relay stack present; video-offer construction not covered. |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/video-call.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/video-call.yaml)
 

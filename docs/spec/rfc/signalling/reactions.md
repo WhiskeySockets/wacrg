@@ -15,7 +15,10 @@ Parent: [`group-call`](../signalling/group-call.md)
 Requires: [`group-call`](../signalling/group-call.md)
 
 **Implemented by**
-- **whatsapp-rust** — unknown · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | unknown | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/reactions.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/reactions.yaml)
 

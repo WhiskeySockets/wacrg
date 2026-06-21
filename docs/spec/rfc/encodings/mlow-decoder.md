@@ -103,8 +103,11 @@ Requires: [`mlow`](../encodings/mlow.md), [`mlow-frame`](../encodings/mlow-frame
 Breakdown: [`mlow-encoder`](../encodings/mlow-encoder.md)
 
 **Implemented by**
-- **whatsapp-rust** — working — pure-Rust stateful MlowDecoder; e2e decode matches the smpl_opus useSmpl reference at lag 0 · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **meowcaller** — partial — codec modules partial; full decode orchestration in progress · [commits ↗](https://github.com/purpshell/meowcaller/commits)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | pure-Rust stateful MlowDecoder; e2e decode matches the smpl_opus useSmpl reference at lag 0 |
+| `meowcaller` | partial | [commits ↗](https://github.com/purpshell/meowcaller/commits) | codec modules partial; full decode orchestration in progress |
 
 Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/encodings/mlow-decoder.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/encodings/mlow-decoder.yaml)
 

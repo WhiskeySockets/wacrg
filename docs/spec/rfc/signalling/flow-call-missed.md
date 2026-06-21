@@ -57,8 +57,11 @@ stanza rather than error.
 Requires: [`call-offer`](../signalling/call-offer.md), [`call-accept`](../signalling/call-accept.md), [`call-preaccept`](../signalling/call-preaccept.md), [`call-terminate`](../signalling/call-terminate.md), [`flow-incoming-1to1`](../signalling/flow-incoming-1to1.md)
 
 **Implemented by**
-- **whatsapp-rust** — working — Parses inbound <call>/<offer>, auto-emits the <receipt><offer/></receipt> ack, and builds <terminate>; example bot rejects/accepts rather than ringing out, so the timeout-driven terminate is not exercised end-to-end. · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — working — Signalling builders (offer/accept/terminate) ported from this flavor's signaling.ts.
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | Parses inbound <call>/<offer>, auto-emits the <receipt><offer/></receipt> ack, and builds <terminate>; example bot rejects/accepts rather than ringing out, so the timeout-driven terminate is not exercised end-to-end. |
+| `zapo-caller` | working | — | Signalling builders (offer/accept/terminate) ported from this flavor's signaling.ts. |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/signalling/flow-call-missed.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/signalling/flow-call-missed.yaml)
 

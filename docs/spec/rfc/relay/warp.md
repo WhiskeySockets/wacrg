@@ -21,8 +21,11 @@ Requires: [`stun-relay`](../relay/stun-relay.md), [`srtp-hop-by-hop`](../crypto/
 Breakdown: [`call-key`](../crypto/call-key.md), [`media-loop`](../relay/media-loop.md), [`rtp-framing`](../relay/rtp-framing.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — working
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `zapo-caller` | working | — | — |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/relay/warp.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/relay/warp.yaml)
 

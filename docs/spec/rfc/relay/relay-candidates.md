@@ -95,8 +95,11 @@ pwd = base64 of the decoded relay key. An empty token or key yields an empty str
 Requires: [`call-relaylatency`](../signalling/call-relaylatency.md), [`srtp-hop-by-hop`](../crypto/srtp-hop-by-hop.md), [`stun-relay`](../relay/stun-relay.md)
 
 **Implemented by**
-- **whatsapp-rust** — working · [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits)
-- **zapo-caller** — working — origin of the parser (src/relay/parse.ts)
+
+| Flavor | Status | Commits | Notes |
+| --- | --- | --- | --- |
+| `whatsapp-rust` | working | [commits ↗](https://github.com/oxidezap/whatsapp-rust/commits) | — |
+| `zapo-caller` | working | — | origin of the parser (src/relay/parse.ts) |
 
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/rfc/relay/relay-candidates.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/rfc/relay/relay-candidates.yaml)
 

@@ -29,7 +29,7 @@ Breakdown: [`media-loop`](../relay/media-loop.md), [`relay-candidates`](../relay
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/relay/stun-relay.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/relay/stun-relay.yaml)
 
 ## Changelog
-- **2026-06-21** · v0.1.0 — Initial spec entry.
+- **2026-06-21** — Initial spec entry.
 
 ---
 

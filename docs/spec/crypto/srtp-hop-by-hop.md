@@ -30,7 +30,7 @@ Breakdown: [`srtp-e2e`](../crypto/srtp-e2e.md), [`video-packetization`](../encod
 Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySockets/wacrg/commits/main/spec/crypto/srtp-hop-by-hop.yaml) · [blame ↗](https://github.com/WhiskeySockets/wacrg/blame/main/spec/crypto/srtp-hop-by-hop.yaml)
 
 ## Changelog
-- **2026-06-21** · v0.1.0 — Initial spec entry.
+- **2026-06-21** — Initial spec entry.
 
 ---
 

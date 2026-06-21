@@ -258,9 +258,10 @@ export interface SpecImplementation {
   commits?: string[];
 }
 
-/** A dated (optionally version-stamped) changelog entry for a spec part. */
+/** A dated changelog entry for a spec part. */
 export interface SpecChange {
   date: string;
+  /** The WhatsApp Web client revision string the change was observed in, if known. */
   version?: string;
   note: string;
 }

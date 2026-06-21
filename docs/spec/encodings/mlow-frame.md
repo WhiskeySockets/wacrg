@@ -91,7 +91,7 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 - [RFC 6716 — Opus (TOC, §3.1, Table 2)](https://www.rfc-editor.org/rfc/rfc6716#section-3.1)
 
 ## Changelog
-- **2026-06-21** · v0.1.0 — Initial spec entry.
+- **2026-06-21** — Initial spec entry.
 
 ---
 

@@ -32,7 +32,7 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 - How a screen-share track is flagged in signalling and in the RTP/encoding plane.
 
 ## Changelog
-- **2026-06-21** · v0.1.0 — Initial spec entry.
+- **2026-06-21** — Initial spec entry.
 
 ---
 

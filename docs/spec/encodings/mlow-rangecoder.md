@@ -331,7 +331,7 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 - [libopus — celt/entdec.c / celt/entenc.c](https://github.com/xiph/opus/blob/main/celt/entdec.c)
 
 ## Changelog
-- **2026-06-21** · v0.1.0 — Initial spec entry.
+- **2026-06-21** — Initial spec entry.
 
 ---
 

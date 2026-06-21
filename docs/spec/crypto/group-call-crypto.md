@@ -70,7 +70,7 @@ Discovered by Vini · [protocol history / diff ↗](https://github.com/WhiskeySo
 - [RFC 9605 — SFrame](https://www.rfc-editor.org/rfc/rfc9605)
 
 ## Changelog
-- **2026-06-21** · v0.1.0 — Initial spec entry.
+- **2026-06-21** — Initial spec entry.
 
 ---
 

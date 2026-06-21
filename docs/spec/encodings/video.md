@@ -35,7 +35,7 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 - Whether other video codecs are supported.
 
 ## Changelog
-- **2026-06-21** · v0.1.0 — Initial spec entry.
+- **2026-06-21** — Initial spec entry.
 
 ---
 

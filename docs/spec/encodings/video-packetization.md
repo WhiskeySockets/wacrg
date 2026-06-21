@@ -76,7 +76,7 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 - [RFC 3550 — RTP: A Transport Protocol for Real-Time Applications](https://www.rfc-editor.org/rfc/rfc3550)
 
 ## Changelog
-- **2026-06-21** · v0.1.0 — Initial spec entry.
+- **2026-06-21** — Initial spec entry.
 
 ---
 

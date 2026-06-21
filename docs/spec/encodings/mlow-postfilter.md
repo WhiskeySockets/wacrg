@@ -157,7 +157,7 @@ Discovered by Rajeh Taher · [protocol history / diff ↗](https://github.com/Wh
 - [MLow: WhatsApp's low-bitrate speech codec (engineering blog)](https://engineering.fb.com/2024/06/13/web/mlow-metas-low-bitrate-audio-codec/)
 
 ## Changelog
-- **2026-06-21** · v0.1.0 — Initial spec entry.
+- **2026-06-21** — Initial spec entry.
 
 ---
 

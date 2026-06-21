@@ -773,7 +773,7 @@ function specDetails(
     out.push(
       '## Changelog\n' +
         part.changelog
-          .map((c) => `- **${c.date}**${c.version ? ` · v${c.version}` : ''} — ${cell(c.note)}`)
+          .map((c) => `- **${c.date}**${c.version ? ` · WA Web \`${cell(c.version)}\`` : ''} — ${cell(c.note)}`)
           .join('\n'),
     );
   }

@@ -117,7 +117,10 @@
       "required": ["date", "note"],
       "properties": {
         "date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
-        "version": { "type": "string" },
+        "version": {
+          "type": "string",
+          "description": "The WhatsApp Web client version/revision string the change was observed in (a long revision string), if known."
+        },
         "note": { "type": "string", "minLength": 1 }
       }
     },

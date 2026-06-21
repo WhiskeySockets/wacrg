@@ -6,6 +6,7 @@ Independent reimplementations of the call protocol — libraries and ports that 
 
 | Flavor | Language | Maturity | Covers | Derives from | Maintainer | Description |
 | --- | --- | --- | --- | --- | --- | --- |
+| [Cobalt](https://github.com/Auties00/Cobalt) | java | production | - | - | @auties | Java reconstruction of the WhatsApp protocol (web multi-device socket and signaling), maintained by Auties. |
 | [meowcaller](https://github.com/purpshell/meowcaller) | go | partial | `media` | `whatsapp-rust` | @purpshell | Clean-room pure-Go WhatsApp calling library porting the whatsapp-rust codec module by module under human audit. |
 | [whatsapp-rust (VoIP)](https://github.com/oxidezap/whatsapp-rust-private) | rust | working | `signaling`, `keying`, `media`, `transport` | `zapo-caller` | @jlucaso1 | Pure-Rust reconstruction of the full WhatsApp VoIP stack — MLow codec, SFrame, SRTP, WARP, STUN/relay, RTP/RTCP, and call signaling. |
 | zapo-caller | typescript | working | `signaling`, `keying`, `transport` | - | @vinikjkkj | TypeScript reconstruction of the WhatsApp caller (signaling, SRTP/SFrame/WARP keying, STUN/relay, RTP), built by Vini and Edgard. |

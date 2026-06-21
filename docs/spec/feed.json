@@ -1042,6 +1042,7 @@
     }
   ],
   "flavors": {
+    "cobalt": [],
     "meowcaller": [
       "mlow",
       "mlow-red-fec",

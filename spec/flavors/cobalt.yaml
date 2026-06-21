@@ -1,0 +1,8 @@
+id: cobalt
+name: Cobalt
+language: java
+maturity: production
+maintainer: auties
+status: stable
+url: https://github.com/Auties00/Cobalt
+description: Java reconstruction of the WhatsApp protocol (web multi-device socket and signaling), maintained by Auties.

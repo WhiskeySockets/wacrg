@@ -1,0 +1,74 @@
+id: call-reject
+category: signalling
+title: "Call reject stanza"
+status: review
+order: 60
+features: [ audio, video ]
+since: "0.1.0"
+summary: >
+  The `<reject>` action stanza declines an incoming call offer before the media
+  phase, naming the call by `call-id`/`call-creator` with no child elements.
+normative: |
+  Wire layout:
+
+      <call to="{caller-jid}">
+        <reject call-id="{call-id}" call-creator="{call-creator-jid}"/>
+      </call>
+
+  **Construction.**
+
+  - The outer `<call>` MUST carry `to` = the JID the offer was received from
+    (the caller). The builder MUST NOT add an `id` attribute to `<call>`; the
+    I/O layer's stanza id applies.
+  - `<reject>` MUST carry exactly two attributes:
+    - `call-id` — copied verbatim from the declined `<offer>` (see
+      [call-offer](call-offer)).
+    - `call-creator` — `call-creator` JID copied verbatim from that `<offer>`.
+  - `<reject>` MUST be empty: no child elements, no content bytes.
+
+  **Semantics.**
+
+  - Send `<reject>` only to decline an offer not yet accepted; distinct from
+    `<terminate>` (see [call-terminate](call-terminate)), which ends a call past
+    offer.
+  - `<reject>` MUST NOT be preceded by `<preaccept>` or `<accept>` for the same
+    call from the same device; it is the terminal action for that offer.
+  - No media keying, relay allocation, or transport negotiation occurs on the
+    reject path.
+
+  **Receiving.**
+
+  - A `<reject>` arrives in an inbound `<call>` stanza with the standard
+    envelope attributes (`from`, `id`, `t`, optionally `notify`, `platform`,
+    `version`, `e`). A receiver MUST treat `call-id` and `call-creator` as
+    required; a `<reject>` missing either MUST be rejected as malformed.
+  - The generic `<call>` acknowledgement covers receipt; no `<receipt>`-style
+    ack-of-offer is emitted (that is specific to `<offer>`).
+
+  Unlike `<terminate>`, `<reject>` carries no `reason`, `duration`, or
+  `audio_duration` attributes and no `<destination>` child.
+requires: [ call-offer ]
+implementations:
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
+  - {
+      flavor: zapo-caller,
+      status: working,
+      note: "ported from zapo-caller signaling.ts"
+    }
+open_questions:
+  - "Whether any client emits an optional <reject> attribute (e.g. a reason or
+    media-type hint) under newer protocol versions; none is observed in the
+    current builders or parser."
+  - "Whether the caller forwards a reject-derived terminate to other callee
+    devices, or whether each device rejects independently."
+references:
+  - {
+      title: "RFC 2119 — Key words for use in RFCs",
+      url: "https://www.rfc-editor.org/rfc/rfc2119"
+    }
+discovered_by: vinikjkkj
+code: SIG-08

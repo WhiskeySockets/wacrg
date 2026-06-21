@@ -1,0 +1,1146 @@
+{
+  "spec": "wacrg",
+  "version": "0.1.0",
+  "note": "Pull feed. Poll this file; the parts a flavor implements are under flavors.<id>. Diff across versions to follow updates.",
+  "parts": [
+    {
+      "id": "call-offer",
+      "category": "signalling",
+      "title": "Call offer stanza",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#call-offer"
+    },
+    {
+      "id": "video-call",
+      "category": "signalling",
+      "title": "Video call negotiation",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "partial"
+        }
+      ],
+      "ref": "index.md#video-call"
+    },
+    {
+      "id": "call-accept",
+      "category": "signalling",
+      "title": "Call accept stanza",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#call-accept"
+    },
+    {
+      "id": "call-preaccept",
+      "category": "signalling",
+      "title": "Call pre-accept (ringing)",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#call-preaccept"
+    },
+    {
+      "id": "call-transport",
+      "category": "signalling",
+      "title": "Transport stanza",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#call-transport"
+    },
+    {
+      "id": "group-call",
+      "category": "signalling",
+      "title": "Group call setup",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "group",
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "unknown"
+        }
+      ],
+      "ref": "index.md#group-call"
+    },
+    {
+      "id": "call-ack",
+      "category": "signalling",
+      "title": "Call stanza acknowledgement",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#call-ack"
+    },
+    {
+      "id": "call-reject",
+      "category": "signalling",
+      "title": "Call reject stanza",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#call-reject"
+    },
+    {
+      "id": "raise-hand",
+      "category": "signalling",
+      "title": "Raise hand",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "group",
+        "raise-hand"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "unknown"
+        }
+      ],
+      "ref": "index.md#raise-hand"
+    },
+    {
+      "id": "reactions",
+      "category": "signalling",
+      "title": "In-call emoji reactions",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "reactions",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "unknown"
+        }
+      ],
+      "ref": "index.md#reactions"
+    },
+    {
+      "id": "screen-share",
+      "category": "signalling",
+      "title": "Screen sharing",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "screen-share",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "unknown"
+        }
+      ],
+      "ref": "index.md#screen-share"
+    },
+    {
+      "id": "flow-call-missed",
+      "category": "signalling",
+      "title": "Missed / timed-out call flow",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#flow-call-missed"
+    },
+    {
+      "id": "call-mute",
+      "category": "signalling",
+      "title": "Mute signalling",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "planned"
+        }
+      ],
+      "ref": "index.md#call-mute"
+    },
+    {
+      "id": "call-terminate",
+      "category": "signalling",
+      "title": "Call terminate stanza",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#call-terminate"
+    },
+    {
+      "id": "call-relaylatency",
+      "category": "signalling",
+      "title": "Relay latency reporting",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#call-relaylatency"
+    },
+    {
+      "id": "flow-incoming-1to1",
+      "category": "signalling",
+      "title": "Incoming 1:1 call flow",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#flow-incoming-1to1"
+    },
+    {
+      "id": "flow-outgoing-1to1",
+      "category": "signalling",
+      "title": "Outgoing 1:1 call flow",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "partial"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#flow-outgoing-1to1"
+    },
+    {
+      "id": "flow-call-rejected",
+      "category": "signalling",
+      "title": "Rejected call flow",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#flow-call-rejected"
+    },
+    {
+      "id": "mlow",
+      "category": "encodings",
+      "title": "MLow audio codec",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "partial"
+        }
+      ],
+      "ref": "index.md#mlow"
+    },
+    {
+      "id": "mlow-red-fec",
+      "category": "encodings",
+      "title": "MLow RED and Reed-Solomon FEC",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "partial"
+        }
+      ],
+      "ref": "index.md#mlow-red-fec"
+    },
+    {
+      "id": "mlow-frame",
+      "category": "encodings",
+      "title": "MLow frame and TOC",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "partial"
+        }
+      ],
+      "ref": "index.md#mlow-frame"
+    },
+    {
+      "id": "mlow-rangecoder",
+      "category": "encodings",
+      "title": "MLow range coder",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "partial"
+        }
+      ],
+      "ref": "index.md#mlow-rangecoder"
+    },
+    {
+      "id": "opus",
+      "category": "encodings",
+      "title": "Opus codec",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "partial"
+        }
+      ],
+      "ref": "index.md#opus"
+    },
+    {
+      "id": "video",
+      "category": "encodings",
+      "title": "Video codec",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "video",
+        "screen-share"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "unknown"
+        }
+      ],
+      "ref": "index.md#video"
+    },
+    {
+      "id": "video-packetization",
+      "category": "encodings",
+      "title": "Video packetization",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "video",
+        "screen-share"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "unknown"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "planned"
+        }
+      ],
+      "ref": "index.md#video-packetization"
+    },
+    {
+      "id": "mlow-lsf-lpc",
+      "category": "encodings",
+      "title": "MLow LSF and LPC",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "partial"
+        }
+      ],
+      "ref": "index.md#mlow-lsf-lpc"
+    },
+    {
+      "id": "mlow-encoder",
+      "category": "encodings",
+      "title": "MLow encode pipeline",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "partial"
+        }
+      ],
+      "ref": "index.md#mlow-encoder"
+    },
+    {
+      "id": "mlow-excitation",
+      "category": "encodings",
+      "title": "MLow CELP excitation",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "partial"
+        }
+      ],
+      "ref": "index.md#mlow-excitation"
+    },
+    {
+      "id": "mlow-decoder",
+      "category": "encodings",
+      "title": "MLow decode pipeline",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "partial"
+        }
+      ],
+      "ref": "index.md#mlow-decoder"
+    },
+    {
+      "id": "mlow-noise",
+      "category": "encodings",
+      "title": "MLow comfort noise",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "partial"
+        }
+      ],
+      "ref": "index.md#mlow-noise"
+    },
+    {
+      "id": "mlow-postfilter",
+      "category": "encodings",
+      "title": "MLow post-filters",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "partial"
+        }
+      ],
+      "ref": "index.md#mlow-postfilter"
+    },
+    {
+      "id": "mlow-synthesis",
+      "category": "encodings",
+      "title": "MLow CELP synthesis",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "partial"
+        }
+      ],
+      "ref": "index.md#mlow-synthesis"
+    },
+    {
+      "id": "mlow-vad",
+      "category": "encodings",
+      "title": "MLow voice activity detection",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "partial"
+        }
+      ],
+      "ref": "index.md#mlow-vad"
+    },
+    {
+      "id": "call-key",
+      "category": "crypto",
+      "title": "Call key establishment",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "planned"
+        }
+      ],
+      "ref": "index.md#call-key"
+    },
+    {
+      "id": "srtp-master-key",
+      "category": "crypto",
+      "title": "SRTP master key and salt derivation",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "planned"
+        }
+      ],
+      "ref": "index.md#srtp-master-key"
+    },
+    {
+      "id": "srtp-hop-by-hop",
+      "category": "crypto",
+      "title": "Hop-by-hop SRTP",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#srtp-hop-by-hop"
+    },
+    {
+      "id": "sframe-media",
+      "category": "crypto",
+      "title": "SFrame media end-to-end encryption",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#sframe-media"
+    },
+    {
+      "id": "srtp-e2e",
+      "category": "crypto",
+      "title": "End-to-end SRTP",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "planned"
+        }
+      ],
+      "ref": "index.md#srtp-e2e"
+    },
+    {
+      "id": "group-call-crypto",
+      "category": "crypto",
+      "title": "Group call crypto",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group",
+        "screen-share"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "planned"
+        }
+      ],
+      "ref": "index.md#group-call-crypto"
+    },
+    {
+      "id": "warp-crypto",
+      "category": "crypto",
+      "title": "WARP key wrap",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        },
+        {
+          "flavor": "meowcaller",
+          "status": "planned"
+        }
+      ],
+      "ref": "index.md#warp-crypto"
+    },
+    {
+      "id": "relay-candidates",
+      "category": "relay",
+      "title": "Transport candidates",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#relay-candidates"
+    },
+    {
+      "id": "stun-relay",
+      "category": "relay",
+      "title": "STUN relay handshake",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#stun-relay"
+    },
+    {
+      "id": "warp",
+      "category": "relay",
+      "title": "WARP relay framing",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#warp"
+    },
+    {
+      "id": "rtcp",
+      "category": "relay",
+      "title": "RTCP control",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#rtcp"
+    },
+    {
+      "id": "rtp-framing",
+      "category": "relay",
+      "title": "RTP framing",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#rtp-framing"
+    },
+    {
+      "id": "ssrc",
+      "category": "relay",
+      "title": "SSRC allocation",
+      "status": "review",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video",
+        "group",
+        "screen-share"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#ssrc"
+    },
+    {
+      "id": "media-loop",
+      "category": "relay",
+      "title": "Media loop and session",
+      "status": "draft",
+      "since": "0.1.0",
+      "features": [
+        "audio",
+        "video"
+      ],
+      "implementations": [
+        {
+          "flavor": "whatsapp-rust",
+          "status": "working"
+        },
+        {
+          "flavor": "zapo-caller",
+          "status": "working"
+        }
+      ],
+      "ref": "index.md#media-loop"
+    }
+  ],
+  "flavors": {
+    "meowcaller": [
+      "mlow",
+      "mlow-red-fec",
+      "mlow-frame",
+      "mlow-rangecoder",
+      "opus",
+      "video-packetization",
+      "mlow-lsf-lpc",
+      "mlow-encoder",
+      "mlow-excitation",
+      "mlow-decoder",
+      "mlow-noise",
+      "mlow-postfilter",
+      "mlow-synthesis",
+      "mlow-vad",
+      "call-key",
+      "srtp-master-key",
+      "srtp-e2e",
+      "group-call-crypto",
+      "warp-crypto"
+    ],
+    "whatsapp-rust": [
+      "call-offer",
+      "video-call",
+      "call-accept",
+      "call-preaccept",
+      "call-transport",
+      "group-call",
+      "call-ack",
+      "call-reject",
+      "raise-hand",
+      "reactions",
+      "screen-share",
+      "flow-call-missed",
+      "call-mute",
+      "call-terminate",
+      "call-relaylatency",
+      "flow-incoming-1to1",
+      "flow-outgoing-1to1",
+      "flow-call-rejected",
+      "mlow",
+      "mlow-red-fec",
+      "mlow-frame",
+      "mlow-rangecoder",
+      "opus",
+      "video",
+      "video-packetization",
+      "mlow-lsf-lpc",
+      "mlow-encoder",
+      "mlow-excitation",
+      "mlow-decoder",
+      "mlow-noise",
+      "mlow-postfilter",
+      "mlow-synthesis",
+      "mlow-vad",
+      "call-key",
+      "srtp-master-key",
+      "srtp-hop-by-hop",
+      "sframe-media",
+      "srtp-e2e",
+      "group-call-crypto",
+      "warp-crypto",
+      "relay-candidates",
+      "stun-relay",
+      "warp",
+      "rtcp",
+      "rtp-framing",
+      "ssrc",
+      "media-loop"
+    ],
+    "zapo-caller": [
+      "call-offer",
+      "video-call",
+      "call-accept",
+      "call-preaccept",
+      "call-transport",
+      "call-ack",
+      "call-reject",
+      "flow-call-missed",
+      "call-mute",
+      "call-terminate",
+      "call-relaylatency",
+      "flow-incoming-1to1",
+      "flow-outgoing-1to1",
+      "flow-call-rejected",
+      "call-key",
+      "srtp-master-key",
+      "srtp-hop-by-hop",
+      "sframe-media",
+      "srtp-e2e",
+      "group-call-crypto",
+      "warp-crypto",
+      "relay-candidates",
+      "stun-relay",
+      "warp",
+      "rtcp",
+      "rtp-framing",
+      "ssrc",
+      "media-loop"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+id: stun-relay
+category: relay
+title: STUN relay handshake
+status: draft
+order: 5
+features: [ audio, video, group ]
+since: "0.1.0"
+summary: >
+  A STUN-dialect handshake binds the client to a relay candidate before WARP
+  media frames flow.
+normative: |
+  - Candidates come from the offer's `<destination>` (see [call-offer](call-offer)),
+    each annotated with measured latency.
+  - The client MUST complete the STUN handshake against these candidates to establish
+    the client↔relay binding that WARP frames ride over.
+  - The client SHOULD select the lowest-latency candidate.
+requires: [ call-offer ]
+implementations:
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
+  - { flavor: zapo-caller, status: working }
+discovered_by: vinikjkkj
+code: REL-02

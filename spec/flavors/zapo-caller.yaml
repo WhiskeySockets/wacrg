@@ -1,0 +1,14 @@
+id: zapo-caller
+name: zapo-caller
+language: typescript
+maturity: working
+maintainer: vinikjkkj
+status: stable
+covers:
+  - signaling
+  - keying
+  - transport
+basis:
+  - wasm-analysis
+  - frida-hooking
+description: TypeScript reconstruction of the WhatsApp caller (signaling, SRTP/SFrame/WARP keying, STUN/relay, RTP), created by Vini with Auties, Edgard, and Shelltear.

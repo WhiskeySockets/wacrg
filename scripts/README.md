@@ -32,10 +32,12 @@ The single place that knows the on-disk shapes. It exports:
 
 - The shared enums and the **fixed technique id set** (`TECHNIQUE_IDS`).
 - TypeScript interfaces matching every canonical YAML shape (stanza, flow,
-  enum, technique, glossary, capture).
+  enum, technique, tool, flavor, flavor map, contributor, glossary, capture).
 - Typed loaders (`loadStanzas`, `loadFlows`, `loadEnums`, `loadTechniques`,
+  `loadTools`, `loadFlavors`, `loadFlavorMaps`, `loadContributors`,
   `loadCaptures`, `loadGlossary`) that glob + parse and return
-  `{ path, relPath, data }`.
+  `{ path, relPath, data }`. `loadFlavors` excludes the `*.map.yaml` files,
+  which `loadFlavorMaps` loads separately.
 - `readSchema(relPath)` to read a JSON Schema, plus `fromRoot(...)` /
   `REPO_ROOT` so every script resolves paths relative to the repository root
   regardless of the current working directory.
@@ -49,8 +51,13 @@ The single place that knows the on-disk shapes. It exports:
    `corpus/schema/capture.schema.json` using `ajv` + `ajv-formats`.
 3. Checks referential integrity:
    - `provenance.techniques` values exist as a technique id;
+   - `provenance.tools` / `provenance.flavors` resolve to a registered
+     `spec/tools/` / `spec/flavors/` id;
    - `capture.source.technique` exists as a technique id;
    - `flow.steps[].stanza` (when set) exists as a stanza id;
+   - a flavor's `maintainer`, `basis` (fixed techniques), and `derives_from`
+     resolve (and a flavor never derives from itself);
+   - a flavor map's `flavor` and each entry's `spec.{stanza,flow,enum}` resolve;
    - attribute types of the form `enum:<id>` reference an existing enum id;
    - every capture sets `sanitized: true`.
 4. Prints a per-file report and exits `1` on any error, `0` on success.
@@ -68,6 +75,10 @@ Idempotently overwrites `docs/spec/**` from the corpus:
 | `spec/flows/*.yaml` | `docs/spec/flows/<id>.md` (with a mermaid sequence diagram) + `docs/spec/flows/index.md` |
 | `spec/enums/*.yaml` | `docs/spec/enums.md` |
 | `spec/techniques/*.yaml` | `docs/spec/techniques.md` |
+| `spec/tools/*.yaml` | `docs/spec/tools.md` |
+| `spec/flavors/*.yaml` | `docs/spec/flavors.md` |
+| `spec/flavors/*.map.yaml` | `docs/spec/flavor-map.md` (the inverse Source-of-truth) |
+| `spec/contributors/*.yaml` | `docs/spec/contributors.md` |
 | `spec/glossary.yaml` | `docs/spec/glossary.md` |
 | (overview) | `docs/spec/index.md` |
 
@@ -100,4 +111,21 @@ Run it locally against a sample:
 ISSUE_NUMBER=12 ISSUE_TITLE="call offer" \
 ISSUE_BODY=$'### Stanza tag\ncall\n\n### Direction\noutgoing' \
 npm run ingest
+```
+
+### `ingest-flavor.ts` (`npm run ingest:flavor`)
+
+Used by the `flavor-to-corpus` GitHub Action — the vendor self-attachment path.
+Reads `ISSUE_NUMBER`, `ISSUE_TITLE`, `ISSUE_BODY`, and `ISSUE_AUTHOR`, splits the
+flavor-registration Issue Form body on `^### ` headings, and writes
+`spec/flavors/<id>.yaml` (stamping the submitter's GitHub login as `maintainer`,
+`status: draft`). If the form's pipe-delimited `Coverage map` section is filled
+in, it also writes `spec/flavors/<id>.map.yaml` (the inverse Source-of-truth).
+`covers`/`basis` are filtered to the allowed sets; `derives_from` is preserved so
+a port is never counted as independent of its upstream.
+
+```bash
+ISSUE_NUMBER=12 ISSUE_AUTHOR=you \
+ISSUE_BODY=$'### Flavor id\nmy-lib\n\n### Language\nrust' \
+npm run ingest:flavor
 ```

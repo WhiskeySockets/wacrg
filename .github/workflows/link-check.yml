@@ -41,6 +41,7 @@ jobs:
             --exclude "whiskeysockets\.github\.io"
             --exclude "img\.shields\.io"
             --exclude "raw\.githubusercontent\.com/WhiskeySockets/wacrg"
+            --exclude "github\.com/purpshell/meowcaller/blob"
             "**/*.md"
           fail: true
         env:

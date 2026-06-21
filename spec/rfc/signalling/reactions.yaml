@@ -1,0 +1,20 @@
+id: reactions
+category: signalling
+title: In-call emoji reactions
+status: draft
+order: 61
+features: [ reactions, group ]
+since: "0.1.0"
+summary: A participant broadcasts a transient emoji reaction during a call.
+normative: |
+  NOT YET SPECIFIED. Carrying stanza, attributes, and emoji encoding are
+  unknown (not reverse-engineered to wire level).
+requires: [ group-call ]
+implementations:
+  - { flavor: whatsapp-rust, status: unknown }
+open_questions:
+  - "Stanza/attribute and emoji encoding for an in-call reaction; TTL/debounce
+    behaviour."
+parent: group-call
+discovered_by: vinikjkkj
+code: SIG-10

@@ -34,6 +34,18 @@ export type TechniqueId = (typeof TECHNIQUE_IDS)[number];
 
 export const SPEC_VERSION = '0.1.0';
 
+/** Top-level RFC divisions (distinct from the stanza `Category` area enum). */
+export const RFC_CATEGORIES = ['signalling', 'encodings', 'crypto', 'relay'] as const;
+export type RfcCategory = (typeof RFC_CATEGORIES)[number];
+
+/** Human label + order for each RFC category on the compiled page. */
+export const RFC_CATEGORY_META: Record<RfcCategory, { label: string; blurb: string }> = {
+  signalling: { label: 'Signalling', blurb: 'Call control over the WABinary/XMPP transport: the <call> stanza family and feature signalling.' },
+  encodings: { label: 'Encodings', blurb: 'Media codecs and payload formats: MLow, Opus, and video.' },
+  crypto: { label: 'Crypto', blurb: 'Keying and media protection: SRTP (hop-by-hop and end-to-end), SFrame, WARP, group-call crypto.' },
+  relay: { label: 'Relay', blurb: 'The media transport and relay stack: STUN, the relay handshake, RTP/RTCP framing, and the media loop.' },
+};
+
 // ---------------------------------------------------------------------------
 // Canonical TypeScript shapes for the YAML corpus.
 // ---------------------------------------------------------------------------
@@ -43,6 +55,13 @@ export interface Provenance {
   techniques?: string[];
   /** Specific tool ids used (see spec/tools/); more granular than techniques. */
   tools?: string[];
+  /**
+   * Flavor ids (independent reimplementations, see spec/flavors/) that
+   * corroborate this fact. A flavor is a corroborating source, not a technique:
+   * it does not by itself promote confidence, and it does not corroborate a
+   * flavor it derives_from.
+   */
+  flavors?: string[];
   /** Contributor ids who observed/submitted this fact (see spec/contributors/). */
   contributors?: string[];
   /** Issue/PR/commit references that back the claim: the proof trail. */
@@ -160,6 +179,8 @@ export interface Contributor {
   affiliation?: string;
   techniques?: string[];
   tools?: string[];
+  /** Flavor ids (independent reimplementations) this contributor maintains/works on. */
+  flavors?: string[];
   links?: Reference[];
 }
 
@@ -172,6 +193,95 @@ export interface Tool {
   techniques?: string[];
   maintainer?: string;
   description?: string;
+}
+
+/**
+ * An independent reimplementation (a "flavor") of the protocol: a library or
+ * port that realizes the spec in real code. Distinct from a Tool — a tool
+ * gathers evidence, a flavor corroborates the spec by implementing it.
+ */
+export interface Flavor {
+  id: string;
+  name?: string;
+  url?: string;
+  language?: string;
+  maturity?: 'experimental' | 'partial' | 'working' | 'production';
+  license?: string;
+  maintainer?: string;
+  status?: Status;
+  /** Coarse protocol planes this flavor implements (the map gives per-bit detail). */
+  covers?: Category[];
+  /** Technique ids this flavor was reconstructed from (judges corroboration independence). */
+  basis?: string[];
+  /** Flavor ids this one was ported/derived from; it is not independent of these. */
+  derives_from?: string[];
+  /** owner/repo to notify when an implemented RFC part changes (opt-in push). */
+  notify_repo?: string;
+  /** When true (with notify_repo), the spec-notify workflow opens issues there. */
+  notify_opt_in?: boolean;
+  description?: string;
+}
+
+/** One entry of a flavor's implementation map: a spec bit -> where it lives in code. */
+export interface FlavorMapEntry {
+  spec: {
+    area?: Category;
+    stanza?: string;
+    flow?: string;
+    enum?: string;
+    module?: string;
+    label?: string;
+  };
+  code: { url: string; symbol?: string; lines?: string };
+  validation?: { kat?: string; status?: 'scaffolded' | 'implemented' | 'verified' };
+  confidence?: Confidence;
+  notes?: string;
+}
+
+/**
+ * A flavor's implementation map (spec/flavors/<id>.map.yaml): the inverse
+ * Source-of-truth — where each bit of the spec is realized in that flavor's code.
+ */
+export interface FlavorMap {
+  flavor: string;
+  entries?: FlavorMapEntry[];
+}
+
+/** A flavor's in-the-wild implementation status for one RFC part (light, not a code map). */
+export interface RfcImplementation {
+  flavor: string;
+  status: 'working' | 'partial' | 'planned' | 'unknown';
+  note?: string;
+  /** Commit SHAs in the flavor's repo that implement/changed this part. */
+  commits?: string[];
+}
+
+/**
+ * One normative section of the RFC (spec/rfc/<category>/<id>.yaml). Parts compile
+ * into a single ever-scrolling page and each renders as its own lookup page; the
+ * id is the permanent citable reference.
+ */
+export interface RfcPart {
+  id: string;
+  /** Small stable annotation id (e.g. ENC-04) embedded in flavor source as `wacrg:<code>`. */
+  code: string;
+  category: RfcCategory;
+  title: string;
+  status?: Status;
+  order?: number;
+  features?: string[];
+  summary: string;
+  normative?: string;
+  findings?: string;
+  /** Id of the parent part this nests under (same category) in the numbered hierarchy. */
+  parent?: string;
+  requires?: string[];
+  implementations?: RfcImplementation[];
+  /** Contributor id credited with first reverse-engineering this part. */
+  discovered_by?: string;
+  since?: string;
+  open_questions?: string[];
+  references?: Reference[];
 }
 
 export interface GlossaryTerm {
@@ -295,6 +405,26 @@ export function loadContributors(): Loaded<Contributor>[] {
 
 export function loadTools(): Loaded<Tool>[] {
   return loadDir<Tool>('spec/tools/*.yaml');
+}
+
+/**
+ * Flavor identity files. The `*.map.yaml` glob overlaps `*.yaml`, so the map
+ * files are filtered out here and loaded separately by loadFlavorMaps().
+ */
+export function loadFlavors(): Loaded<Flavor>[] {
+  return loadDir<Flavor>('spec/flavors/*.yaml').filter(
+    (f) => !f.relPath.endsWith('.map.yaml'),
+  );
+}
+
+/** Per-flavor implementation maps (the inverse Source-of-truth). */
+export function loadFlavorMaps(): Loaded<FlavorMap>[] {
+  return loadDir<FlavorMap>('spec/flavors/*.map.yaml');
+}
+
+/** RFC parts, nested one level under spec/rfc/<category>/. */
+export function loadRfcParts(): Loaded<RfcPart>[] {
+  return loadDir<RfcPart>('spec/rfc/**/*.yaml');
 }
 
 export function loadCaptures(): Loaded<Capture>[] {

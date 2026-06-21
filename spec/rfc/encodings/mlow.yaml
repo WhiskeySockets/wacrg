@@ -1,0 +1,45 @@
+id: mlow
+category: encodings
+title: MLow audio codec
+status: review
+order: 10
+features: [ audio ]
+since: "0.1.0"
+summary: >
+  WhatsApp's low-bitrate split-band CELP speech codec ("SMPL") that reuses the
+  Opus/CELT range coder for entropy coding.
+normative: |
+  - Decode an MLow payload as split-band CELP. Output is 16 kHz PCM.
+  - Entropy layer is the Opus/CELT range coder verbatim: read symbols from the
+    front of the buffer, raw bits from the back.
+  - Run the decode schedule in this order: TOC/frame parse; RED de-packetization;
+    range-coded LSF -> LPC; excitation pulses; gains; pitch/LTP; CELP synthesis;
+    harmonic and HP post-filters; comfort-noise generation.
+  - MLow is a registered decoder alongside Opus; codec selection is signalled in
+    the offer (see [call-offer](call-offer)).
+  - The neural companion post-filter is OPTIONAL; not required for intelligible audio.
+implementations:
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
+  - {
+      flavor: meowcaller,
+      status: partial,
+      note: "receive DSP largely KAT-verified; CELP synth + decoder orchestration in
+        progress",
+      commits:
+        [
+          70af2501dbc1b29be8f8e2ead92d117b7ed000a4,
+          f7103c5a6084f5e95e94e0bc0a3ba237e83088cc,
+          b0fe93c61ea77c36eaacaf67450e2f844c489889,
+          e362783d5f8988607d5b12fd419710fb275ea9e4,
+          8b5ad0b00fecd944a053cbc2e5dbf9a9541b6661,
+          72d8a03dbd47a5ff0b362647129a80c8edf5a820
+        ]
+    }
+references:
+  - { title: "RFC 6716 — Opus", url: "https://www.rfc-editor.org/rfc/rfc6716" }
+discovered_by: purpshell
+code: ENC-01

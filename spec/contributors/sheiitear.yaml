@@ -1,6 +1,7 @@
 id: sheiitear
-name: Sheiitear
+name: Shelltear
+github: sheiitear
 techniques:
   - wasm-analysis
-tools:
+flavors:
   - zapo-caller

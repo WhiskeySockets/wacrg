@@ -17,12 +17,16 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 import type { ErrorObject, ValidateFunction } from 'ajv';
 import addFormats from 'ajv-formats';
 import {
+  RFC_CATEGORIES,
   TECHNIQUE_IDS,
   fromRoot,
   loadCaptures,
   loadContributors,
   loadEnums,
+  loadFlavorMaps,
+  loadFlavors,
   loadFlows,
+  loadRfcParts,
   loadStanzas,
   loadTechniques,
   loadTools,
@@ -32,8 +36,11 @@ import {
   walkChildren,
   type Attribute,
   type Contributor,
+  type Flavor,
+  type FlavorMap,
   type Loaded,
   type Provenance,
+  type RfcPart,
   type Stanza,
   type Tool,
 } from './lib/corpus.ts';
@@ -83,6 +90,18 @@ const SCHEMAS: Record<string, SchemaKind> = {
   tool: {
     label: 'tool',
     schemaPath: 'spec/schema/tool.schema.json',
+  },
+  flavor: {
+    label: 'flavor',
+    schemaPath: 'spec/schema/flavor.schema.json',
+  },
+  flavorMap: {
+    label: 'flavor-map',
+    schemaPath: 'spec/schema/flavor-map.schema.json',
+  },
+  rfcPart: {
+    label: 'rfc-part',
+    schemaPath: 'spec/schema/rfc-part.schema.json',
   },
   glossary: {
     label: 'glossary',
@@ -146,14 +165,21 @@ const enums = loadEnums();
 const techniques = loadTechniques();
 const contributors = loadContributors();
 const tools = loadTools();
+const flavors = loadFlavors();
+const flavorMaps = loadFlavorMaps();
+const rfcParts = loadRfcParts();
 const captures = loadCaptures();
 
 // Reference sets for integrity checks.
 const techniqueIds = new Set<string>(techniques.map((t) => t.data.id));
 const stanzaIds = new Set<string>(stanzas.map((s) => s.data.id));
 const enumIds = new Set<string>(enums.map((e) => e.data.id));
+const flowIds = new Set<string>(flows.map((f) => f.data.id));
 const contributorIds = new Set<string>(contributors.map((c) => c.data.id));
 const toolIds = new Set<string>(tools.map((t) => t.data.id));
+const flavorIds = new Set<string>(flavors.map((f) => f.data.id));
+const rfcPartIds = new Set<string>(rfcParts.map((p) => p.data.id));
+const rfcCategories = new Set<string>(RFC_CATEGORIES);
 const fixedTechniqueIds = new Set<string>(TECHNIQUE_IDS);
 
 // During bootstrap the spec/techniques/ directory may not exist yet. When no
@@ -163,6 +189,7 @@ const fixedTechniqueIds = new Set<string>(TECHNIQUE_IDS);
 const techniqueFilesPresent = techniques.length > 0;
 const contributorsPresent = contributors.length > 0;
 const toolsPresent = tools.length > 0;
+const flavorsPresent = flavors.length > 0;
 
 // ---------------------------------------------------------------------------
 // Schema validation pass.
@@ -174,6 +201,9 @@ for (const f of enums) validateFile('enum', f);
 for (const f of techniques) validateFile('technique', f);
 for (const f of contributors) validateFile('contributor', f);
 for (const f of tools) validateFile('tool', f);
+for (const f of flavors) validateFile('flavor', f);
+for (const f of flavorMaps) validateFile('flavorMap', f);
+for (const f of rfcParts) validateFile('rfcPart', f);
 for (const f of captures) validateFile('capture', f);
 
 // Validate the glossary file directly (single-file kind).
@@ -216,6 +246,13 @@ function checkProvenance(
     if (!toolIds.has(tool)) {
       const msg = `${where}: provenance tool "${tool}" has no matching spec/tools/${tool}.yaml`;
       if (toolsPresent) fail(relPath, msg);
+      else warn(relPath, msg);
+    }
+  }
+  for (const flavor of prov.flavors ?? []) {
+    if (!flavorIds.has(flavor)) {
+      const msg = `${where}: provenance flavor "${flavor}" has no matching spec/flavors/${flavor}.yaml`;
+      if (flavorsPresent) fail(relPath, msg);
       else warn(relPath, msg);
     }
   }
@@ -281,7 +318,7 @@ for (const { relPath, data } of tools as Loaded<Tool>[]) {
 }
 
 // Contributors: declared techniques must be in the fixed set; declared tools
-// must exist.
+// and flavors must exist.
 for (const { relPath, data } of contributors as Loaded<Contributor>[]) {
   for (const t of data.techniques ?? []) {
     if (!fixedTechniqueIds.has(t)) {
@@ -291,6 +328,106 @@ for (const { relPath, data } of contributors as Loaded<Contributor>[]) {
   for (const tool of data.tools ?? []) {
     if (toolsPresent && !toolIds.has(tool)) {
       fail(relPath, `contributor "${data.id}": tool "${tool}" has no matching spec/tools/${tool}.yaml`);
+    }
+  }
+  for (const flavor of data.flavors ?? []) {
+    if (flavorsPresent && !flavorIds.has(flavor)) {
+      fail(relPath, `contributor "${data.id}": flavor "${flavor}" has no matching spec/flavors/${flavor}.yaml`);
+    }
+  }
+}
+
+// Flavors: basis techniques must be in the fixed set; maintainer must be a known
+// contributor; derives_from must reference real flavor ids (and not itself).
+for (const { relPath, data } of flavors as Loaded<Flavor>[]) {
+  for (const t of data.basis ?? []) {
+    if (!fixedTechniqueIds.has(t)) {
+      fail(relPath, `flavor "${data.id}": basis technique "${t}" is not in the fixed technique set`);
+    }
+  }
+  if (data.maintainer && contributorsPresent && !contributorIds.has(data.maintainer)) {
+    fail(relPath, `flavor "${data.id}": maintainer "${data.maintainer}" has no matching contributor`);
+  }
+  for (const dep of data.derives_from ?? []) {
+    if (dep === data.id) {
+      fail(relPath, `flavor "${data.id}": derives_from cannot include itself`);
+    } else if (!flavorIds.has(dep)) {
+      fail(relPath, `flavor "${data.id}": derives_from "${dep}" has no matching spec/flavors/${dep}.yaml`);
+    }
+  }
+}
+
+// Flavor maps: the flavor must exist, and every entry's spec node reference
+// (stanza/flow/enum) must resolve. area is schema-constrained; module/label are
+// free-form. A map file's flavor id should also match its file name stem.
+for (const { relPath, data } of flavorMaps as Loaded<FlavorMap>[]) {
+  if (flavorsPresent && !flavorIds.has(data.flavor)) {
+    fail(relPath, `flavor map references unknown flavor "${data.flavor}" (no spec/flavors/${data.flavor}.yaml)`);
+  }
+  const expectedStem = relPath.replace(/^.*\//, '').replace(/\.map\.yaml$/, '');
+  if (data.flavor && data.flavor !== expectedStem) {
+    fail(relPath, `flavor map "flavor: ${data.flavor}" does not match file name "${expectedStem}.map.yaml"`);
+  }
+  for (const [i, entry] of (data.entries ?? []).entries()) {
+    const s = entry.spec ?? {};
+    if (s.stanza && !stanzaIds.has(s.stanza)) {
+      fail(relPath, `entries[${i}].spec.stanza references unknown stanza id "${s.stanza}"`);
+    }
+    if (s.flow && !flowIds.has(s.flow)) {
+      fail(relPath, `entries[${i}].spec.flow references unknown flow id "${s.flow}"`);
+    }
+    if (s.enum && !enumIds.has(s.enum)) {
+      fail(relPath, `entries[${i}].spec.enum references unknown enum id "${s.enum}"`);
+    }
+  }
+}
+
+// RFC parts: id matches file name, category matches parent dir, ids are unique,
+// requires resolve to other parts, and implementation flavors are registered.
+const rfcSeen = new Map<string, string>();
+const rfcCodeSeen = new Map<string, string>();
+for (const { relPath, data } of rfcParts as Loaded<RfcPart>[]) {
+  const segments = relPath.split('/'); // spec/rfc/<category>/<id>.yaml
+  const stem = (segments.at(-1) ?? '').replace(/\.yaml$/, '');
+  const parentDir = segments.at(-2);
+  if (data.id !== stem) {
+    fail(relPath, `rfc part id "${data.id}" does not match file name "${stem}.yaml"`);
+  }
+  if (data.category && parentDir && data.category !== parentDir) {
+    fail(relPath, `rfc part category "${data.category}" does not match directory "${parentDir}/"`);
+  }
+  if (data.category && !rfcCategories.has(data.category)) {
+    fail(relPath, `rfc part category "${data.category}" is not a known category`);
+  }
+  const prior = rfcSeen.get(data.id);
+  if (prior) fail(relPath, `duplicate rfc part id "${data.id}" (also in ${prior})`);
+  else rfcSeen.set(data.id, relPath);
+  if (data.code) {
+    const cprior = rfcCodeSeen.get(data.code);
+    if (cprior) fail(relPath, `duplicate annotation code "${data.code}" (also in ${cprior})`);
+    else rfcCodeSeen.set(data.code, relPath);
+  }
+  for (const dep of data.requires ?? []) {
+    if (!rfcPartIds.has(dep)) {
+      fail(relPath, `rfc part "${data.id}": requires "${dep}" has no matching spec/rfc part`);
+    }
+  }
+  if (data.parent) {
+    const pp = rfcParts.find((p) => p.data.id === data.parent);
+    if (!pp) {
+      fail(relPath, `rfc part "${data.id}": parent "${data.parent}" has no matching spec/rfc part`);
+    } else if (pp.data.category !== data.category) {
+      fail(relPath, `rfc part "${data.id}": parent "${data.parent}" is in a different category`);
+    } else if (data.parent === data.id) {
+      fail(relPath, `rfc part "${data.id}": parent cannot be itself`);
+    }
+  }
+  if (data.discovered_by && contributorsPresent && !contributorIds.has(data.discovered_by)) {
+    fail(relPath, `rfc part "${data.id}": discovered_by "${data.discovered_by}" has no matching spec/contributors/${data.discovered_by}.yaml`);
+  }
+  for (const impl of data.implementations ?? []) {
+    if (flavorsPresent && impl.flavor && !flavorIds.has(impl.flavor)) {
+      fail(relPath, `rfc part "${data.id}": implementation flavor "${impl.flavor}" has no matching spec/flavors/${impl.flavor}.yaml`);
     }
   }
 }
@@ -325,14 +462,16 @@ for (const { relPath, data } of captures) {
 
 const fileCount =
   stanzas.length + flows.length + enums.length + techniques.length +
-  contributors.length + tools.length + captures.length;
+  contributors.length + tools.length + flavors.length + flavorMaps.length +
+  rfcParts.length + captures.length;
 
 console.log('wacrg corpus validation');
 console.log('-----------------------');
 console.log(
   `stanzas: ${stanzas.length}  flows: ${flows.length}  enums: ${enums.length}  ` +
     `techniques: ${techniques.length}  contributors: ${contributors.length}  ` +
-    `tools: ${tools.length}  captures: ${captures.length}  (total ${fileCount} files)`,
+    `tools: ${tools.length}  flavors: ${flavors.length}  flavor-maps: ${flavorMaps.length}  ` +
+    `rfc-parts: ${rfcParts.length}  captures: ${captures.length}  (total ${fileCount} files)`,
 );
 
 if (warnings.length) {

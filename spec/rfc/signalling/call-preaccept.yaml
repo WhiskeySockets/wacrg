@@ -1,0 +1,60 @@
+id: "call-preaccept"
+category: signalling
+title: "Call pre-accept (ringing)"
+status: review
+order: 20
+features: [ audio, video ]
+since: "0.1.0"
+summary: >
+  Optional <preaccept> stanza a callee sends to signal "ringing" before
+  answering with <accept>.
+normative: |
+  A callee MAY send `<preaccept>` to signal that an incoming `<offer>`
+  ([call-offer](call-offer)) is ringing, before the user answers. It does not
+  accept the call and MUST be followed by `<accept>` ([call-accept](call-accept))
+  or a terminating action ([call-reject](call-reject) /
+  [call-terminate](call-terminate)).
+
+  Wire format — top-level `<call>` wrapper with a `<preaccept>` action child:
+
+      <call to="<caller>" id="<wrapper-id>">
+        <preaccept call-id="<call-id>" call-creator="<creator>">
+          <audio enc="opus" rate="..."/>     ; one or more, preference order
+          <encopt keygen="2"/>
+          <capability ver="1">01 05 f7 09 e4 bb 07</capability>
+        </preaccept>
+      </call>
+
+  - `<call>` MUST carry `to` (the caller) and `id` (stanza id correlating the
+    server `<ack>`, generated from random bytes).
+  - `<preaccept>` MUST carry `call-id` (echoed unchanged from the offer) and
+    `call-creator`.
+  - `<preaccept>` children MUST appear in order: `audio(+) → encopt → capability`.
+  - Media MUST be one or more `<audio enc="opus" rate="...">`, in preference order.
+    `rate="8000"` steers to Opus narrowband; `rate="16000"` selects wideband.
+  - `<encopt keygen="2">` MUST be present (v2 SRTP key path).
+  - `<capability ver="1">` MUST carry the fixed 7-byte blob `01 05 f7 09 e4 bb 07`
+    (differs from the offer/accept blob `01 05 f7 09 e4 bb 13` only in the final
+    byte).
+  - A receiver MUST read `call-id` and `call-creator` to correlate with the
+    in-flight call. No `<receipt>` ack is expected; the generic server `<ack>` for
+    the `<call>` stanza suffices.
+implementations:
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
+  - { flavor: zapo-caller, status: working }
+requires: [ call-offer, call-accept ]
+references: []
+open_questions:
+  - "Whether the server or peer behaves differently when <preaccept> is omitted
+    versus sent (e.g. caller-side ringing UI/timeout), and whether it is ever
+    mandatory."
+  - "Whether <preaccept> may carry additional children (e.g. <video>, <net>) for
+    video calls, as its <audio>-only shape is observed for audio calls."
+  - "Full meaning of the packed <capability> bitfield and the significance of
+    the differing final byte."
+discovered_by: vinikjkkj
+code: SIG-04

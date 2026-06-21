@@ -3,7 +3,7 @@ name: Auties
 github: Auties00
 techniques:
   - wasm-analysis
-tools:
+flavors:
   - zapo-caller
 links:
   - title: GitHub

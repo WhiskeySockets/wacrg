@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wacrg.whiskeysockets.io/schema/flavor.schema.json",
+  "title": "Flavor",
+  "description": "An independent reimplementation (a \"flavor\") of the WhatsApp call protocol: a library or port that realizes the spec in real code. Distinct from a tool: a tool gathers evidence (warden, frida); a flavor corroborates the spec by independently implementing it. provenance.flavors entries reference these ids to record WHICH reimplementations agree on a fact. A flavor is a corroborating source, never a technique.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Stable flavor id; matches the file name."
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name."
+    },
+    "url": {
+      "type": "string",
+      "description": "Repository or homepage of the implementation."
+    },
+    "language": {
+      "type": "string",
+      "enum": ["go", "rust", "typescript", "javascript", "python", "c", "cpp", "java", "kotlin", "swift", "other"],
+      "description": "Primary implementation language."
+    },
+    "maturity": {
+      "type": "string",
+      "enum": ["experimental", "partial", "working", "production"],
+      "description": "How complete and usable the implementation is."
+    },
+    "license": {
+      "type": "string",
+      "description": "SPDX license id, if known."
+    },
+    "maintainer": {
+      "type": "string",
+      "description": "Contributor id of the maintainer, if any (must match spec/contributors/)."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "review", "stable", "deprecated"]
+    },
+    "covers": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": ["signaling", "keying", "media", "transport"]
+      },
+      "description": "Protocol planes this flavor implements (coarse; the <id>.map.yaml gives the per-bit detail)."
+    },
+    "basis": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string" },
+      "description": "Technique ids this flavor was reconstructed from (must be in the fixed technique set). Used to judge corroboration independence."
+    },
+    "derives_from": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string" },
+      "description": "Flavor ids this one was ported or derived from. A flavor is NOT independent corroboration of any flavor it derives from; the corroboration rule uses this to avoid double-counting a port and its upstream."
+    },
+    "notify_repo": {
+      "type": "string",
+      "pattern": "^[^/]+/[^/]+$",
+      "description": "owner/repo to notify (open a tracking issue) when an RFC part this flavor implements changes. Opt-in push channel; pull is always available via the feed."
+    },
+    "notify_opt_in": {
+      "type": "boolean",
+      "description": "When true (and notify_repo is set), the spec-notify workflow opens/updates a tracking issue in notify_repo on relevant RFC changes."
+    },
+    "description": {
+      "type": "string"
+    }
+  }
+}

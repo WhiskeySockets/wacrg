@@ -1,0 +1,47 @@
+id: call-offer
+category: signalling
+title: Call offer stanza
+status: review
+order: 10
+features: [ audio, video ]
+since: "0.1.0"
+summary: >
+  A caller opens a 1:1 call with a <call> stanza whose <offer> child proposes
+  the session, carries per-device media keys, and seeds transport negotiation.
+normative: |
+  Send a top-level `<call>` stanza with `id` (stanza id, correlates the server
+  `<ack>`), `from`, and `to`. Its `<offer>` child MUST carry `call-id` (opaque
+  logical call identifier, echoed in every later stanza for this call) and
+  `call-creator`.
+
+  `<offer>` children MUST appear in this exact order; a mis-ordered offer is
+  rejected by the server with error **439**:
+
+      privacy → audio(8000) → audio(16000) → net(medium) → capability
+              → (destination | enc) → encopt(keygen) → device-identity
+
+  - Media: two nodes `<audio enc="opus" rate="8000">` and `<audio enc="opus" rate="16000">`.
+  - `<capability ver="1">` body MUST be the fixed 7-byte blob `01 05 f7 09 e4 bb 13`.
+  - `<encopt keygen="2">` selects the v2 SRTP key path.
+  - Each recipient device MUST receive its own `<enc>` node carrying the call key
+    encrypted to that device's Signal session: `type="pkmsg"` to establish,
+    `type="msg"` to reuse. A multi-device callee receives several `<enc>` nodes.
+requires: []
+implementations:
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
+  - { flavor: zapo-caller, status: working }
+references:
+  - {
+      title: "Signal Protocol (X3DH + Double Ratchet)",
+      url: "https://signal.org/docs/"
+    }
+open_questions:
+  - "Full meaning of the packed <capability> bitfield."
+  - "Whether an explicit media-key length/salt is carried, or all is derived
+    from the Signal plaintext."
+discovered_by: vinikjkkj
+code: SIG-01

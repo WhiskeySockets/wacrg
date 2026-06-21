@@ -6,9 +6,8 @@ techniques:
   - websocket-capture
   - baileys-instrumentation
   - wasm-analysis
-tools:
-  - baileys
-  - warden
+flavors:
+  - meowcaller
 links:
   - title: GitHub
     url: https://github.com/purpshell

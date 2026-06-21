@@ -50,6 +50,11 @@ Confidence follows a rule:
   observed (most of the [media](../media-srtp.md) and
   [SRTP keying](../encryption-keying.md#srtp-key-derivation) details today).
 - A fact is **`unknown`** when we have a slot for it but no evidence at all.
+- An independent **reimplementation** that reproduces a fact (a *flavor*,
+  [`spec/flavors/`](../spec/flavors.md)) corroborates it as a *source*, not a
+  technique. It is recorded in `provenance.flavors` and strengthens confidence, but
+  `confirmed` still requires two independent techniques — and a flavor that is a port
+  of another (`derives_from`) is not independent of its upstream.
 
 This is why **provenance** is mandatory on every attribute: it records *which*
 techniques and *which* sources back the claim, so a reviewer can see at a glance

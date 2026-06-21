@@ -1,0 +1,66 @@
+id: group-call-crypto
+category: crypto
+title: Group call crypto
+status: draft
+order: 40
+features: [ audio, video, group, screen-share ]
+since: "0.1.0"
+summary: >
+  A single 32-byte call key is shared with every group-call participant, and
+  each participant derives one SFrame key per sender keyed by that sender's
+  participant id.
+normative: |
+  **Call key.** A group call MUST share one 32-byte `callKey` among all participants,
+  delivered to each recipient device in the offer's `<enc>` payload (see
+  [call-offer](call-offer)). The same `callKey` is used by every member; there is no
+  per-pair key. A `callKey` not exactly 32 bytes MUST fail key derivation (no key produced).
+
+  **Per-sender SFrame key derivation.** Derive with HKDF-SHA256 (expand):
+
+      salt = callKey[0..16]
+      ikm  = callKey[16..32]
+      info = "e2e sframe key" || participantId
+      L    = 32
+      OKM  = HKDF-SHA256(salt, ikm, info, 32)
+
+  The SFrame AEAD (AES-128-GCM) MUST use `OKM[0..16]` as the key; `OKM[16..32]` is unused.
+
+  **Participant id normalization.** `participantId` MUST be the sender's normalized
+  participant JID:
+
+  1. Strip any device/resource suffix after `/`; trim surrounding whitespace.
+  2. If there is no `@`, or `@` is the first character, use the bare string unchanged.
+  3. Split into `user@domain`. If `user` already contains `:`, keep `user@domain` unchanged.
+  4. If `domain` is `lid` and `user` has no `:` suffix, address the primary device as `:0`,
+     yielding `user:0@lid`.
+  5. Otherwise use `user@domain`.
+
+  **Direction.** The info label always carries the **sender's** participant id, so producer
+  and consumer derive an identical key. Each participant MUST derive its *send* key from its
+  own normalized id and seal outgoing frames under it; to receive, it MUST derive a peer's
+  key from that peer's normalized id.
+
+  **Counters.** Each sender MUST maintain a monotonic per-frame counter seeding the GCM
+  nonce, carried in the SFrame header (see [sframe-media](sframe-media)). The counter MUST
+  NOT repeat under a given sender key.
+findings: |
+  SFrame derivation differs from 1:1 E2E-SRTP: SFrame splits `callKey` into 16-byte
+  salt + 16-byte IKM (E2E-SRTP uses a 32-byte zero salt and the whole `callKey` as IKM);
+  SFrame uses AES-128-GCM with a 16-byte nonce (E2E-SRTP uses AES-128-CTR).
+requires: [ call-offer, group-call, srtp-master-key, sframe-media ]
+implementations:
+  - { flavor: whatsapp-rust, status: working }
+  - { flavor: zapo-caller, status: working }
+  - { flavor: meowcaller, status: planned }
+open_questions:
+  - "How a new participant joining mid-call obtains the existing callKey, and
+    whether the callKey is rotated on membership change (join/leave)."
+  - "Whether a non-zero SFrame key_id is ever used for in-call key rotation, or
+    it is always 0."
+  - "Exact participant-id form (LID vs PN, device-suffix rules) used by the
+    signaling layer to address each sender across all client versions."
+references:
+  - { title: "RFC 5869 — HKDF", url: "https://www.rfc-editor.org/rfc/rfc5869" }
+  - { title: "RFC 9605 — SFrame", url: "https://www.rfc-editor.org/rfc/rfc9605" }
+discovered_by: vinikjkkj
+code: CRY-06

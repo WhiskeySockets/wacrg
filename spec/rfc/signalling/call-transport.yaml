@@ -1,0 +1,82 @@
+id: "call-transport"
+category: signalling
+title: "Transport stanza"
+status: review
+order: 30
+features: [ audio, video ]
+since: "0.1.0"
+summary: >
+  The <transport> action of the <call> stanza negotiates ICE/relay candidates
+  after the offer, carrying the relay token and network medium.
+normative: |
+  Wire format. Send a top-level `<call to="<peer>">` wrapping a `<transport>`
+  action child:
+
+      <call to="<peer>">
+        <transport call-id="<call-id>" call-creator="<creator-jid>"
+                   [p2p-cand-round="<n>"]
+                   [transport-message-type="<t>"]>
+          [ <te priority="1">…relay-token-bytes…</te> ]
+          <net medium="2" [protocol="0"]/>
+        </transport>
+      </call>
+
+  Identity (both required, echoed unchanged from the offer):
+  - `call-id` MUST equal the offer's `call-id`.
+  - `call-creator` MUST identify the call creator.
+
+  Children and order:
+  - The action MUST contain a `<net>` child.
+  - When a relay token is conveyed, a `<te priority="1">` child (binary body =
+    relay token blob) MUST precede `<net>`.
+  - When no relay token is conveyed, `<te>` is omitted and `<net>` is the sole child.
+
+  `<net>` attributes:
+  - MUST carry `medium="2"`.
+  - MUST carry `protocol="0"` unless `transport-message-type="9"`; when
+    `transport-message-type="9"`, `protocol` MUST be omitted.
+
+  `transport-message-type` (optional) selects the exchange role:
+
+      "1"  relay candidate
+      "3"  peer (ICE) candidate    ; callee replies with type "9"
+      "9"  keepalive / reply       ; <net> omits protocol
+
+  `p2p-cand-round` (optional): round number as a decimal string for round-based
+  peer-to-peer candidate exchange.
+
+  Receiver: MUST read `call-id` and `call-creator`; MAY read `p2p-cand-round`
+  and `transport-message-type`. A receiver that does not recognise the action
+  MUST ignore the stanza rather than fail the call (forward-compatibility for
+  future transport-message-type values).
+findings: |
+  The same `<te>` relay-token carrier appears in the accept (`priority="2"`) and
+  relaylatency exchanges, indicating a shared relay-token element across call actions.
+requires: [ call-offer, stun-relay ]
+implementations:
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
+  - { flavor: zapo-caller, status: working }
+open_questions:
+  - "Exact internal structure of the <te> relay-token blob (token bytes vs.
+    framed structure)."
+  - "Full enumeration of transport-message-type values beyond 1 (relay
+    candidate), 3 (peer ICE), and 9 (keepalive/reply)."
+  - "Whether <net medium> takes values other than 2 in the transport exchange,
+    and the meaning of the medium scale."
+  - "Semantics of p2p-cand-round rounds and the termination condition for
+    candidate-exchange rounds."
+references:
+  - {
+      title: "RFC 8445 — Interactive Connectivity Establishment (ICE)",
+      url: "https://www.rfc-editor.org/rfc/rfc8445"
+    }
+  - {
+      title: "RFC 7675 — STUN Usage for Consent Freshness",
+      url: "https://www.rfc-editor.org/rfc/rfc7675"
+    }
+discovered_by: vinikjkkj
+code: SIG-05

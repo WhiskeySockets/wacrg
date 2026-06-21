@@ -129,7 +129,8 @@ children:
             observed_values: [16000, 48000]
             provenance:
               techniques: [websocket-capture, frida-hooking]
-              sources: []
+              flavors: [zapo-caller, whatsapp-rust]
+              sources: ["Reconstructed: two <audio enc=opus rate=8000|16000> nodes"]
       - tag: video
         occurrence: "0..1"
         confidence: speculative
@@ -190,7 +191,8 @@ children:
             observed_values: [1, 2]
             provenance:
               techniques: [websocket-capture, static-smali-analysis]
-              sources: []
+              flavors: [zapo-caller, whatsapp-rust]
+              sources: ["Reconstructed: ver=1 body is a fixed 7-byte blob 01 05 f7 09 e4 bb 13"]
       - tag: encopt
         occurrence: "0..1"
         confidence: probable
@@ -210,7 +212,8 @@ children:
             observed_values: [1, 2]
             provenance:
               techniques: [websocket-capture, frida-hooking]
-              sources: []
+              flavors: [zapo-caller, whatsapp-rust]
+              sources: ["Reconstructed: keygen=2 selects the v2 <raw_e2e> SRTP key path"]
       - tag: enc
         occurrence: "1..n"
         confidence: probable

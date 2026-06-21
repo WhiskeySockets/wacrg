@@ -1,0 +1,16 @@
+id: meowcaller
+name: meowcaller
+url: https://github.com/purpshell/meowcaller
+language: go
+maturity: partial
+maintainer: purpshell
+status: draft
+covers:
+  - media
+basis:
+  - wasm-analysis
+derives_from:
+  - whatsapp-rust
+notify_repo: purpshell/meowcaller
+notify_opt_in: true
+description: Clean-room pure-Go WhatsApp calling library porting the whatsapp-rust codec module by module under human audit.

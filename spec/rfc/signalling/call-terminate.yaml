@@ -1,0 +1,81 @@
+id: call-terminate
+category: signalling
+title: Call terminate stanza
+status: draft
+order: 80
+features: [ audio, video, group ]
+since: "0.1.0"
+summary: >
+  The <terminate> action stanza that ends a call, its reason attribute,
+  destination fan-out, and inbound duration counters.
+normative: |
+  Wire shape:
+
+      <call to="{peer-jid}">
+        <terminate call-id="{call-id}" call-creator="{call-creator-jid}"
+                   [reason="{reason}"]>
+          [<destination>
+             <to jid="{device-jid}"/>...
+           </destination>]
+        </terminate>
+      </call>
+
+  `<call>` wrapper:
+
+  - MUST carry `to` (peer JID).
+  - MUST NOT carry a builder-supplied `id` (unlike `<preaccept>`/`<heartbeat>`).
+
+  `<terminate>` action element:
+
+  - MUST carry `call-id` — the call identifier from the offer
+    (see [call-offer](call-offer)), not the stanza id.
+  - MUST carry `call-creator` — JID of the call's creator.
+  - MAY carry `reason` (free-form string). When absent, the attribute MUST be
+    omitted entirely (no empty `reason=""`).
+  - MAY contain a single `<destination>` child, which MUST then contain one
+    `<to jid="..."/>` per target device. When there are no extra devices,
+    `<destination>` MUST be omitted.
+
+  Reason `accepted_elsewhere` is sent to a peer's other devices once the call is
+  accepted on one device; it pairs with the `<destination>` list of devices to
+  hang up. An ordinary hang-up MAY send no `reason`.
+
+  Inbound `<terminate>`:
+
+  - MUST be parsed for `call-id` and `call-creator` (both required).
+  - MAY carry `duration` — total call duration in seconds, non-negative integer
+    fitting an unsigned 32-bit value.
+  - MAY carry `audio_duration` — audio-only duration, same encoding/range.
+  - Both counters optional; a parser MUST treat absence as "not reported", not 0.
+
+  A receiver that does not recognize a `<call>` action child MUST ignore the
+  stanza rather than error.
+findings: |
+  The inbound parser reads `duration`/`audio_duration` but does not consume
+  `reason`, so a peer-sent reason is on the wire but not surfaced.
+requires: [ call-offer ]
+implementations:
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      note: "build_terminate emits the action; the inbound parser decodes
+        duration/audio_duration.",
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
+  - {
+      flavor: zapo-caller,
+      status: working,
+      note: "signalling builder ported from this flavor's signaling.ts."
+    }
+open_questions:
+  - "Full enumeration of reason values the server and clients emit; only
+    accepted_elsewhere is confirmed from source."
+  - "Whether duration/audio_duration are ever sent on outbound terminates or
+    only received."
+  - "Whether reason is expected (or validated) on inbound terminates, given the
+    parser ignores it today."
+references:
+  - { title: "wacore voip signaling builders (build_terminate)", url: "" }
+  - { title: "wacore call stanza parser (terminate action)", url: "" }
+discovered_by: vinikjkkj
+code: SIG-14

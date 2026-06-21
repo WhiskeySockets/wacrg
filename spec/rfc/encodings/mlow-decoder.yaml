@@ -1,0 +1,142 @@
+id: mlow-decoder
+category: encodings
+title: MLow decode pipeline
+status: draft
+order: 60
+features: [ audio ]
+since: "0.1.0"
+summary: >
+  Decode one RTP MLow payload into a 16 kHz PCM frame: strip RED, route on the
+  TOC byte, and for an active frame run three chained 20 ms internal frames
+  through a per-packet harmonic post-filter while carrying predictor and
+  synthesis state.
+normative: |
+  An MLow decoder consumes one RTP MLow payload per call and produces one PCM frame
+  of 32-bit floats in `[-1.0, 1.0]` at the TOC-derived output length.
+
+  The same instance MUST be reused for the lifetime of a continuous stream: the
+  cross-frame predictor (`prev_nlsf`), the CELP/LTP synthesis history, the HP
+  post-filter state, and the harmonic post-filter state all persist across packets.
+  The decoder MUST expose a reset that clears all carried state. A caller MUST reset
+  at a stream discontinuity (new SSRC or detected gap) and MUST NOT reset between
+  consecutive packets of one stream.
+
+  **Stage 0 — empty payload.** If the payload is empty, emit one silence frame of
+  `OPUS_FRAME_SAMPS = 960` samples (60 ms at 16 kHz) and MUST NOT advance state.
+
+  **Stage 1 — RED strip.** With negotiated RED level `n > 0`, de-packetize the
+  SplitRED container (see [mlow-red-fec](mlow-red-fec)). The main frame is the LAST
+  element of the recovered list; extract it and decode as a bare MLow frame (Stage 2
+  on). If de-packetization fails, emit `OPUS_FRAME_SAMPS` (960) samples of silence
+  and MUST NOT advance state. When `n == 0`, the payload is already a bare frame and
+  goes directly to Stage 2.
+
+  **Stage 2 — TOC routing.** Parse the first byte as the smpl TOC (see
+  [mlow-frame](mlow-frame)) and compute:
+
+      output_length = std_opus ? (16000 / 1000 * frame_ms)
+                               : (sample_rate / 1000 * frame_ms)
+
+  Route in this order, emitting exactly `output_length` samples of `0.0` for each
+  silence case:
+
+      std_opus == true   →  silence
+      sid == true        →  silence
+      active == false    →  silence
+      otherwise          →  decode active frame (Stage 3)
+
+  **Stage 3 — active-frame decode.** The body begins at byte offset 1 and is a single
+  range-coded bitstream (see [mlow-rangecoder](mlow-rangecoder)) covering all three
+  internal frames.
+
+    1. Read from the TOC byte `b`:
+
+           config   = (b >> 2) & 1
+           low_rate = ((b >> 2) & 1) != 0
+
+       Initialise a range decoder over `frame[1..]`.
+
+    2. For each internal frame `f` in `0, 1, 2`, read from the SAME range decoder in
+       this exact order:
+
+         a. LSF/LPC indices (see [mlow-lsf-lpc](mlow-lsf-lpc)). Voiced iff the decoded
+            LSF stage-1 index `== 1`.
+         b. Excitation pulses (see [mlow-excitation](mlow-excitation)) over
+            `SMPL_INTF_LEN = 320` samples with 4 subframes.
+         c. If voiced: the pitch/LTP block (see [mlow-lsf-lpc](mlow-lsf-lpc)).
+            Per-40-sample-block lags reconstructed as
+            `lag = clamp(block_lag * 0.5 + 32.0, .., 320.0)` (8 lags per internal
+            frame); ACB gain indices per subframe; voiced FCB gain index from the
+            pitch block's `filt_idx` (floored at 0).
+            If unvoiced: the gains block; decoded `gain_q` → `nrgres_dbq_q14` and
+            `nrg_res` → `fcbg_idx`.
+         d. Reconstruct the NLSF vector from the LSF stage indices, `config`, the grid
+            index, the stage-2 residual, and carried `prev_nlsf`; then update
+            `prev_nlsf` for the next internal frame/packet.
+         e. Run CELP synthesis (see [mlow-synthesis](mlow-synthesis)) over
+            `SMPL_INTF_LEN = 320` samples, gated on `low_rate`, into a 320-sample
+            signal, and append to the packet output.
+
+       Across the three frames, accumulate the full per-40-block lag list (8 per
+       frame, 24 per packet) and the sum of per-frame normalized bitrate (from total
+       pulse count and 320).
+
+    3. Run the per-packet harmonic post-filter (see [mlow-postfilter](mlow-postfilter))
+       ONCE over the full `3 * 320 = 960` sample buffer, passing the 24 accumulated
+       lags and the average normalized bitrate (`accumulated_sum / 3.0`). It
+       introduces `SMPL_TOT_POSTFILT_DELAY = 48` samples of group delay; emitted PCM
+       is aligned at lag 0.
+
+    4. Clamp each output sample to `[-1.0, 1.0]`. If `output_length` is nonzero and
+       differs from the produced length, resize the buffer to `output_length`
+       (truncate or zero-pad the tail).
+
+  A range-coder error flag set after the active-frame decode indicates TOC/body
+  desync; a decoder SHOULD surface it (it does not change emitted samples).
+findings: |
+  In captured 1-to-1 audio the TOC internal-rate bit is 0 (16 kHz) and `low_rate`
+  (`(b >> 2) & 1`) is 0, so an active 60 ms frame yields 3 × 320 = 960 samples before
+  the post-filter, matching `OPUS_FRAME_SAMPS`. End-to-end decode aligns
+  sample-for-sample at lag 0 with the `useSmpl` (real `smpl_opus`) reference,
+  correlating > 0.95 with the per-block voiced ACB/LTP lags, HP post-filter, and the
+  harmonic post-filter (48-sample group delay) in place.
+requires:
+  [
+    mlow,
+    mlow-frame,
+    mlow-rangecoder,
+    mlow-red-fec,
+    mlow-lsf-lpc,
+    mlow-excitation,
+    mlow-synthesis,
+    mlow-postfilter,
+    mlow-noise
+  ]
+implementations:
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      note: "pure-Rust stateful MlowDecoder; e2e decode matches the smpl_opus useSmpl
+        reference at lag 0",
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
+  - {
+      flavor: meowcaller,
+      status: partial,
+      note: "codec modules partial; full decode orchestration in progress"
+    }
+open_questions:
+  - "Whether the 32 kHz internal rate and the 10/20/120 ms active frame sizes
+    ever drive the active-frame decode in live calls, or only 16 kHz / 60 ms
+    frames occur (only the latter is seen in capture)."
+  - "Comfort-noise generation for SID/inactive frames: the decoder currently
+    emits pure silence rather than synthesizing comfort noise from the SID
+    descriptor."
+  - "Whether RED redundancy beyond the main (last) frame is ever used for loss
+    concealment, or the older frames are always discarded after
+    de-packetization."
+references:
+  - { title: "RFC 6716 — Opus", url: "https://www.rfc-editor.org/rfc/rfc6716" }
+parent: mlow
+discovered_by: purpshell
+code: ENC-11

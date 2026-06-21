@@ -47,7 +47,7 @@ Audio media descriptor. Present for any call that requests audio, which is effec
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
 | `enc` | `string` | no | speculative | Marks the audio stream as encrypted and/or selects the SRTP profile. The exact value vocabulary is unknown; it may name a codec/crypto suite or simply be a boolean-like flag. <br/>_observed:_ `opus` | techniques: websocket-capture; sources: none |
-| `rate` | `int` | no | speculative | Advertised audio sample rate in Hz (Opus is typically negotiated at 16000 or 48000). Whether this is a hard requirement or a hint is unconfirmed. <br/>_observed:_ `16000`, `48000` | techniques: websocket-capture, frida-hooking; sources: none |
+| `rate` | `int` | no | speculative | Advertised audio sample rate in Hz (Opus is typically negotiated at 16000 or 48000). Whether this is a hard requirement or a hint is unconfirmed. <br/>_observed:_ `16000`, `48000` | techniques: websocket-capture, frida-hooking; flavors: zapo-caller, whatsapp-rust; sources: Reconstructed: two <audio enc=opus rate=8000\|16000> nodes |
 
 #### `<video>`
 
@@ -84,7 +84,7 @@ Device capability descriptor. The payload is commonly an opaque binary blob (a p
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `ver` | `int` | no | probable | Capability format version, selecting how the binary payload is interpreted. <br/>_observed:_ `1`, `2` | techniques: websocket-capture, static-smali-analysis; sources: none |
+| `ver` | `int` | no | probable | Capability format version, selecting how the binary payload is interpreted. <br/>_observed:_ `1`, `2` | techniques: websocket-capture, static-smali-analysis; flavors: zapo-caller, whatsapp-rust; sources: Reconstructed: ver=1 body is a fixed 7-byte blob 01 05 f7 09 e4 bb 13 |
 
 #### `<encopt>`
 
@@ -96,7 +96,7 @@ Encryption options for the call. Notably carries the keygen attribute that indic
 
 | Name | Type | Required | Confidence | Description | Provenance |
 | --- | --- | --- | --- | --- | --- |
-| `keygen` | `int` | no | probable | Key-generation scheme version for the call/media key. Couples the <enc> payload format to a derivation method the callee must use to recover the SRTP master key. <br/>_observed:_ `1`, `2` | techniques: websocket-capture, frida-hooking; sources: none |
+| `keygen` | `int` | no | probable | Key-generation scheme version for the call/media key. Couples the <enc> payload format to a derivation method the callee must use to recover the SRTP master key. <br/>_observed:_ `1`, `2` | techniques: websocket-capture, frida-hooking; flavors: zapo-caller, whatsapp-rust; sources: Reconstructed: keygen=2 selects the v2 <raw_e2e> SRTP key path |
 
 #### `<enc>`
 

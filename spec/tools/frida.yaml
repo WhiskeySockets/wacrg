@@ -1,8 +1,0 @@
-id: frida
-name: Frida
-url: https://frida.re/
-techniques:
-  - frida-hooking
-description: >
-  Dynamic instrumentation toolkit. Hooks native functions at runtime on an owned
-  device to observe call setup, derived keys, and the SRTP/media path.

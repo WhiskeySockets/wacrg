@@ -1,0 +1,55 @@
+id: "call-accept"
+category: signalling
+title: "Call accept stanza"
+status: review
+order: 12
+features: [ audio, video ]
+since: "0.1.0"
+summary: >
+  The callee answers an offer with a <call> stanza whose <accept> child selects
+  the media format and commits the call to the v2 SRTP key path.
+normative: |
+  The `<call>` wrapper MUST carry `to` (the offering peer); it MAY omit `id`.
+  The `<accept>` child MUST carry `call-id` and `call-creator`, both echoed verbatim
+  from the offer.
+
+  `<accept>` children MUST appear in this order:
+
+      audio(rate)… → [te(priority=2)] → net(medium=2) → encopt(keygen=2)
+                   → [capability] → [rte] → [voip_settings]
+
+  Required children:
+
+  - One `<audio enc="opus" rate="…">` per accepted rate, in preference order, no body.
+    `rate="8000"` selects 8 kHz narrowband Opus; `rate="16000"` selects 16 kHz.
+  - `<net medium="2">` — selects the relay transport medium (offer advertises
+    `medium="3"`; accept commits to `medium="2"`).
+  - `<encopt keygen="2">` — pins the v2 SRTP key derivation path
+    (see [srtp-master-key](srtp-master-key)), matching the offer's `encopt`.
+
+  Optional children:
+
+  - `<te priority="2">` — relay transport-endpoint blob; MUST be placed immediately
+    after the `<audio>` nodes.
+  - `<capability ver="1">` — body is the fixed 7-byte blob `01 05 f7 09 e4 bb 13`.
+  - `<rte>` — relay-token-extension blob, no attributes.
+  - `<voip_settings uncompressed="1">` — VoIP settings blob; MUST be the last child.
+requires: [ call-offer, call-preaccept, srtp-master-key ]
+implementations:
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
+  - { flavor: zapo-caller, status: working }
+open_questions:
+  - "Byte layout and semantics of the <te priority=2> relay transport-endpoint
+    blob."
+  - "Contents of the <rte> relay-token-extension blob and the <voip_settings
+    uncompressed=1> body."
+  - "Whether the server enforces the <accept> child order with a 439-style
+    rejection as it does for <offer>."
+references:
+  - { title: "RFC 3711 — SRTP", url: "https://www.rfc-editor.org/rfc/rfc3711" }
+discovered_by: vinikjkkj
+code: SIG-03

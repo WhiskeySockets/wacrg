@@ -4,8 +4,8 @@
 
 > **Superseded in part (2026-06).** This page was the gap analysis written when
 > the only source was a static `wasm-analysis` read. Independent reconstructions
-> have since landed: a byte-exact Go decoder ([meowmeow](../../spec/tools.md))
-> and a Rust port ([whatsapp-rust](../../spec/tools.md)), both validated against
+> have since landed: a byte-exact Go decoder and a Rust port
+> ([whatsapp-rust](../../spec/flavors.md)), both validated against
 > captured decode vectors. They resolve most of the open items below and
 > correct the architecture. MLow is split-band CELP (internally "SMPL"),
 > not the "custom MDCT + LPC" this page speculated; the MDCT cluster in the WASM

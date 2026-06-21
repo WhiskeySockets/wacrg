@@ -1,0 +1,92 @@
+# Notify libraries when the RFC changes (opt-in push channel).
+# On a push to main that touches spec/rfc/**, work out which RFC parts changed,
+# map them to the flavors that implement them and have opted in
+# (notify_opt_in + notify_repo), and open a tracking issue in each such repo.
+# The pull channel (docs/spec/rfc/feed.json) is always available and needs none
+# of this. Push degrades to a no-op when no cross-repo token is configured.
+
+name: Spec notify
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "spec/rfc/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: spec-notify-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    name: Notify implementing libraries
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Compute changed RFC parts
+        id: changed
+        run: |
+          base="${{ github.event.before }}"
+          if [ -z "$base" ] || ! git cat-file -e "${base}^{commit}" 2>/dev/null; then
+            base="HEAD~1"
+          fi
+          files=$(git diff --name-only "$base" HEAD -- 'spec/rfc/**/*.yaml' | tr '\n' ' ')
+          echo "files=${files}" >> "$GITHUB_OUTPUT"
+
+      - name: Map changed parts to opted-in flavors
+        env:
+          CHANGED_PARTS: ${{ steps.changed.outputs.files }}
+        run: npm run notify
+
+      - name: Job summary
+        run: |
+          echo '## Spec notify' >> "$GITHUB_STEP_SUMMARY"
+          if [ -s notify-payload.json ] && [ "$(jq 'length' notify-payload.json)" != "0" ]; then
+            jq -r '.[] | "- **\(.repo)** (flavor `\(.flavor)`): \(.parts | map(.id) | join(", "))"' \
+              notify-payload.json >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo '_No opted-in flavor implements a changed part._' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload notification payload
+        uses: actions/upload-artifact@v4
+        with:
+          name: notify-payload
+          path: notify-payload.json
+
+      - name: Open tracking issues (opt-in push)
+        env:
+          # A PAT with `repo` scope on the target repos. Absent → push is skipped.
+          GH_TOKEN: ${{ secrets.SPEC_NOTIFY_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "No SPEC_NOTIFY_TOKEN configured; pull feed only, skipping push."
+            exit 0
+          fi
+          count=$(jq 'length' notify-payload.json)
+          for i in $(seq 0 $((count - 1))); do
+            repo=$(jq -r ".[$i].repo" notify-payload.json)
+            flavor=$(jq -r ".[$i].flavor" notify-payload.json)
+            ids=$(jq -r ".[$i].parts | map(.id) | join(\", \")" notify-payload.json)
+            body=$(jq -r ".[$i].parts | map(\"- [\(.id)](\(.ref)) — \(.title)\") | join(\"\n\")" notify-payload.json)
+            gh issue create --repo "$repo" \
+              --title "[wacrg] RFC update affecting ${flavor}: ${ids}" \
+              --body "$(printf 'The wacrg RFC changed in parts your implementation maps to:\n\n%s\n\nFollow the feed: https://whiskeysockets.github.io/wacrg/spec/rfc/feed.json' "$body")" \
+              || echo "Could not open an issue in ${repo} (token scope?)."
+          done

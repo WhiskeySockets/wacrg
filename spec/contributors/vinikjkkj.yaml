@@ -1,0 +1,11 @@
+id: vinikjkkj
+name: Vini
+github: vinikjkkj
+techniques:
+  - wasm-analysis
+  - frida-hooking
+flavors:
+  - zapo-caller
+links:
+  - title: GitHub
+    url: https://github.com/vinikjkkj

@@ -1,6 +1,7 @@
 id: edgard
 name: Edgard
+github: edgardmessias
 techniques:
   - wasm-analysis
-tools:
+flavors:
   - zapo-caller

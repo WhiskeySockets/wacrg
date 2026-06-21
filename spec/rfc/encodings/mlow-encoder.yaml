@@ -1,0 +1,170 @@
+id: "mlow-encoder"
+category: encodings
+title: "MLow encode pipeline"
+status: draft
+order: 45
+features: [ audio ]
+since: "0.1.0"
+summary: >
+  Encode one 60 ms PCM frame into a wire MLow frame: LPC analysis, bit-exact LSF
+  VQ, voicing classification, CELP excitation, per-subframe rate control, DTX,
+  and range-coder serialization in the inverse of the decoder read order.
+normative: |
+  **Input/output.** Consume exactly **960 samples** (60 ms @ 16 kHz, f32 nominally
+  in `[-1, 1]`) per call; emit one MLow frame = one TOC byte + range-coded body (see
+  [mlow-frame](mlow-frame), [mlow-rangecoder](mlow-rangecoder)). Active config-0
+  TOC byte is `0x50`.
+
+  Process as **3 chained 20 ms internal frames** (320 samples each), each split into
+  **4 subframes** of 80 samples. Cross-frame analysis history (LPC window history,
+  high-pass state, CELP excitation state, perceptual-model state, pitch-estimator
+  predictor state, LSF predictor) MUST persist across packets; clear only at a stream
+  discontinuity.
+
+  **Input sanitization.** Before analysis, replace any non-finite (NaN) sample with 0
+  and clamp every sample to `[-1, 1]`.
+
+  **Stage order (per packet), in order:**
+      1. SILK VAD over int16-scaled input PCM (before the high-pass), yielding a
+         per-internal-frame speech-activity probability and the packet-level
+         coded-as-active-voice flag (see [mlow-vad](mlow-vad)).
+      2. Encoder input high-pass: 2nd-order ARMA, 35 Hz 3 dB corner, applied to the
+         whole packet, state carried across packets.
+      3. For each of the 3 internal frames: LPC analysis, LSF quant, voicing
+         classification, CELP excitation, rate control, entropy serialization.
+
+  **LPC front-end analysis.** Per internal frame: window the high-pass-domain LPC
+  buffer (starts 96 samples before the internal frame, 448 samples long, up to 144
+  samples previous-packet history), FFT-autocorrelate, derive bandwidth-expanded
+  order-16 LPC coefficients `A` (`A[0] = 1`), convert forward A->NLSF (radians 0..PI).
+  Use a long analysis window for internal frames 0 and 1, a short window for the last.
+
+  **LSF quantization.** Run the bit-exact LSF VQ on the analysis NLSF; select wire
+  `(grid, stage2[16])` (see [mlow-lsf-lpc](mlow-lsf-lpc)). Use conditional ("cond")
+  coding against the previous internal frame's committed NLSF when `intf > 0` AND the
+  previous internal frame's voiced flag equals the current frame's; otherwise use the
+  unconditional quantizer. Driver params: RD weights = inverse spectral-envelope
+  magnitude; `RDw_adj = sqrt(mainBitRate/14000)` (= 1.1952286 at 20 kbps); `surv = 6`
+  survivors (complexity 8). Wire `grid` = `qi[0]` (stage-1 index, or 16 for the cond
+  centroid); `qi[1..16]` = the 16 stage-2 indices. Reconstruct the committed NLSF from
+  the chosen indices and carry it as the previous-NLSF input for the next frame.
+
+  **Per-subframe LPC interpolation.** Per subframe: interpolate between the previous
+  frame's committed NLSF and this frame's, convert to monic LPC, compute LPC residual.
+  Evaluate interpolation index 0 and index 1; select index 1 only when it lowers the
+  summed per-subframe residual RMS below `0.998 ×` the index-0 RMS. Write the chosen
+  `lsf_interpol_idx` as the unvoiced LSF `extra` symbol. On the voiced path the LSF
+  `extra` symbol is 0.
+
+  **Voicing classification.** Per internal frame run the perceptually-weighted pitch
+  estimator (over the persistent perceptually-weighted speech buffer) and the
+  signal-mode classifier (see [mlow-vad](mlow-vad)). Fold five strengths into one
+  `voicing_strength`:
+
+      voicing_strength = ( w0*corr + w1*vad + w2*tilt + w3*harm + w4*lag )
+                         / sum(w) + bias   (+ hysteresis term)
+      w    = [1.0, 0.5, 0.5, 0.7, 0.3]
+      bias = -0.1038
+      corr = inv_sigmoid(0.1 + 0.75 * clamp(pitchcorr, 0, 1))
+      vad  = 0.04 * (1 - 1.04 / (sp_act_prob + 0.04))
+      tilt = t^3   where t is the background-subtracted low/high spectral-tilt ratio
+      lag  = -sigmoid(0.25 * (38 - avg_lag))
+      harm = spectral harmonicity (peak/valley energy ratio) at avg_lag
+
+  Add per-stream hysteresis `+= voicing_prev * 0.05`; update `voicing_prev`, the
+  low/high background-tilt energies, and the previous last-lag each internal frame.
+  Smooth the spectral-tilt background energies toward the current low/high band
+  energies only when the VAD strength is below `-0.1`. Encode an internal frame
+  **voiced** (LSF stage-1 index = 1, pitch/LTP block) when `voicing_strength > 0` AND
+  the packet is coded-as-active-voice; otherwise **unvoiced** (stage-1 index = 0,
+  gains block).
+
+  **Unvoiced excitation (gains block).** Run the CELP excitation encoder per subframe,
+  mapping each CELP pulse to a per-position pulse train (`sign = 1 + 2*(v>>15)`,
+  `pos = v*sign - 1`, `pulse[pos] += sign`). The wire gains block IS the
+  quantized-residual-energy (`nrg_res`) layout: `gain_main` = frame-level nrgres index,
+  `gain_delta` = shape index, both from bit-exact `quant_nrg_res` over the per-subframe
+  residual energy (`sum(res^2)/80`, normalized domain). Write the per-subframe `nrg_res`
+  symbol only for subframes that carry pulses, as the CELP FCB gain index for that
+  subframe; mark subframes with no pulses `-1` (not written).
+
+  **Voiced excitation (pitch/LTP block).** Derive per-40-sample-block pitch lags from
+  the estimator contour (`blockseg_idx` + 8 `laginds`); decoder maps
+  `lag = laginds*0.5 + 32` clamped to <= 320. Build the CELP adaptive-codebook
+  (ACB/LTP) basis from the decoder-reconstructed lags. Wire pitch block:
+  `acb_idx` (clamped to `[0, 15]`) -> LTP gain index `gain_idx`; FCB `gain_idx` ->
+  `filt_idx` (written only where pulses exist, else `-1`); MAIN-rate pulses -> pulse
+  train. Write the lag contour as `blockseg_idx` + per-block `laginds`, with delta-lag
+  prediction `mode`:
+
+      mode = 0   if avg_gain < 10007
+      mode = 1   if avg_gain < 14085
+      mode = 2   otherwise
+
+  where `avg_gain = sum_over_subframes(w0 + 2*w2) / 4` from the per-subframe LTP gain
+  weights. Advance the cross-packet lag predictor (`prev_lagblk`/`prev_lagidx`) from the
+  committed contour. Reset the lag-block predictor after the last internal frame of each
+  packet and after any unvoiced internal frame.
+
+  **Rate control.** Per subframe, drive a bitrate controller to get a maximum pulse
+  count (`max_pulses`) and an importance weight, using: assumed main bitrate
+  (20000 bps for active 1:1 config), complexity 8, 60 ms payload, 16 kHz, the
+  subframe's weighted target energy, `voicing_strength`, and the VAD inputs. Distribute
+  FCB pulse survivors across pulse counts from the 20 ms survivor budget
+  (`tot_surv = 1000 * 100 * 80 / (20*16000)`). Select the unvoiced per-subframe gain so
+  its linear reconstructed gain is closest to the target residual level over the same
+  `(gain_main, gain_delta)` codebook the decoder uses.
+
+  **DTX / inactive frames.** When a frame is inactive (VAD/coded-as-active-voice false)
+  or carries no excitation, signal via TOC SID/VAD/enable bits (see
+  [mlow-frame](mlow-frame)). A silent internal frame (autocorrelation lag-0 energy <= 0)
+  MUST still advance the CELP excitation state with zeros; encode it as unvoiced with the
+  lowest-energy gains block and no pulses.
+
+  **Entropy serialization.** Serialize each internal frame, in order, as: LSF block,
+  pulses block, then EITHER the pitch block (voiced) OR the gains block (unvoiced) —
+  never both. The range-coder symbol stream MUST be the exact inverse of the decoder
+  read order and use the same CDF tables in the same field order. After the three
+  internal frames, finalize the range coder, prepend the TOC byte, and treat a
+  range-coder buffer overflow as an encode error.
+findings: |
+  Config-0 runtime field order constants: `p3 = 4`, `p4 = 1`. Spectral harmonicity is
+  computed within a survivor-loop cache keyed by a quantized harmonic bin, so it is
+  bin-aliased to that resolution. The encoder works in the normalized `[-1, 1]` domain
+  for the CELP residual; the int16-scaled domain is used only for the LPC
+  autocorrelation lead history. The internal-frame excitation leads the input by 32
+  samples (the analysis lookahead).
+requires: [ mlow, mlow-frame, mlow-rangecoder, mlow-lsf-lpc, mlow-vad, mlow-decoder ]
+implementations:
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
+  - {
+      flavor: meowcaller,
+      status: partial,
+      note: "encode-path codec modules partial"
+    }
+open_questions:
+  - "The assumed main bitrate (20000 bps) for the active 1:1 config is not
+    recovered from the wire; it drives the per-subframe pulse budget and gain
+    selection, so a different negotiated rate would change the chosen pulse
+    counts and gains."
+  - "The bitrate controller's per-subframe weighted target energy uses the
+    residual energy as a proxy for the perceptually-weighted speech energy; the
+    exact `wnrg` derivation is unspecified."
+  - "Only the active config-0 (0x50) frame is specified; the encode path for
+    config 1, the 32 kHz internal rate, and frame sizes other than 60 ms is not
+    characterized."
+  - "DTX/SID frame generation is described only at the TOC level here; the
+    comfort-noise descriptor payload an MLow encoder emits during silence is not
+    specified."
+references:
+  - {
+      title: "RFC 6716 — Opus (SILK LPC/LSF, LTP, pitch background)",
+      url: "https://www.rfc-editor.org/rfc/rfc6716"
+    }
+parent: mlow
+discovered_by: purpshell
+code: ENC-09

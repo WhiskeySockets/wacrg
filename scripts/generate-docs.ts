@@ -15,17 +15,26 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import {
+  RFC_CATEGORIES,
+  RFC_CATEGORY_META,
+  SPEC_VERSION,
   fromRoot,
   loadContributors,
   loadEnums,
+  loadFlavorMaps,
+  loadFlavors,
   loadFlows,
   loadGlossary,
+  loadRfcParts,
   loadStanzas,
   loadTechniques,
   loadTools,
   type Attribute,
   type Child,
+  type FlavorMapEntry,
   type Flow,
+  type RfcCategory,
+  type RfcPart,
   type Stanza,
 } from './lib/corpus.ts';
 
@@ -38,6 +47,13 @@ function write(relPath: string, body: string): void {
   mkdirSync(dirname(abs), { recursive: true });
   const content = body.endsWith('\n') ? body : body + '\n';
   writeFileSync(abs, BANNER + '\n' + content, 'utf8');
+}
+
+/** Write a file verbatim, with no generated-file banner (for JSON feeds etc.). */
+function writeRaw(relPath: string, body: string): void {
+  const abs = fromRoot(relPath);
+  mkdirSync(dirname(abs), { recursive: true });
+  writeFileSync(abs, body.endsWith('\n') ? body : body + '\n', 'utf8');
 }
 
 // ---------------------------------------------------------------------------
@@ -64,7 +80,7 @@ function provenanceLine(attr: Attribute): string {
   if (!prov) return '';
   const parts: string[] = [];
   parts.push(`techniques: ${prov.techniques?.length ? prov.techniques.join(', ') : 'none'}`);
-  if (prov.tools?.length) parts.push(`tools: ${prov.tools.join(', ')}`);
+  if (prov.flavors?.length) parts.push(`flavors: ${prov.flavors.join(', ')}`);
   if (prov.contributors?.length) {
     parts.push(`by: ${prov.contributors.map((c) => '@' + c).join(', ')}`);
   }
@@ -453,7 +469,7 @@ function renderContributors(contributors: ReturnType<typeof loadContributors>): 
     return out.join('\n\n');
   }
   const head =
-    '| Contributor | GitHub | Affiliation | Techniques | Tools |\n' +
+    '| Contributor | GitHub | Affiliation | Techniques | Flavors |\n' +
     '| --- | --- | --- | --- | --- |';
   const rows = contributors
     .slice()
@@ -465,12 +481,12 @@ function renderContributors(contributors: ReturnType<typeof loadContributors>): 
       const techniques = data.techniques?.length
         ? data.techniques.map((t) => `\`${t}\``).join(', ')
         : '-';
-      const tools = data.tools?.length
-        ? data.tools.map((t) => `\`${t}\``).join(', ')
+      const flavors = data.flavors?.length
+        ? data.flavors.map((t) => `\`${t}\``).join(', ')
         : '-';
       return (
         `| ${cell(data.name ?? data.id)} | ${gh} | ${cell(data.affiliation ?? '-')} | ` +
-        `${techniques} | ${tools} |`
+        `${techniques} | ${flavors} |`
       );
     });
   out.push([head, ...rows].join('\n'));
@@ -514,6 +530,407 @@ function renderTools(tools: ReturnType<typeof loadTools>): string {
   return out.join('\n\n');
 }
 
+function renderFlavors(flavors: ReturnType<typeof loadFlavors>): string {
+  const out: string[] = [];
+  out.push('# Flavors');
+  out.push(
+    'Independent reimplementations of the call protocol — libraries and ports ' +
+      'that realize the spec in real code. A flavor is **not** an ' +
+      'evidence-gathering tool: a tool produces a fact, a flavor *corroborates* ' +
+      'the spec by implementing it. `provenance.flavors` cites these ids — a ' +
+      'flavor is a corroborating source, never a technique, and it does not ' +
+      'corroborate a flavor it derives from. Generated from `spec/flavors/`.',
+  );
+  if (flavors.length === 0) {
+    out.push('_No flavors registered yet._');
+    return out.join('\n\n');
+  }
+  const head =
+    '| Flavor | Language | Maturity | Covers | Derives from | Maintainer | Description |\n' +
+    '| --- | --- | --- | --- | --- | --- | --- |';
+  const rows = flavors
+    .slice()
+    .sort((a, b) => a.data.id.localeCompare(b.data.id))
+    .map(({ data }) => {
+      const name = data.url
+        ? `[${cell(data.name ?? data.id)}](${data.url})`
+        : cell(data.name ?? data.id);
+      const covers = data.covers?.length
+        ? data.covers.map((c) => `\`${c}\``).join(', ')
+        : '-';
+      const derives = data.derives_from?.length
+        ? data.derives_from.map((d) => `\`${d}\``).join(', ')
+        : '-';
+      const maint = data.maintainer ? `@${data.maintainer}` : '-';
+      return (
+        `| ${name} | ${cell(data.language ?? '-')} | ${cell(data.maturity ?? '-')} | ` +
+        `${covers} | ${derives} | ${maint} | ${cell(data.description ?? '')} |`
+      );
+    });
+  out.push([head, ...rows].join('\n'));
+  out.push('[Back to spec overview](./index.md)');
+  return out.join('\n\n');
+}
+
+/** Label a flavor-map entry's spec target, linking node refs where they exist. */
+function specBitLabel(spec: FlavorMapEntry['spec'] | undefined): string {
+  if (!spec) return '-';
+  if (spec.stanza) return `stanza [\`${spec.stanza}\`](./stanzas/${spec.stanza}.md)`;
+  if (spec.flow) return `flow [\`${spec.flow}\`](./flows/${spec.flow}.md)`;
+  if (spec.enum) return `enum \`${spec.enum}\``;
+  if (spec.module) return `${spec.area ? spec.area + ' · ' : ''}\`${spec.module}\``;
+  if (spec.label) return spec.label;
+  if (spec.area) return spec.area;
+  return '-';
+}
+
+function renderFlavorMap(
+  flavors: ReturnType<typeof loadFlavors>,
+  maps: ReturnType<typeof loadFlavorMaps>,
+): string {
+  const out: string[] = [];
+  out.push('# Implementation map');
+  out.push(
+    'The inverse of the code-to-reference `// Source of truth:` comment: for each ' +
+      'flavor, **where each bit of the spec is realized in real code**. Each row ' +
+      'pairs a spec bit with a code permalink and the vector that validates it. ' +
+      'Generated from `spec/flavors/*.map.yaml`.',
+  );
+  const byFlavor = new Map(maps.map((m) => [m.data.flavor, m.data] as const));
+  const sorted = flavors.slice().sort((a, b) => a.data.id.localeCompare(b.data.id));
+  if (sorted.length === 0) {
+    out.push('_No flavors registered yet._');
+    return out.join('\n\n');
+  }
+  for (const { data: flavor } of sorted) {
+    out.push(`## ${flavor.name ?? flavor.id}`);
+    const entries = byFlavor.get(flavor.id)?.entries ?? [];
+    if (entries.length === 0) {
+      const covers = flavor.covers?.length
+        ? flavor.covers.map((c) => `\`${c}\``).join(', ')
+        : '_none declared_';
+      out.push(
+        `No per-bit map yet. Declared coverage (plane level): ${covers}. A flavor ` +
+          `adds \`spec/flavors/${flavor.id}.map.yaml\` to record exact code permalinks.`,
+      );
+      continue;
+    }
+    const head =
+      '| Spec bit | Status | Validated by | Confidence | Code |\n' +
+      '| --- | --- | --- | --- | --- |';
+    const rows = entries.map((e) => {
+      const status = e.validation?.status ?? '-';
+      const kat = e.validation?.kat ? `\`${e.validation.kat}\`` : '-';
+      const conf = e.confidence ?? '-';
+      const codeText = e.code?.symbol ? `\`${e.code.symbol}\`` : 'source';
+      const code = e.code?.url ? `[${codeText}](${e.code.url})` : codeText;
+      return `| ${cell(specBitLabel(e.spec))} | ${cell(status)} | ${kat} | ${cell(conf)} | ${code} |`;
+    });
+    out.push([head, ...rows].join('\n'));
+  }
+  out.push('[Back to spec overview](./index.md)');
+  return out.join('\n\n');
+}
+
+// ---------------------------------------------------------------------------
+// RFC: small YAML parts compiled into one ever-scrolling page + per-part pages.
+// ---------------------------------------------------------------------------
+
+function rfcSorted(parts: ReturnType<typeof loadRfcParts>): RfcPart[] {
+  const order = (c: string) => (RFC_CATEGORIES as readonly string[]).indexOf(c);
+  return parts
+    .map((p) => p.data)
+    .slice()
+    .sort((a, b) => {
+      const c = order(a.category) - order(b.category);
+      if (c) return c;
+      const o = (a.order ?? 999) - (b.order ?? 999);
+      if (o) return o;
+      return a.id.localeCompare(b.id);
+    });
+}
+
+function rfcImplTable(part: RfcPart, toFlavors: string): string {
+  if (!part.implementations?.length) return '_No known implementations yet._';
+  const head = '| Flavor | Status | Note |\n| --- | --- | --- |';
+  const rows = part.implementations.map(
+    (i) => `| [\`${cell(i.flavor)}\`](${toFlavors}) | ${cell(i.status)} | ${cell(i.note ?? '')} |`,
+  );
+  return [head, ...rows].join('\n');
+}
+
+/** Rewrite ergonomic `](part-id)` cross-refs to the correct anchor/page link. */
+function rfcResolveRefs(
+  md: string,
+  partIds: Set<string>,
+  linkRequire: (id: string) => string,
+): string {
+  return md.replace(/\]\(([a-z0-9][a-z0-9-]*)\)/g, (m, id) =>
+    partIds.has(id) ? `](${linkRequire(id)})` : m,
+  );
+}
+
+/** Reverse-deps: a part's "breakdown" is the parts that require it. */
+function rfcBreakdownMap(parts: RfcPart[]): Map<string, string[]> {
+  const m = new Map<string, string[]>();
+  for (const p of parts) {
+    for (const dep of p.requires ?? []) {
+      const arr = m.get(dep) ?? [];
+      arr.push(p.id);
+      m.set(dep, arr);
+    }
+  }
+  return m;
+}
+
+const WACRG_REPO = 'https://github.com/WhiskeySockets/wacrg';
+
+/** The logic only: meta line + summary + normative. Used in the compiled RFC. */
+function rfcLogic(
+  part: RfcPart,
+  ctx: { linkRequire: (id: string) => string; partIds: Set<string>; demote?: boolean },
+): string {
+  const ref = (md: string) => rfcResolveRefs(md, ctx.partIds, ctx.linkRequire);
+  // In the compiled page, a part is a heading; any headings inside its own
+  // normative text would clash with the page hierarchy, so fold them to bold.
+  const fold = (md: string) =>
+    ctx.demote ? md.replace(/^[ \t]*#{1,6}[ \t]+(.+?)[ \t]*$/gm, '**$1**') : md;
+  const out: string[] = [];
+  const meta = [`status: ${part.status ?? 'draft'}`];
+  if (part.features?.length) meta.push(part.features.join(', '));
+  out.push(`\`${part.code}\` · _${meta.join(' · ')}_`);
+  out.push(fold(ref(part.summary.trim())));
+  if (part.normative?.trim()) out.push(fold(ref(part.normative.trimEnd())));
+  return out.join('\n\n');
+}
+
+/** The full detail view for a part page: logic + notes + nav + implementations + history. */
+function rfcDetails(
+  part: RfcPart,
+  ctx: {
+    linkRequire: (id: string) => string;
+    partIds: Set<string>;
+    breakdown?: string[];
+    flavorUrl: (id: string) => string | undefined;
+    contributorName: (id: string) => string;
+  },
+): string {
+  const ref = (md: string) => rfcResolveRefs(md, ctx.partIds, ctx.linkRequire);
+  const link = (id: string) => `[\`${id}\`](${ctx.linkRequire(id)})`;
+  const out: string[] = [rfcLogic(part, ctx)];
+  if (part.findings?.trim()) out.push('**Notes.** ' + ref(part.findings.trim()));
+  const nav: string[] = [];
+  if (part.parent) nav.push('Parent: ' + link(part.parent));
+  if (part.requires?.length) nav.push('Requires: ' + part.requires.map(link).join(', '));
+  if (ctx.breakdown?.length) nav.push('Breakdown: ' + ctx.breakdown.map(link).join(', '));
+  if (nav.length) out.push(nav.join('  \n'));
+  if (part.implementations?.length) {
+    const head = '| Flavor | Status | Commits | Notes |\n| --- | --- | --- | --- |';
+    const rows = part.implementations.map((i) => {
+      const url = ctx.flavorUrl(i.flavor);
+      const commits =
+        url && i.commits?.length
+          ? i.commits.map((sha) => `[\`${sha.slice(0, 7)}\`](${url}/commit/${sha})`).join(' ')
+          : '—';
+      return `| \`${cell(i.flavor)}\` | ${cell(i.status)} | ${commits} | ${i.note ? cell(i.note) : '—'} |`;
+    });
+    out.push('**Implemented by**\n\n' + [head, ...rows].join('\n'));
+  }
+  out.push(
+    `**Annotation** \`wacrg:${part.code}\` — a flavor marks its implementation site in ` +
+      `source with this comment; a script clones the source, finds it, and attaches the ` +
+      `commit blame/permalink.`,
+  );
+  const file = `spec/rfc/${part.category}/${part.id}.yaml`;
+  const history: string[] = [];
+  if (part.discovered_by) history.push(`Discovered by ${ctx.contributorName(part.discovered_by)}`);
+  history.push(`[protocol history / diff ↗](${WACRG_REPO}/commits/main/${file})`);
+  history.push(`[blame ↗](${WACRG_REPO}/blame/main/${file})`);
+  out.push(history.join(' · '));
+  if (part.open_questions?.length) out.push('**Open questions**\n' + list(part.open_questions));
+  if (part.references?.length) {
+    out.push(
+      '**References**\n' +
+        part.references.map((r) => (r.url ? `- [${r.title ?? r.url}](${r.url})` : `- ${r.title ?? ''}`)).join('\n'),
+    );
+  }
+  return out.join('\n\n');
+}
+
+function rfcGroupByCategory(sorted: RfcPart[]): Map<RfcCategory, RfcPart[]> {
+  const byCat = new Map<RfcCategory, RfcPart[]>();
+  for (const p of sorted) {
+    const arr = byCat.get(p.category) ?? [];
+    arr.push(p);
+    byCat.set(p.category, arr);
+  }
+  return byCat;
+}
+
+/**
+ * The compiled, ever-scrolling RFC, rendered as the site home page. Logic only —
+ * no implementation/discovery detail. Each category numbers its top-level parts and
+ * nests children under them; every part links to its full "View details" page.
+ */
+function renderRfcIndex(
+  parts: ReturnType<typeof loadRfcParts>,
+  ctx: {
+    partLink: (cat: string, id: string) => string;
+    feed: string;
+    updates: string;
+    contributors: Array<{ id: string; name?: string; github?: string }>;
+  },
+): string {
+  const sorted = rfcSorted(parts);
+  const byCat = rfcGroupByCategory(sorted);
+  const partIds = new Set(sorted.map((p) => p.id));
+  const cats = RFC_CATEGORIES.filter((c) => byCat.get(c)?.length);
+  const out: string[] = [];
+  out.push('# WhatsApp Calls — the RFC');
+  out.push(
+    'The normative spec of the WhatsApp 1:1 and group call stack. Implement to these ' +
+      'sections to interoperate; each is citable by its stable id and has its own ' +
+      `details page. Libraries follow changes via the [feed](${ctx.feed}) ` +
+      `([updates](${ctx.updates})).`,
+  );
+  out.push(cats.map((c) => `[${RFC_CATEGORY_META[c].label}](#${c})`).join(' · '));
+
+  for (const cat of cats) {
+    const ps = byCat.get(cat)!;
+    const top = ps.filter((p) => !p.parent);
+    const childrenOf = (id: string) => ps.filter((p) => p.parent === id);
+    out.push(`<a id="${cat}"></a>`);
+    out.push(`## ${RFC_CATEGORY_META[cat].label}`);
+    out.push(RFC_CATEGORY_META[cat].blurb);
+    out.push(
+      '**In this section:** ' +
+        top.map((p, i) => `[${i + 1}. ${cell(p.title)}](#${p.id})`).join(' · '),
+    );
+    const lctx = { linkRequire: (id: string) => `#${id}`, partIds, demote: true };
+    top.forEach((p, i) => {
+      const n = i + 1;
+      out.push(`<a id="${p.id}"></a>`);
+      out.push(`### ${n}. ${cell(p.title)}`);
+      out.push(`[View details →](${ctx.partLink(p.category, p.id)})`);
+      out.push(rfcLogic(p, lctx));
+      childrenOf(p.id).forEach((ch, j) => {
+        out.push(`<a id="${ch.id}"></a>`);
+        out.push(`#### ${n}.${j + 1} ${cell(ch.title)}`);
+        out.push(`[View details →](${ctx.partLink(ch.category, ch.id)})`);
+        out.push(rfcLogic(ch, lctx));
+      });
+      out.push('---');
+    });
+  }
+
+  out.push('## Acknowledgements');
+  out.push(
+    'This spec exists because of the people who reverse-engineered, implemented, ' +
+      'and documented the WhatsApp call stack. Thank you:',
+  );
+  out.push(
+    ctx.contributors
+      .slice()
+      .sort((a, b) => (a.name ?? a.id).localeCompare(b.name ?? b.id))
+      .map((c) => (c.github ? `[${c.name ?? c.id}](https://github.com/${c.github})` : c.name ?? c.id))
+      .join(' · '),
+  );
+  return out.join('\n\n');
+}
+
+function renderRfcPartPage(
+  part: RfcPart,
+  partById: Map<string, RfcPart>,
+  breakdown: Map<string, string[]>,
+  ctx: { flavorUrl: (id: string) => string | undefined; contributorName: (id: string) => string },
+): string {
+  const out: string[] = [];
+  out.push(`# ${part.title}`);
+  out.push(`_${RFC_CATEGORY_META[part.category]?.label ?? part.category} · \`${part.id}\`_`);
+  out.push(
+    rfcDetails(part, {
+      partIds: new Set(partById.keys()),
+      breakdown: breakdown.get(part.id),
+      flavorUrl: ctx.flavorUrl,
+      contributorName: ctx.contributorName,
+      linkRequire: (id) => {
+        const d = partById.get(id);
+        return d ? `../${d.category}/${d.id}.md` : `../../../index.md#${id}`;
+      },
+    }),
+  );
+  out.push('---');
+  out.push(`[← in the full RFC](../../../index.md#${part.id})`);
+  return out.join('\n\n');
+}
+
+/** The pull feed: a poll-able JSON of every part + which flavors implement it. */
+function renderRfcFeed(parts: ReturnType<typeof loadRfcParts>, flavorIds: string[]): string {
+  const sorted = rfcSorted(parts);
+  const partObjs = sorted.map((p) => ({
+    id: p.id,
+    category: p.category,
+    title: p.title,
+    status: p.status ?? 'draft',
+    since: p.since ?? null,
+    features: p.features ?? [],
+    implementations: (p.implementations ?? []).map((i) => ({ flavor: i.flavor, status: i.status })),
+    ref: `index.md#${p.id}`,
+  }));
+  const byFlavor: Record<string, string[]> = {};
+  for (const id of flavorIds) byFlavor[id] = [];
+  for (const p of sorted) {
+    for (const i of p.implementations ?? []) {
+      (byFlavor[i.flavor] ??= []).push(p.id);
+    }
+  }
+  return (
+    JSON.stringify(
+      {
+        spec: 'wacrg',
+        version: SPEC_VERSION,
+        note: 'Pull feed. Poll this file; the parts a flavor implements are under flavors.<id>. Diff across versions to follow updates.',
+        parts: partObjs,
+        flavors: byFlavor,
+      },
+      null,
+      2,
+    ) + '\n'
+  );
+}
+
+function renderRfcUpdates(parts: ReturnType<typeof loadRfcParts>): string {
+  const sorted = rfcSorted(parts);
+  const out: string[] = [];
+  out.push('# RFC updates');
+  out.push(
+    'How libraries follow the spec. **Pull:** poll [`feed.json`](./feed.json) — it ' +
+      'lists every part, its `since` version, and the flavors that implement it; ' +
+      'diff across versions to see what changed in the parts you implement. ' +
+      '**Push (opt-in):** a flavor that sets `notify_repo` + `notify_opt_in: true` ' +
+      'in its `spec/flavors/<id>.yaml` gets a tracking issue opened in its repo when ' +
+      'a part it implements changes.',
+  );
+  out.push('## Parts by version');
+  const byVer = new Map<string, RfcPart[]>();
+  for (const p of sorted) {
+    const v = p.since ?? '(unversioned)';
+    const arr = byVer.get(v) ?? [];
+    arr.push(p);
+    byVer.set(v, arr);
+  }
+  for (const [ver, ps] of [...byVer.entries()].sort((a, b) => b[0].localeCompare(a[0]))) {
+    out.push(`### ${ver}`);
+    out.push(
+      ps
+        .map((p) => `- [\`${p.id}\`](../../index.md#${p.id}) — ${cell(p.title)} (${p.category}, ${p.status ?? 'draft'})`)
+        .join('\n'),
+    );
+  }
+  out.push('[← the RFC](../../index.md)');
+  return out.join('\n\n');
+}
+
 function renderGlossary(): string {
   const glossary = loadGlossary();
   const out: string[] = [];
@@ -535,11 +952,13 @@ function renderGlossary(): string {
 }
 
 function renderOverview(counts: {
+  rfcParts: number;
   stanzas: number;
   flows: number;
   enums: number;
   techniques: number;
   tools: number;
+  flavors: number;
   contributors: number;
 }): string {
   const out: string[] = [];
@@ -559,11 +978,12 @@ function renderOverview(counts: {
   out.push('## Contents');
   out.push(
     `| Section | Count |\n| --- | --- |\n` +
+      `| [**The RFC**](../index.md) — normative call-stack spec | ${counts.rfcParts} parts |\n` +
       `| [Stanzas](./stanzas/index.md) | ${counts.stanzas} |\n` +
       `| [Flows](./flows/index.md) | ${counts.flows} |\n` +
       `| [Enums](./enums.md) | ${counts.enums} |\n` +
       `| [Techniques](./techniques.md) | ${counts.techniques} |\n` +
-      `| [Tools](./tools.md) | ${counts.tools} |\n` +
+      `| [Flavors](./flavors.md) | ${counts.flavors} |\n` +
       `| [Contributors](./contributors.md) | ${counts.contributors} |\n` +
       `| [Glossary](./glossary.md) | - |\n` +
       `| [Coverage](./coverage.md) | - |`,
@@ -578,6 +998,9 @@ function renderOverview(counts: {
       '- **Techniques** document the reverse-engineering methods that back ' +
       'each fact; **Tools** and **Contributors** record what produced it and ' +
       'who submitted it.\n' +
+      '- **Flavors** are independent reimplementations that corroborate the ' +
+      'spec; the **Implementation map** records where each bit of the spec is ' +
+      'realized in their code (the inverse of a code-to-reference pointer).\n' +
       '- **Coverage** quantifies how confirmed the spec currently is.',
   );
   return out.join('\n\n');
@@ -593,6 +1016,9 @@ const enums = loadEnums();
 const techniques = loadTechniques();
 const contributors = loadContributors();
 const tools = loadTools();
+const flavors = loadFlavors();
+const flavorMaps = loadFlavorMaps();
+const rfcParts = loadRfcParts();
 
 for (const { data } of stanzas) {
   write(`docs/spec/stanzas/${data.id}.md`, renderStanza(data));
@@ -606,17 +1032,49 @@ write('docs/spec/flows/index.md', renderFlowIndex(flows.map((f) => f.data)));
 
 write('docs/spec/enums.md', renderEnums(enums));
 write('docs/spec/techniques.md', renderTechniques(techniques));
-write('docs/spec/tools.md', renderTools(tools));
+write('docs/spec/flavors.md', renderFlavors(flavors));
+
+// The RFC is the site home page (docs/index.md): logic only. Each part also has a
+// full details page, plus the pull feed and updates page.
+const rfcPartById = new Map(rfcParts.map((p) => [p.data.id, p.data]));
+const rfcBreakdown = rfcBreakdownMap(rfcParts.map((p) => p.data));
+const flavorUrl = (id: string) => flavors.find((f) => f.data.id === id)?.data.url;
+const contributorName = (id: string) =>
+  contributors.find((c) => c.data.id === id)?.data.name ?? id;
+write(
+  'docs/index.md',
+  renderRfcIndex(rfcParts, {
+    partLink: (cat, id) => `spec/rfc/${cat}/${id}.md`,
+    feed: 'spec/rfc/feed.json',
+    updates: 'spec/rfc/updates.md',
+    contributors: contributors.map((c) => ({
+      id: c.data.id,
+      name: c.data.name,
+      github: c.data.github,
+    })),
+  }),
+);
+for (const { data } of rfcParts) {
+  write(
+    `docs/spec/rfc/${data.category}/${data.id}.md`,
+    renderRfcPartPage(data, rfcPartById, rfcBreakdown, { flavorUrl, contributorName }),
+  );
+}
+write('docs/spec/rfc/updates.md', renderRfcUpdates(rfcParts));
+writeRaw('docs/spec/rfc/feed.json', renderRfcFeed(rfcParts, flavors.map((f) => f.data.id)));
+
 write('docs/spec/contributors.md', renderContributors(contributors));
 write('docs/spec/glossary.md', renderGlossary());
 write(
   'docs/spec/index.md',
   renderOverview({
+    rfcParts: rfcParts.length,
     stanzas: stanzas.length,
     flows: flows.length,
     enums: enums.length,
     techniques: techniques.length,
     tools: tools.length,
+    flavors: flavors.length,
     contributors: contributors.length,
   }),
 );
@@ -625,5 +1083,6 @@ console.log('Generated docs/spec from corpus:');
 console.log(
   `  stanzas: ${stanzas.length}  flows: ${flows.length}  enums: ${enums.length}  ` +
     `techniques: ${techniques.length}  tools: ${tools.length}  ` +
+    `flavors: ${flavors.length}  flavor-maps: ${flavorMaps.length}  ` +
     `contributors: ${contributors.length}`,
 );

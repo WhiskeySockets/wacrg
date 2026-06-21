@@ -13,7 +13,7 @@ the whole stack.
 
 > **Provenance.** Layer status is drawn from the wacrg
 > [coverage report](spec/coverage.md) and the per-plane docs (cited inline);
-> media-internals claims are `wasm-analysis` · tool `warden` · contributor
+> media-internals claims are `wasm-analysis` (warden) · contributor
 > `purpshell` (one technique, so `probable`/`speculative`). This is a planning
 > document, not a set of new corpus facts; specifics are graded where stated.
 
@@ -49,9 +49,9 @@ Maturity = how close to "reconstructable end to end". Coverage = the wacrg
 reconstruction.
 
 As of 2026-06, independent reconstructions exist and largely work: a Go
-reference ([meowmeow](spec/tools.md), byte-exact codec from captured vectors), a
-TypeScript caller ([zapo-caller](spec/tools.md)), and a Rust stack
-([whatsapp-rust](spec/tools.md)) that wires the whole media plane. That changes
+reference (byte-exact codec from captured vectors), a
+TypeScript caller ([zapo-caller](spec/flavors.md)), and a Rust stack
+([whatsapp-rust](spec/flavors.md)) that wires the whole media plane. That changes
 the question from "is it reconstructable" (mostly yes) to "is it documented and
 confirmed".
 

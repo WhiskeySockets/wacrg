@@ -1,0 +1,17 @@
+id: whatsapp-rust
+name: whatsapp-rust (VoIP)
+url: https://github.com/oxidezap/whatsapp-rust-private
+language: rust
+maturity: working
+maintainer: jlucaso1
+status: stable
+covers:
+  - signaling
+  - keying
+  - media
+  - transport
+basis:
+  - wasm-analysis
+derives_from:
+  - zapo-caller
+description: Pure-Rust reconstruction of the full WhatsApp VoIP stack — MLow codec, SFrame, SRTP, WARP, STUN/relay, RTP/RTCP, and call signaling.

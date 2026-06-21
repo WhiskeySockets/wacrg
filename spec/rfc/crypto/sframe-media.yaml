@@ -1,0 +1,31 @@
+id: sframe-media
+category: crypto
+title: SFrame media end-to-end encryption
+status: draft
+order: 30
+features: [ audio, video, group ]
+since: "0.1.0"
+summary: >
+  Per-frame end-to-end AEAD sealing of media payloads, applied above SRTP so the
+  relay only forwards ciphertext.
+normative: |
+  - Each media frame MUST be sealed with an SFrame-style AEAD before transport.
+  - The sealed frame carries an authenticated header (key id + monotonic frame
+    counter) over a payload encrypted under a per-participant SFrame key derived
+    from the call key.
+  - The frame counter MUST NOT repeat under a given key.
+  - The relay MUST be unable to recover plaintext; it only forwards sealed frames.
+  - Group calls use per-sender keys.
+requires: [ srtp-master-key ]
+implementations:
+  - {
+      flavor: whatsapp-rust,
+      status: working,
+      commits: [ 674e85164b35ca19115dfebcf605708d15951ee7 ]
+    }
+  - { flavor: zapo-caller, status: working }
+open_questions:
+  - "Exact AEAD suite, nonce construction, and header varint layout."
+  - "Group-call key distribution and rotation."
+discovered_by: vinikjkkj
+code: CRY-04

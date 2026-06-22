@@ -19,11 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-This MIT license applies to the code and tooling in this repository (for
-example everything under scripts/ and the GitHub configuration). The
-specification content and documentation (the YAML corpus under spec/ and
-corpus/, and the prose under docs/) are licensed separately under
-Creative Commons Attribution 4.0 International; see LICENSE-docs.

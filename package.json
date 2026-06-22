@@ -20,7 +20,7 @@
     "test": "npm run validate"
   },
   "devDependencies": {
-    "@types/node": "^22.10.0",
+    "@types/node": "^26.0.0",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "fast-glob": "^3.3.2",

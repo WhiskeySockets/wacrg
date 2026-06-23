@@ -1,4 +1,4 @@
-<!-- Hand-written narrative. Backed by impl/mlow/data/identity-map.json (machine-generated from warden). -->
+<!-- Hand-written narrative. Backed by the warden knowledge base (machine-generated identity map). -->
 
 # MLow function map
 
@@ -12,7 +12,7 @@ in the warden knowledge base.
 > `warden` · contributor `purpshell` · source: commit `aa0996c`. Confidence:
 > class membership is **`probable`** (a function referencing a class's typeinfo
 > operates on that class); exact per-method roles are `speculative` until each
-> function body is read. Full lists: `impl/mlow/data/identity-map.json`.
+> function body is read. Full lists live in the warden knowledge base.
 
 ## Two failure modes, and why renames need the body
 
@@ -55,7 +55,7 @@ Function counts are the number of functions that reference each class's typeinfo
 | `facebook::rtc::AudioDecoderMLowImpl` | MLow speech decoder | 10 | 1839, 4245, 4882, 6261, 7006, 7018, 8032, 8036, 10750, 11416 |
 | `facebook::rtc::MLowFrame` | MLow audio frame/packet | 37 | 1916, 2024, 2039, 2314, 3790, 3922, 3926, 3928, 4703, 4733, 4815, 4819, 5418, 5422 ... |
 | `concerto::MlowRedPayloadSplitter` | RED redundancy split | 7 | 2024, 3607, 4016, 10750, 11407, 11416, 11419 |
-| `facebook::rtc::ReedSolomonCode` | RS FEC core | 22 | (see impl/mlow/data/identity-map.json) |
+| `facebook::rtc::ReedSolomonCode` | RS FEC core | 22 | (full list in the warden KB) |
 | `facebook::rtc::ReedSolomonFactoryImpl` | RS FEC factory | 7 | - |
 | `facebook::rtc::RSEncoderDecoder` | RS encode/decode | 2 | - |
 | `facebook::rtc::RSCodec` | RS codec wrapper | 2 | 10750, 11416 |

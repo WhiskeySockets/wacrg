@@ -122,5 +122,4 @@ SRTP are one layer or two stacked layers is an open question.
 ## See also
 
 [encryption-keying](../encryption-keying.md) · [media-srtp](../media-srtp.md) ·
-[reconstruction](../reconstruction.md) ·
-[`impl/keying/`](../../impl/keying/README.md) (tested reference KDF).
+[reconstruction](../reconstruction.md).

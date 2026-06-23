@@ -18,8 +18,8 @@ separately by TOC (see [TOC routing](#toc-routing-mlow-vs-standard-opus)).
 > only the WASM read has them. Provenance: technique `wasm-analysis` ·
 > flavors `whatsapp-rust` · contributors `purpshell`, `jlucaso1` ·
 > source: `wacore/src/voip/mlow/` (Rust), commit
-> `365daa6` (the range coder is additionally corroborated by the round-trip test
-> in `impl/mlow/`). Functions cited by index.
+> `365daa6` (the range coder is additionally corroborated by a matched-encoder
+> round-trip test). Functions cited by index.
 
 ## Correction: #1839 is not the decoder
 
@@ -50,12 +50,10 @@ fingerprint of `ec_dec_init` with `EC_CODE_BITS=32, EC_SYM_BITS=8,
 EC_CODE_EXTRA=7`. Callers are `audio_mdct_quantization_decode` (#8911, #8992) and
 `audio_encode_frame` (#8918), i.e. an MDCT transform path.
 
-Because this is a published coder, the reference implementation ports it exactly
-and round-trip tests it against a matched CELT encoder:
-[`impl/mlow/rangecoder.go`](../../../impl/mlow/rangecoder.go),
-[`ec_enc.go`](../../../impl/mlow/ec_enc.go),
-[`rangecoder_test.go`](../../../impl/mlow/rangecoder_test.go). This is the first
-codec layer that is both recovered and verified by an executable test.
+Because this is a published coder, it was ported exactly and round-trip tested
+against a matched CELT encoder (range coder, entropy encoder, and a round-trip
+test). This is the first codec layer that is both recovered and verified by an
+executable test.
 
 ## Decode schedule and CDF tables (verified, then data-dependent)
 
@@ -79,10 +77,8 @@ valid `icdf` (non-increasing, 0-terminated, `icdf[0] ~= 2^ftb`):
 | `0x112ab3` (1125043) | 5 | `25, 23, 2, 0` | conditional mid-range parameter |
 | `0x112ab7` (1125047) | 7 | `126, 124, 119, 109, 87, 41, 19, 9, 4, 2, 0` | conditional large parameter |
 
-These are shipped and round-trip tested in
-[`impl/mlow/tables.go`](../../../impl/mlow/tables.go) /
-[`tables_test.go`](../../../impl/mlow/tables_test.go): encoding then decoding any
-symbol of any table against the matched coder recovers it, which jointly
+These were round-trip tested against the matched coder: encoding then decoding any
+symbol of any table recovers it, which jointly
 validates the bytes, the `ftb`, and the `ec_dec_icdf` transcription.
 
 Extraction is reproducible: the binary uses bulk-memory passive data
@@ -126,18 +122,17 @@ and per-subframe voiced flags in the TOC. RED redundancy uses a
 `SplitRed` layout with 2-byte block headers. Config 0 runs at 16 kHz
 (narrow-band); the `mlow_dec_cutoff_hz` field trial sets the output low-pass.
 
-## What the reference implementation does with this
+## Reconstruction state
 
-- **Implemented + tested:** the range coder (decode and a matched encoder).
-- A complete, validated reference now exists in Rust
+- **Recovered + tested:** the range coder (decode and a matched encoder),
+  verified by a round-trip test.
+- A complete, validated reference exists in Rust
   ([whatsapp-rust](../../spec/flavors.md) `wacore/src/voip/mlow/`), pinned to
-  captured decode vectors. The
-  wacrg `impl/mlow/` Go reference can now follow that recovered CELP pipeline
-  (LSF/NLSF -> LPC -> LTP -> algebraic pulse -> synthesis -> harmonic comb)
-  rather than re-deriving it; the cross-check is the existing reconstructions.
+  captured decode vectors, which follows the recovered CELP pipeline
+  (LSF/NLSF -> LPC -> LTP -> algebraic pulse -> synthesis -> harmonic comb); the
+  cross-check is the existing reconstructions.
 
 ## See also
 
 - [index](index.md) (architecture, open questions) ·
   [function-map](function-map.md) · [methodology](methodology.md)
-- [`impl/mlow/`](../../../impl/mlow/README.md): the reference implementation.

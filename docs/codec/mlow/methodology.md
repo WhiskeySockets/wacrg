@@ -54,8 +54,8 @@ for r in rows:
 dem = lambda s: subprocess.run(["c++filt","-t",s], capture_output=True, text=True).stdout.strip()
 ```
 
-The full result is committed at `impl/mlow/data/identity-map.json` (kept under
-`impl/`, not the published `docs/` site, per the
+The full result is maintained in the warden knowledge base (kept out of the
+published `docs/` site, per the
 [attribution model](../../attribution.md)). The codec-relevant classes are in the
 [function map](function-map.md). Key reads:
 

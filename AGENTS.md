@@ -34,7 +34,6 @@ docs/                 the published MkDocs site (hand-written narrative + genera
   spec/**             GENERATED from spec/, committed, do not hand-edit
   methodology/  techniques/
   codec/mlow/   keying/   signaling/   reconstruction.md   ← deep RE narratives
-impl/<area>/          executable reference implementations (Go, etc.) tied to a doc
 scripts/              validate / generate / coverage / ingest (TypeScript, tsx)
 ```
 
@@ -68,7 +67,7 @@ reimplementations that corroborate it, must exist in `spec/flavors/` — a
 corroborating source, **not** a technique, and a port does not corroborate its
 upstream), `contributors` (must exist in `spec/contributors/`), `sources`
 (issue/PR/commit refs). Raw tool output (identity maps, dumps) lives under
-`impl/` or `corpus/`, not `docs/`. Full model:
+`corpus/` (or off-repo warden tooling), not `docs/`. Full model:
 [docs/attribution.md](docs/attribution.md). Register yourself once at
 `spec/contributors/<handle>.yaml`.
 
@@ -114,16 +113,20 @@ and the traps:
   inferred algorithm is `speculative` until a body read or a second technique
   confirms it.
 
-## Reference implementations (`impl/`)
+## Research-only: no executable code in source control
 
-When a finding is concrete enough to run, add a stdlib-only, tested reference
-under `impl/<area>/`, cross-linked to its doc. Conventions that have worked:
+wacrg is a research and specification corpus, not a code distribution. Do not add
+a runnable reference-implementation tree (`impl/`) to source control. Keep any
+executable reconstruction in a separate/off-repo project, and when it
+independently corroborates a finding, register it as a flavor
+(`spec/flavors/<id>.yaml`) and cite it in `provenance.flavors`. Verification
+principles still hold for the *finding*:
 - Prove primitives against an authoritative known-answer where one exists
   (e.g. the SRTP HKDF vs RFC 5869; the CELT range coder vs a matched encoder
-  round-trip). Recovered *and* executable beats recovered alone.
-- Return an explicit `ErrNotRecovered` for stages not yet recovered rather than
-  emitting plausible-but-wrong output. Honesty over coverage.
-- Cite the WASM function indices / evidence each file was built from.
+  round-trip), and record in the doc's provenance that the check was done.
+- Mark stages not yet recovered as open rather than asserting plausible-but-wrong
+  output. Honesty over coverage.
+- Cite the WASM function indices / evidence each claim was built from.
 
 ## Build on context that compounds
 
@@ -131,10 +134,9 @@ This repo is designed to accumulate understanding: a finding becomes a doc,
 a doc cites its provenance, provenance lets the next contributor see exactly how
 sure we are and what to work on next. When you finish a piece:
 1. Write the narrative under `docs/...` (confidence-graded, provenance-stamped).
-2. If runnable, add the `impl/...` reference + test.
-3. Update [docs/reconstruction.md](docs/reconstruction.md) (the system-level
+2. Update [docs/reconstruction.md](docs/reconstruction.md) (the system-level
    gap analysis) and the relevant roadmap so the open frontier moves visibly.
-4. Add any durable process lesson to this file.
+3. Add any durable process lesson to this file.
 
 > Note: this is not [docs/AGENTS.md]-style; wacrg has no agent-crew feature.
 > This file is purely how to *work on wacrg*.

@@ -23,8 +23,8 @@ information.
 > **Provenance.** Module: WhatsApp Web calling engine `wa.wasm`,
 > SHA-1 `3638a506b4055c2fc6bec75edff18512ca79fe64` (9,819,554 bytes).
 > Technique `wasm-analysis` · tool `warden` · contributor `purpshell` · sources:
-> commits `aa0996c`, `365daa6` and the machine-readable identity map at
-> `impl/mlow/data/identity-map.json` (rendered in the
+> commits `aa0996c`, `365daa6` and the machine-readable identity map in the
+> warden knowledge base (rendered in the
 > [function map](function-map.md)). Method and exact queries:
 > [methodology](methodology.md).
 

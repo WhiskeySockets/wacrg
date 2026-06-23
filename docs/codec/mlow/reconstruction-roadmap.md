@@ -16,12 +16,11 @@
 
 This page answers one question end to end: what would it take to fully
 reconstruct MLow from the binary, and how far along is each piece? It is the
-consolidated gap analysis behind the [decode pipeline](decode-pipeline.md) and the
-[reference implementation](../../../impl/mlow/README.md).
+consolidated gap analysis behind the [decode pipeline](decode-pipeline.md).
 
 > **Provenance.** Module `wa.wasm` SHA-1 `3638a50...`. Technique `wasm-analysis` ·
 > tool `warden` · contributor `purpshell` · source: commit history of
-> `docs/codec/mlow/` and `impl/mlow/`. One technique, so structural claims are
+> `docs/codec/mlow/`. One technique, so structural claims are
 > `probable` and algorithmic ones `speculative`; the range coder is additionally
 > corroborated by an executable test.
 
@@ -66,7 +65,7 @@ not yet implemented) · **reported** (agent-surfaced, not body-verified) ·
 | 2 | RED depacketization | reported | `MlowRedPayloadSplitter` #11407/#11419 | Exact block layout: primary + N redundant frames, timestamp-offset and length field widths/endianness. |
 | 3 | Reed-Solomon FEC | reported | `ReedSolomonCode` (22 fns), #6154/#7849 | RS params (k, n, symbol size, GF field, generator) and how a RED group maps onto shards. Agent guessed k=13/32-bit; **unverified**. |
 | 4 | MLowFrame / TOC parse | reported | #4815/4819/4988/4951 | Frame header bits: mode/type field (agent: byte 120-125), length, codec byte (agent: 200-210), how subframes pack. **Verify bodies.** |
-| 5 | Range coder (`ec_dec`) | **done** | #8855-8861 | Implemented + round-trip tested (`impl/mlow/rangecoder.go`). |
+| 5 | Range coder (`ec_dec`) | **done** | #8855-8861 | Recovered + round-trip tested against a matched encoder. |
 | 6 | **Decode schedule (bitstream grammar)** | unknown | #8911/#8992, #9013 | The exact ordered sequence of `ec_dec_icdf`/`bit_logp`/`bits` calls and which CDF table each uses. This is the codec's grammar; without it the range coder decodes noise. Recoverable only by reading the decode hot path control flow. |
 | 7 | Quantization / CDF tables | unknown (extractable) | data section via `i32.const` args | The icdf/CDF and codebook tables passed to the decode calls. Deterministically extractable from the data section once the decode functions name their table addresses. |
 | 8 | NLSF/LSF -> LPC | reported | #9754 (+ #9752) | The LSF-to-LPC conversion (Chebyshev/poly) and the LSF codebook. |
@@ -110,7 +109,7 @@ unknown: it is implicit in control flow, not named by any string.
 
 ## Recommended order of attack
 
-1. **#4 frame parse** (verify #4815/4819/4988/4951 bodies) -> `impl/mlow/frame.go`.
+1. **#4 frame parse** (verify #4815/4819/4988/4951 bodies).
 2. **#6 + #7**: trace the decode hot path (#8911/#9013), recover the symbol
    schedule, and extract the CDF/codebook tables from the data section. This is
    the highest-payoff and highest-risk step.
@@ -121,4 +120,4 @@ unknown: it is implicit in control flow, not named by any string.
 ## See also
 
 [decode-pipeline](decode-pipeline.md) · [function-map](function-map.md) ·
-[methodology](methodology.md) · [impl/mlow](../../../impl/mlow/README.md).
+[methodology](methodology.md).

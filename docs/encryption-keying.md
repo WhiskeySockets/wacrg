@@ -90,8 +90,8 @@ structure to `probable`. The full schedule is in
 
 Hop-by-hop SRTP skips Layer 1: the relay supplies a 30-byte
 `masterKey || masterSalt` directly. The primitives are statically confirmed in
-the binary (SHA-256, AES-128-CTR), and a reference implementation with an
-RFC 5869 known-answer test lives at [`impl/keying/`](../impl/keying/README.md).
+the binary (SHA-256, AES-128-CTR), and the HKDF derivation was verified against
+the RFC 5869 known-answer vectors.
 
 **What is still open:** the exact HKDF `info` beyond the LID, the
 `<encopt keygen>` / `<enc v>` selectors, and any mid-call rekeying. Reaching

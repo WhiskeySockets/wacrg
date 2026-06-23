@@ -1,11 +1,3 @@
-# Funding configuration for the WhatsApp Calls Research Group (wacrg).
-#
-# GitHub Sponsors for the contributors, in priority order:
-#   1. Rajeh Taher (purpshell)  2. João (jlucaso1)  3. Auties (Auties00)
-#   4. Vini (vinikjkkj)  5. Shelltear (sheiitear)  6. Edgard (edgardmessias)
-# GitHub renders only four usernames in the native `github:` list, so the
-# remaining two are linked via `custom:` to their Sponsors pages, preserving the
-# order. All are WhiskeySockets contributors.
 github: [purpshell, jlucaso1, Auties00, vinikjkkj]
 custom:
   - https://github.com/sponsors/sheiitear

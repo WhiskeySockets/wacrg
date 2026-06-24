@@ -10,7 +10,7 @@ transport is **WARP** (WhatsApp's RTP profile) carried over a custom **STUN**
 framing to the relay.
 
 > **Confidence.** `probable` - recovered from two reconstructions
-> ([zapo-caller](../../spec/flavors.md) TS, [whatsapp-rust](../../spec/flavors.md)
+> ([zapo-caller](../spec/flavors.md) TS, [whatsapp-rust](../spec/flavors.md)
 > Rust) whose framing is pinned to captured packets, and consistent with the
 > `wasm-analysis` view of the relay code. `confirmed` wants a fresh on-wire
 > capture decoded against these formats.

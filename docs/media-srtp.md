@@ -7,11 +7,15 @@ Once a call is accepted, the actual audio and video do not travel over the
 plane**: SRTP over UDP to WhatsApp voip/relay servers, using transport
 endpoints negotiated during signaling.
 
-> Confidence: this is the least-observed plane in wacrg today. That media is
-> SRTP/UDP and end-to-end encrypted is `probable`; almost everything more
-> specific (exact codecs, RTP header usage, the SRTP cipher suite, the key
-> schedule) is `speculative`. We mark it accordingly and lead with open
-> questions. Do not treat anything here as settled.
+> Confidence: media as SRTP/UDP and end-to-end encrypted is `probable`. Much of
+> what this page once marked `speculative` has since been recovered to `probable`
+> by `wasm-analysis` plus independent reconstructions: the audio codec
+> ([MLow](codec/mlow/index.md)), the SRTP cipher suite and
+> [key schedule](keying/srtp-key-schedule.md), the per-frame
+> [SFrame](keying/sframe-media-e2ee.md) layer, and the
+> [WARP/STUN media transport](transport/warp-stun-relay.md). What is still open
+> (video, RTP multiplexing, replay window, mid-call rekeying) is marked below.
+> Nothing here is `confirmed` yet — that wants a fresh on-wire media capture.
 
 ## What we believe is true
 
@@ -27,26 +31,39 @@ endpoints negotiated during signaling.
   candidates offered during signaling. See [ICE & relays](ice-and-relays.md).
   Relays forward *ciphertext*; they are not media-decryption points.
 
-## What we do not know yet
+## What has been recovered
 
-This section is deliberately long, because it records what remains unverified.
+Much of the media plane this page once listed as unknown is now mapped to
+`probable` by static `wasm-analysis` plus two independent reconstructions:
 
-- **Codecs.** Static `wasm-analysis` now identifies the audio codec at
-  `probable`: the primary codec is **MLow** (an in-house CELP speech codec with
-  an optional neural "companion"), with **Opus** present as an alternate, carried
+- **Codecs.** The primary audio codec is **MLow** (an in-house CELP speech codec
+  with an optional neural "companion"), with **Opus** as an alternate, carried
   over an RED + Reed-Solomon FEC layer into a WebRTC-NetEq receive engine. See
-  [MLow and the audio media plane](codec/mlow/index.md). What remains open: the
-  MLow bitstream/bitrates, DTX usage, mid-call renegotiation, and the exact
-  `<audio enc rate>` mapping. Video codec(s) and parameters are still open.
-- **RTP details.** Payload type numbers, SSRC assignment, header extensions,
-  marker/sequence handling, and whether multiple media (audio+video) are
-  multiplexed on one 5-tuple are all unknown.
-- **SRTP profile.** The specific SRTP cipher suite (e.g. AES-CM vs. AES-GCM),
-  authentication tag length, and replay-window behavior are unconfirmed.
-- **Key derivation.** *How* the Signal-delivered media key becomes SRTP master
-  keys/salts, including the KDF, labels, and whether keys are per-direction or
-  rekeyed mid-call, is the largest open question and is treated as
-  `speculative` throughout (see [keying](encryption-keying.md#srtp-key-derivation)).
+  [MLow and the audio media plane](codec/mlow/index.md).
+- **RTP details.** Media rides **WARP** (WhatsApp's RTP profile): first byte
+  `0x90`, audio payload types 120/121, a `0xDEBE` header-extension profile, and a
+  4-byte per-packet HMAC tag; SSRCs are derived rather than random. See
+  [WARP/STUN media transport](transport/warp-stun-relay.md).
+- **SRTP profile.** The suite is **`AES_CM_128_HMAC_SHA1_80`** (AES-128 counter
+  mode, 80-bit HMAC-SHA1 tag), applied in two layers — hop-by-hop to the relay
+  and end-to-end. See [SRTP key schedule](keying/srtp-key-schedule.md).
+- **Key derivation.** How the Signal-delivered call key becomes SRTP master
+  keys/salts is recovered: a `WAHKDF` (HKDF-SHA256 keyed by the call key, with the
+  participant LID as `info`) feeding the RFC 3711 KDF. See
+  [SRTP key schedule](keying/srtp-key-schedule.md).
+- **Per-frame E2EE.** Above SRTP, **SFrame** encrypts each frame's payload with
+  AES-128-GCM. See [SFrame](keying/sframe-media-e2ee.md).
+
+## What is still open
+
+- **Video.** The video codec(s) and parameters remain unmapped; the recovered
+  media plane is audio-first.
+- **RTP multiplexing.** Whether audio and video share one 5-tuple, SSRC
+  assignment across slots, and the exact RTCP (compound) layout.
+- **MLow bitstream.** Bitrates, DTX usage, mid-call renegotiation, and the exact
+  `<audio enc rate>` mapping.
+- **Rekeying and replay.** Whether SRTP/SFrame keys rotate during a long call,
+  the SRTP replay-window behavior, and the exact HKDF `info` beyond the LID.
 - **Congestion control / quality adaptation.** Bandwidth estimation, packet-loss
   concealment, and jitter-buffer behavior are out of scope until we can observe
   them.
@@ -68,14 +85,14 @@ harder and lower-yield, which is exactly why this plane is under-documented. See
 
 The above is summarized as `open_questions` on the relevant
 [stanza](spec/stanzas/index.md) and [technique](spec/techniques.md) entries.
-Priorities for moving any of this from `speculative` toward `probable`:
+The recovered facts are `probable`; the priorities now are to confirm them and
+close the remaining gaps:
 
-1. Confirm the audio codec and its `<audio enc rate>` mapping. *(Codec
-   identified at `probable` by static [MLow analysis](media/mlow/index.md);
-   promoting to `confirmed` needs a second technique, e.g. a Frida hook or a live
-   media capture of the same frames.)*
-2. Determine the SRTP cipher suite and key-derivation steps.
-3. Establish whether/how media keys rotate during a long call.
+1. A fresh on-wire media capture decoded against the recovered WARP/SRTP/SFrame
+   formats — the missing independent technique that would reach `confirmed`.
+2. The `<audio enc rate>` mapping and MLow bitstream specifics (bitrates, DTX).
+3. The video codec and how audio/video multiplex on the media path.
+4. Whether/how SRTP and SFrame keys rotate during a long call.
 
 If you can observe the media plane safely and with fully synthetic test
 accounts, see the [capture pipeline](methodology/capture-pipeline.md) and the

@@ -10,9 +10,11 @@ probe and select among them.
 
 > Confidence: that calls use candidate transport endpoints with relay fallback
 > and latency probing is `probable`, because the offer carries a `<destination>`
-> with `<te>`/`<endpoint>` children and latency hints, and because NAT traversal
-> demands it. The precise candidate-selection algorithm and the exact STUN/TURN
-> semantics are `speculative`. Hedge accordingly.
+> with `<te>`/`<endpoint>` children and latency hints. The relay's wire protocol —
+> a custom RFC 5389 STUN dialect carrying the WARP RTP profile — has since been
+> recovered to `probable`; see
+> [WARP, STUN, and relay transport](transport/warp-stun-relay.md). The precise
+> candidate-selection/priority algorithm is still `speculative`.
 
 ## Where endpoints come from
 
@@ -63,14 +65,20 @@ shape rhymes with ICE, but field-level details are unverified.
 - Relays forward **encrypted** media; they are not decryption points (the keys
   stay end-to-end, see [keying](encryption-keying.md)).
 
-**Not known (`speculative`):**
+**Recovered since (`probable`, see [WARP/STUN transport](transport/warp-stun-relay.md)):**
 
-- The exact candidate encoding inside `<te>`/`<endpoint>` (address format, ports,
-  priorities, transport protocols).
+- The relay probing protocol *is* a custom **RFC 5389 STUN** dialect with WA
+  message types (keepalive ping `0x0801` / pong `0x0802`, allocate `0x0003`) and a
+  FINGERPRINT + MESSAGE-INTEGRITY scheme.
+- The allocate request's relay-token attributes (the `0x40xx` protobuf range).
+
+**Still not known (`speculative`):**
+
+- The exact candidate encoding inside the signaling `<te>`/`<endpoint>` (address
+  format, ports, priorities).
 - Whether direct peer-to-peer is ever used for 1:1, or whether 1:1 media is
   always relayed.
 - The precise selection/priority algorithm and how ties are broken.
-- The probing protocol details (is it STUN, a WA-specific keepalive, or both?).
 - How `<net>`/`<net medium>` in the offer influences candidate choice.
 
 ## Why this plane is under-observed
@@ -84,10 +92,14 @@ selection*.
 
 ## Open questions (tracked)
 
-- Decode the `<te>`/`<endpoint>` candidate format.
+- Decode the signaling `<te>`/`<endpoint>` candidate format (the relay-side STUN
+  framing is mapped in [WARP/STUN transport](transport/warp-stun-relay.md); the
+  offer-side candidate encoding is not).
 - Determine whether 1:1 calls ever go peer-to-peer or are always relayed.
-- Pin down the `<relaylatency>` probe/response semantics.
+- Tie the signaling `<relaylatency>` stanza to the media-plane STUN ping/pong
+  probes it reports.
 - Map `<net medium>` values to network types and their effect on selection.
+- The full `0x40xx` allocate-attribute (relay token) protobuf schema.
 
 These are recorded as `open_questions` on the transport-related
 [stanza entries](spec/stanzas/index.md).

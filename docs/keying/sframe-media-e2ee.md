@@ -13,8 +13,8 @@ the key schedule is now fully recovered.
 
 > **Confidence.** The key schedule and GCM framing are `probable`: recovered
 > by `wasm-analysis` and corroborated by two reconstructions
-> ([zapo-caller](../../spec/flavors.md) in TypeScript and
-> [whatsapp-rust](../../spec/flavors.md) in Rust) whose primitives are pinned to
+> ([zapo-caller](../spec/flavors.md) in TypeScript and
+> [whatsapp-rust](../spec/flavors.md) in Rust) whose primitives are pinned to
 > known-answer test vectors. Promoting to `confirmed` wants a recorded live
 > capture as a third, independent technique.
 >

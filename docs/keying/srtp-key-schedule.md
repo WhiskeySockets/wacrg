@@ -12,8 +12,8 @@ keys, then into SRTP/SRTCP session keys, in two layers.
 > multiple independent paths: static `wasm-analysis` of the binary (this
 > page), a runtime WASM trace, and two
 > independent reconstructions whose primitives are pinned to known-answer test
-> vectors: [zapo-caller](../../spec/flavors.md) (TypeScript) and
-> [whatsapp-rust](../../spec/flavors.md) (Rust). All derive byte-identical keys.
+> vectors: [zapo-caller](../spec/flavors.md) (TypeScript) and
+> [whatsapp-rust](../spec/flavors.md) (Rust). All derive byte-identical keys.
 > The HBH two-stage schedule (below) is `probable` (recovered by the
 > reconstructions; one technique class). Rekey policy stays `speculative`.
 >

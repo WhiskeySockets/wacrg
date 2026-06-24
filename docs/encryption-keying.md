@@ -8,10 +8,11 @@ in an `<enc>` node inside the [signaling](signaling.md) offer, encrypted to each
 peer device, and the [SRTP media keys](media-srtp.md) are derived from it.
 
 > Confidence map for this page: the call key being delivered via Signal `<enc>`
-> and multi-device fan-out are `probable`. The `pkmsg`/`msg` distinction is
-> `probable`. The SRTP key-derivation steps are `speculative` and clearly
-> marked. Where this page describes a KDF or label, assume it is a hypothesis to
-> be tested, not a fact.
+> and multi-device fan-out are `probable`, as is the `pkmsg`/`msg` distinction.
+> The SRTP key-derivation steps, once the most speculative part of the spec, are
+> now recovered to `probable` — see the
+> [SRTP key schedule](keying/srtp-key-schedule.md). Anything still genuinely open
+> is hedged inline.
 
 ## Two encryption layers
 

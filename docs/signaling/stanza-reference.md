@@ -11,8 +11,8 @@ technique; where it adds structure (child order, magic blobs, encodings) it is
 new and `probable`.
 
 > **Confidence.** `probable` for the structures below: they come from
-> reconstructions ([zapo-caller](../../spec/flavors.md) TS, ported into
-> [whatsapp-rust](../../spec/flavors.md) Rust) that place real calls, with the
+> reconstructions ([zapo-caller](../spec/flavors.md) TS, ported into
+> [whatsapp-rust](../spec/flavors.md) Rust) that place real calls, with the
 > stanza builders unit-tested. Facts that also match the websocket-capture
 > model are noted as candidates for `confirmed` (two independent techniques).
 >

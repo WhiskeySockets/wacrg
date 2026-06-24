@@ -9,6 +9,12 @@ repo_url: https://github.com/WhiskeySockets/wacrg
 repo_name: WhiskeySockets/wacrg
 docs_dir: docs
 
+# The ADR template is a contributor scaffold, not a standalone page. It stays in
+# the repo (decisions/index.md links to it) but is intentionally kept out of the
+# nav; declaring it here keeps the build free of "omitted from nav" warnings.
+not_in_nav: |
+  /decisions/_TEMPLATE.md
+
 theme:
   name: material
   # Serves overrides/404.html as site/404.html (GitHub Pages' not-found page).

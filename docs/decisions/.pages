@@ -1,4 +1,6 @@
 title: Decision records
+# Explicit nav (no `...` rest token) so the _TEMPLATE.md scaffold is not pulled
+# into the published navigation. It stays in the repo for contributors to copy;
+# index.md links to it. The omission is declared in mkdocs.yml `not_in_nav`.
 nav:
   - index.md
-  - ...
